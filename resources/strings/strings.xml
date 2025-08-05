@@ -1,5 +1,5 @@
 <strings>
-    <string id="AppName">Infocal 2023</string>
+    <string id="AppName">Infocal</string>
 
     <!-- Basic settings -->
     <string id="power_save_mode">Power saving mode (refresh per minute)</string>
@@ -144,7 +144,7 @@
     <string id="barometer_unit_1">Inches of Mercury (inHg)</string>
 
     <!-- Openweather Key -->
-    <string id="openweathermap_api">OpenWeatherMap API key, read FAQs section for more info</string>
+    <string id="openweather_api">OpenWeather API key, read FAQs section for more info</string>
 
     <!-- IQAir (Air Quality) API Key -->
     <string id="iqair_api">IQAir (Air Quality) API key, read FAQs section for more info</string>

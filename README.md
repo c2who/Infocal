@@ -42,7 +42,7 @@ Infocal Custom needs access to your profile to calculate active calories, distan
 
 ## Why does Infocal Custom need internet/background communication permission?
 
-If using the OpenWeatherMap for any of the features (see feature list above), internet and background communication is used to fetch data from the OpenWeatherMap API.
+If using the OpenWeather for any of the features (see feature list above), internet and background communication is used to fetch data from the OpenWeather API.
 
 ## Why isn't battery days remaining not working?
 
@@ -52,7 +52,7 @@ The days remaining battery estimate needs about an 1 hour to calibrate before di
 
 The group notification complication displays a "C" (connected) if the watch is connected to a phone, otherwise it will display "D" (disconnected).
 
-## Why doesn't sunrise/sunset/OpenWeatherMap temperature display any information?
+## Why doesn't sunrise/sunset/OpenWeather temperature display any information?
 
 Sunrise/sunset only works if the watch has a GPS signal. Try starting any activity that requires GPS, then wait for GPS signal. Once a GPS signal is established, return to watch face and check the complication again.
 
@@ -64,7 +64,7 @@ Not all complications are supported for all devices, or there is no data to disp
 
 Currently, this watch face only supports English (or Latin characters).
 
-## How do I get an OpenWeatherMap API?
+## How do I get an OpenWeather API?
 
 Go to https://openweathermap.org/, create an account, and log in. Once logged in, click on your account name in the upper right corner, then click on "My API keys". If you do not have any keys, click "Generate" and copy the newly generated key to the Infocal Custom settings.
 

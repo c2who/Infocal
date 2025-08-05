@@ -191,7 +191,7 @@ class HuwaiiApp extends Application.AppBase {
    }
 
    function needWeatherDataUpdate() as Boolean {
-      // OpenWeatherMap data field must be shown.
+      // OpenWeather data field must be shown.
       if (!isAnyDataFieldsInUse( [FIELD_TYPE_TEMPERATURE_HL, FIELD_TYPE_TEMPERATURE_OUT, FIELD_TYPE_WEATHER, FIELD_TYPE_WIND] )) {
          return false;
       }

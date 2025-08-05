@@ -41,7 +41,7 @@ class IQAirClient {
       self._callback = callback;
 
       if (key.length() == 0) {
-         key = "582a5d0c-abd9-41c5-ba3e-e7110915cfc0"; // default apikey
+         key = SECRETS_DEFAULT_IQAIR_API_KEY;
       }
 
       var params = {

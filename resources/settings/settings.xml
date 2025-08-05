@@ -696,7 +696,7 @@
     <setting propertyKey="@Properties.ctext_input" title="@Strings.ctext">
         <settingConfig type="alphaNumeric" />
     </setting>
-    <setting propertyKey="@Properties.openweathermap_api" title="@Strings.openweathermap_api">
+    <setting propertyKey="@Properties.openweather_api" title="@Strings.openweather_api">
         <settingConfig type="alphaNumeric" />
     </setting>
     <setting propertyKey="@Properties.iqair_api" title="@Strings.iqair_api">

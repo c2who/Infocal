@@ -6,7 +6,7 @@ using Toybox.Application as App;
 import Toybox.Lang;
 
 const DATA_TYPE_AIR_QUALITY = "AirQuality";
-const DATA_TYPE_WEATHER     = "OpenWeatherMapCurrent";
+const DATA_TYPE_WEATHER     = "OpenWeather";
 
 const DATA_TYPE_ERROR_SUFFIX = ".Error";
 
@@ -40,9 +40,9 @@ class BackgroundService extends Sys.ServiceDelegate {
       var pendingWebRequests = App.getApp().getProperty("PendingWebRequests");
       if (pendingWebRequests != null) {
          if (pendingWebRequests[$.DATA_TYPE_WEATHER] != null) {
-            var api_key = App.getApp().getProperty("openweathermap_api");
+            var api_key = App.getApp().getProperty("openweather_api");
             if (api_key.length() == 0) {
-               api_key = "1cb1d74009767c92444cc93abfc31ef5"; // default apikey
+               api_key = SECRETS_DEFAULT_OPENWEATHER_API_KEY; 
             }
             makeWebRequest(
                "https://api.openweathermap.org/data/2.5/weather",
@@ -52,7 +52,7 @@ class BackgroundService extends Sys.ServiceDelegate {
                   "appid" => api_key,
                   "units" => "metric", // Celsius.
                },
-               method(:onReceiveOpenWeatherMapCurrent)
+               method(:onReceiveOpenWeather)
             );
             _expectedResults[$.DATA_TYPE_WEATHER] = 1;
          }
@@ -89,7 +89,7 @@ class BackgroundService extends Sys.ServiceDelegate {
    }
 
    (:background_method)
-   function onReceiveOpenWeatherMapCurrent(responseCode, data) {
+   function onReceiveOpenWeather(responseCode, data) {
       var result;
 
       // Useful data only available if result was successful.

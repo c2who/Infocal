@@ -28,7 +28,7 @@
     <property id="render_arc_line" type="boolean">true</property>
 
     <property id="comp12h" type="number">1</property>
-    <property id="comp2h" type="number">16</property>
+    <property id="comp2h" type="number">38</property>
     <property id="comp4h" type="number">4</property>
     <property id="comp6h" type="number">31</property>
     <property id="comp8h" type="number">3</property>
@@ -55,7 +55,7 @@
 
     <property id="ctext_input" type="string"></property>
 
-    <property id="openweathermap_api" type="string"></property>
+    <property id="openweather_api" type="string"></property>
     <property id="iqair_api" type="string"></property>
 
 </properties>
