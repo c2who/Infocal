@@ -6,7 +6,6 @@ using Toybox.Lang;
 using Toybox.Time.Gregorian as Date;
 using Toybox.Application as App;
 using Toybox.ActivityMonitor as Mon;
-using Toybox.UserProfile;
 
 var small_digi_font = null;
 var second_digi_font = null;
@@ -51,7 +50,7 @@ class HuwaiiView extends WatchUi.WatchFace {
 
    var did_clear = false;
 
-   var screenbuffer = null;
+   var screenbuffer as Graphics.BufferedBitmap? = null;
 
    function initialize() {
       WatchFace.initialize();

@@ -11,7 +11,7 @@
 
     <string id="force_date_english">Force date to English (prevent rectangle on unsupported chars)</string>
 
-    <string id="enable_buffering">Enable buffering (try toggling this if the watchface crashes constantly)</string>
+    <string id="enable_buffering">Enable screen buffering</string>
 
     <!-- Custom countdown settings -->
     <string id="countdown_date">Date for countdown</string>
