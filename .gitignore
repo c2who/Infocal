@@ -1,6 +1,7 @@
-bin/*
+bin/
 build/
 *.DS_Store
 .vscode
+*.code-workspace
 *.iq
-secrets.*
+secrets*.*

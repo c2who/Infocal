@@ -96,12 +96,7 @@ class HuwaiiView extends WatchUi.WatchFace {
       checkBackgroundRequest();
    }
 
-   // Update the view
-   function onUpdate(dc) {
-      var clockTime = System.getClockTime();
-      var current_milli = System.getTimer();
-      var minute_changed = clockTime.min != last_draw_minute;
-
+   function calculateBatteryConsumption() {
       // Calculate battery consumption in days
       var time_now = Time.now();
       if (last_battery_hour == null) {
@@ -144,6 +139,25 @@ class HuwaiiView extends WatchUi.WatchFace {
          last_battery_percent = current_battery;
          last_hour_consumption = temp_last_hour_consumption;
       }
+   }
+
+   //! Update the View.
+   //! This is called when a View is brought to the foreground, after the call to onShow(). 
+   //! There are also some special cases when it will be invoked:
+   //! - On WatchUi.requestUpdate() calls within Widgets and Watch Apps
+   //! - Once per minute in Watch Faces when in low power mode
+   //! - Once per second in Watch Faces when in high power mode
+   //! - Once per second in Data Fields
+   //! 
+   //! @note More than one call to onUpdate() may occur during View transitions
+   function onUpdate(dc) {
+      View.onUpdate(dc); // Force screen clear in simulator!
+
+      var clockTime = System.getClockTime();
+      var current_milli = System.getTimer();
+      var minute_changed = clockTime.min != last_draw_minute;
+
+      calculateBatteryConsumption();
 
       // if this device has the clear dc bug
       // use a screen buffer to save having to redraw
@@ -236,6 +250,17 @@ class HuwaiiView extends WatchUi.WatchFace {
       }
    }
 
+   //! Update a portion of the screen.
+   //! Partial updates can be used to update a small part of the screen to allow for Always On Watch Faces.
+   //! This method is called each second as long as the device power budget is not exceeded. 
+   //! @note     If the call to this method exceeds the power budget of the device, the partial update will not draw and
+   //!           a call to onPowerBudgetExceeded() is made to report the limits that were exceeded.
+   //! @internal It is important to update as small of a portion of the display as possible in this method to avoid 
+   //!           exceeding the allowed power budget. To do this, the application must set the clipping region for the 
+   //!           Graphics.Dc object using the setClip() method. 
+   //! @internal Calls to System.println() and System.print() will not execute on devices when this function is being 
+   //!           invoked, but can be used in the device *simulator*.
+   (:partial_update)
    function onPartialUpdate(dc) {
       if (!Application.getApp().getProperty("use_analog")) {
          if (Application.getApp().getProperty("always_on_second")) {
@@ -270,7 +295,11 @@ class HuwaiiView extends WatchUi.WatchFace {
             var ss = dc.getTextDimensions(heart_text, second_digi_font);
             var s = (ss[0] * 1.2).toNumber();
             var s2 = (second_clip_size[0] * 1.25).toNumber();
-            dc.setClip(heart_x - s2 - 1, second_y, s2 + 2, second_clip_size[1]);
+            dc.setClip(
+               heart_x - s2 - 1, 
+               second_y, 
+               s2 + 2, 
+               second_clip_size[1]);
             dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
             dc.clear();
 
@@ -293,7 +322,9 @@ class HuwaiiView extends WatchUi.WatchFace {
    function onHide() {
    }
 
-   // The user has just looked at their watch. Timers and animations may be started here.
+   //! The device is exiting low power mode.
+   //! Timers and animations may be started here in preparation for once-per-second updates.
+   //! (the user has just looked at their watch)
    function onExitSleep() {
       var dialDisplay = View.findDrawableById("analog");
       if (dialDisplay != null) {
@@ -302,24 +333,14 @@ class HuwaiiView extends WatchUi.WatchFace {
       checkBackgroundRequest();
    }
 
-   // Terminate any active timers and prepare for slow updates.
+   //! The device is entering low power mode.
+   //! Terminate any active timers and prepare for once-per-minute updates.
    function onEnterSleep() {
+      // If the analog dial is used then disable the seconds hand.
       if (Application.getApp().getProperty("use_analog")) {
          var dialDisplay = View.findDrawableById("analog");
          if (dialDisplay != null) {
             dialDisplay.disableSecondHand();
-         }
-      } else {
-         if (Application.getApp().getProperty("always_on_second")) {
-            var dc = screenbuffer.getDc();
-            dc.setClip(
-               second_x,
-               second_y,
-               second_clip_size[0],
-               second_clip_size[1]
-            );
-            dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
-            dc.clear();
          }
       }
    }
