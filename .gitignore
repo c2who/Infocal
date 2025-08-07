@@ -4,4 +4,6 @@ build/
 .vscode
 *.code-workspace
 *.iq
-secrets*.*
+secret*.*
+scripts/devices.csv
+scripts/devices.json
