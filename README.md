@@ -1,5 +1,7 @@
-# Infocal Custom
-Infocal Custom, a watchface for Garmin devices ([Garmin Connect IQ store](https://apps.garmin.com/en-US/apps/a45e74a2-48b5-4c53-9bce-8aae7c685c0b)). This project was forked from [Infocal](https://github.com/RyanDam/Infocal), and would not exist if not for the work RyanDam put into that project.
+# Infocal with Air Quality
+A watchface for Garmin devices ([Garmin Connect IQ store](https://apps.garmin.com/apps/f86d1406-8272-4ede-abe5-cc566dd8e2d6)). 
+
+This project was forked from [Infocal](https://github.com/RyanDam/Infocal), and would not exist if not for the work RyanDam put into that project.
 
 This project is free and will remain free under the MIT License.
 
@@ -7,6 +9,7 @@ This project is free and will remain free under the MIT License.
 
 Infocal is a digital and analogue watchface, carefully made with high quality rendering. It's both customizable and functional. With up to 8 complications on the screen, each complication can show a variety of data:
 
+- Air Quality
 - Date
 - Digital time/2nd timezone
 - Battery
@@ -30,9 +33,12 @@ Infocal is a digital and analogue watchface, carefully made with high quality re
 - Body battery
 - Stress
 
-Please configure your watch face via Garmin Connect Mobile or Garmin Express. Here is how to do it:
+# Configure Settings
 
-https://forums.garmin.com/developer/connect-iq/w/wiki/14/changing-your-app-settings-in-garmin-express-gcm-ciq-mobile-store
+There are a few alternative ways to change the Watch settings:
+- Using Connect IQ App on your phone (recommended)
+- Using[Connect IQ Store App](https://support.garmin.com/en-US/?faq=9rNKwEDKMj2FAxqUVrsudA) on your phone
+- Using [Garmin Express](https://support.garmin.com/en-CA/?faq=6Vl7EbW3qA42l63ZIhJet5) from your computer 
 
 # FAQs
 
