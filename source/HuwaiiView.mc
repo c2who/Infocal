@@ -50,6 +50,10 @@ class HuwaiiView extends WatchUi.WatchFace {
 
    var did_clear = false;
 
+   //! Screen buffer stores a copy of the bitmap rendered to the screen.
+   //! This avoids having to fully redraw the screen each update, improving battery life
+   //! @note Screen bufferring can only be used on (newer) devices with larger memory,
+   //!       on lower-end devices it must be disabled to avoid out of memory errors.
    var screenbuffer as Graphics.BufferedBitmap? = null;
 
    function initialize() {
@@ -150,8 +154,9 @@ class HuwaiiView extends WatchUi.WatchFace {
    //! 
    //! @note More than one call to onUpdate() may occur during View transitions
    function onUpdate(dc) {
-      View.onUpdate(dc); // Force screen clear in simulator!
-
+      // Call parent (required for simulator, mostly no-op on watch?)
+      View.onUpdate(dc);
+      
       var clockTime = System.getClockTime();
       var current_milli = System.getTimer();
       var minute_changed = clockTime.min != last_draw_minute;
@@ -261,47 +266,48 @@ class HuwaiiView extends WatchUi.WatchFace {
    //!           invoked, but can be used in the device *simulator*.
    (:partial_update)
    function onPartialUpdate(dc) {
-      if (!Application.getApp().getProperty("use_analog")) {
-         if (Application.getApp().getProperty("always_on_second")) {
-            var clockTime = System.getClockTime();
-            var second_text = clockTime.sec.format("%02d");
+      if (Application.getApp().getProperty("use_analog")) {
+         // not supported
+         return;
+      }
 
-            dc.setClip(
-               second_x,
-               second_y,
-               second_clip_size[0],
-               second_clip_size[1]
-            );
-            dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
-            dc.clear();
-            dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(
-               second_x,
-               second_y - font_padding,
-               second_digi_font,
-               second_text,
-               Graphics.TEXT_JUSTIFY_LEFT
-            );
-            dc.clearClip();
-         }
+      if (Application.getApp().getProperty("always_on_second")) {
+         var clockTime = System.getClockTime();
+         var second_text = clockTime.sec.format("%02d");
 
-         if (Application.getApp().getProperty("always_on_heart")) {
-            var h = _retrieveHeartrate();
-            var heart_text = "--";
-            if (h != null) {
-               heart_text = h.format("%d");
-            }
-            var ss = dc.getTextDimensions(heart_text, second_digi_font);
-            var s = (ss[0] * 1.2).toNumber();
-            var s2 = (second_clip_size[0] * 1.25).toNumber();
-            dc.setClip(
-               heart_x - s2 - 1, 
-               second_y, 
-               s2 + 2, 
-               second_clip_size[1]);
-            dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
-            dc.clear();
+         dc.setClip(
+            second_x,
+            second_y,
+            second_clip_size[0],
+            second_clip_size[1]
+         );
+         dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
+         dc.clear();
+         dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
+         dc.drawText(
+            second_x,
+            second_y - font_padding,
+            second_digi_font,
+            second_text,
+            Graphics.TEXT_JUSTIFY_LEFT
+         );
+      }
 
+      if (Application.getApp().getProperty("always_on_heart")) {
+         var width = (second_clip_size[0] * 1.25).toNumber();
+         dc.setClip(
+            heart_x - width - 1, 
+            second_y, 
+            width + 2, 
+            second_clip_size[1]);
+         dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
+         dc.clear();
+
+         // fix: remove (and do not draw) heart rate if invalid
+         var h = _retrieveHeartrate();
+         if ((h != null) && (h > 0)) {
+            var heart_text = h.format("%d");
+         
             dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
             dc.drawText(
                heart_x - 1,
@@ -310,9 +316,10 @@ class HuwaiiView extends WatchUi.WatchFace {
                heart_text,
                Graphics.TEXT_JUSTIFY_RIGHT
             );
-            dc.clearClip();
          }
       }
+      // Finally, remove any applied dc clipping
+      dc.clearClip();
    }
 
    // Called when this View is removed from the screen. Save the
