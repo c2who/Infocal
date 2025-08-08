@@ -31,8 +31,8 @@ class DigitalDial extends Ui.Drawable {
       alignment = Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER;
 
       bonusy_smallsize = 0;
-      if (center_x == 195) {
-         bonusy_smallsize = -35;
+      if (center_x == 195) { // 390x390 screen
+         bonusy_smallsize = -35; 
       }
    }
 
@@ -46,6 +46,7 @@ class DigitalDial extends Ui.Drawable {
       midDigitalFont = null;
    }
 
+   // TODO: Simplify font handling (remove duplicate vars)
    function checkCurrentFont() {
       var digital_style = Application.getApp().getProperty("digital_style");
       if (digital_style == 0) {
@@ -269,37 +270,36 @@ class DigitalDial extends Ui.Drawable {
          var hourText = hour.format(number_formater);
          var minuText = minute.format("%02d");
 
-         var bonus = digital_style == 3 ? -13 : 0;
          var boldF = digital_style == 3 ? xmidBoldFont : midBoldFont;
          var normF = digital_style == 3 ? xmidSemiFont : midSemiFont;
 
-         var hourW = dc.getTextWidthInPixels(hourText, boldF).toFloat();
-         var h = dc.getFontHeight(boldF).toFloat();
-         var minuW = dc.getTextWidthInPixels(minuText, normF).toFloat();
-         var half = (hourW + minuW + 6.0) / 2.0;
-         var left = center_x_l - half;
+         var hourW = dc.getTextWidthInPixels(hourText, boldF);
+         var minuW = dc.getTextWidthInPixels(minuText, normF);
+         var width = hourW + minuW + 6;
+         var height = dc.getFontHeight(boldF);
+         var left = center_x_l - width/2;
 
-         // Draw clock
+         // Draw time
+         // FIXME: Digital font height is 2x character height (font bounds are incorrect)
          dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
          dc.drawText(
-            left.toNumber(),
-            center_y_l - 70 + bonus + bonusy_smallsize,
+            left,
+            center_y - height*0.75,
             boldF,
             hourText,
             Graphics.TEXT_JUSTIFY_LEFT
          );
          dc.drawText(
-            (left + hourW + 6.0).toNumber(),
-            center_y_l - 70 + bonus + bonusy_smallsize,
+            left + hourW + 6,
+            center_y - height*0.75,
             normF,
             minuText,
             Graphics.TEXT_JUSTIFY_LEFT
          );
 
          // Calculate global offsets
-         var f_align = 40;
-         second_x_l = center_x_l + half + 1;
-         heart_x_l = center_x_l - half - 1;
+         second_x_l = center_x_l + width/2 + 1;
+         heart_x_l = center_x_l - width/2 - 1;
 
          second_y_l =
             center_y_l -

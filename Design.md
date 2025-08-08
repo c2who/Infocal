@@ -41,3 +41,12 @@ can be built into the application by populating secrets.mc.
 In the Garmin Simulator, you can run a recorded activity (FIT/GPX) to set
 activity current location (Simulation > Activity Data).
 > You can export an activity from [Garmin Connect account](https://connect.garmin.com/modern/activities)
+
+### Simulator Limitations
+The Garmin Simulator does not implent all of the device behaviors, here are some of the known limitations:
+- Watch cannot enter/exit sleep mode - always in high-power mode
+- OnUpdate() does not clear the screen 
+  (all newer watches clear screen on update, so must perform a full screen refresh; 
+  older watches allowed incremental draw on update, allowing incredible power efficiency)
+
+
