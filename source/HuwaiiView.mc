@@ -283,7 +283,7 @@ class HuwaiiView extends WatchUi.WatchFace {
          dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
          dc.drawText(
             second_x,
-            second_y - font_padding,
+            second_y,
             second_digi_font,
             second_text,
             Graphics.TEXT_JUSTIFY_LEFT
@@ -291,7 +291,7 @@ class HuwaiiView extends WatchUi.WatchFace {
       }
 
       if (Application.getApp().getProperty("always_on_heart")) {
-         var width = (second_clip_size[0] * 1.25).toNumber();
+         var width = second_clip_size[0];
          dc.setClip(
             heart_x - width - 1, 
             second_y, 
@@ -308,7 +308,7 @@ class HuwaiiView extends WatchUi.WatchFace {
             dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
             dc.drawText(
                heart_x - 1,
-               second_y - font_padding,
+               second_y,
                second_digi_font,
                heart_text,
                Graphics.TEXT_JUSTIFY_RIGHT
@@ -434,27 +434,17 @@ class HuwaiiView extends WatchUi.WatchFace {
 
    function checkAlwaysOnStyle() {
       var always_on_style = Application.getApp().getProperty("always_on_style");
-      if (center_x == 195) {
          if (always_on_style == 0) {
             second_digi_font = WatchUi.loadResource(Rez.Fonts.secodigi);
-            second_font_height_half = 16;
-            second_clip_size = [40, 30];
          } else {
             second_digi_font = WatchUi.loadResource(Rez.Fonts.xsecodigi);
-            second_font_height_half = 16;
-            second_clip_size = [52, 44];
-         }
-      } else {
-         if (always_on_style == 0) {
-            second_digi_font = WatchUi.loadResource(Rez.Fonts.secodigi);
-            second_font_height_half = 7;
-            second_clip_size = [20, 15];
-         } else {
-            second_digi_font = WatchUi.loadResource(Rez.Fonts.xsecodigi);
-            second_font_height_half = 14;
-            second_clip_size = [26, 22];
-         }
       }
+
+      // Measure clipping area for seconds and heart rate AOD
+      var width  = dc.getTextWidthInPixels("200", second_digi_font) +;
+      var height = Graphics.getFontHeight(second_digi_font);
+      second_font_height_half = height/2;
+      second_clip_size = [width, height];
    }
 
    function removeAllFonts() {

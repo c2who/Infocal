@@ -49,4 +49,10 @@ The Garmin Simulator does not implent all of the device behaviors, here are some
   (all newer watches clear screen on update, so must perform a full screen refresh; 
   older watches allowed incremental draw on update, allowing incredible power efficiency)
 
+# Fonts
 
+## DigitalDial Fonts
+seconds and heart rate digit fonts are stored in:
+  - secodigi.fntc (Samll size)
+  - xsecodigi.fntc (Medium size)
+  The font files have been edited to fix the incorrect lineHeight

@@ -103,13 +103,6 @@ class DigitalDial extends Ui.Drawable {
       }
       checkCurrentFont();
 
-      // Get locals
-      var second_x_l = second_x;
-      var second_y_l = second_y;
-      var heart_x_l = heart_x;
-      var center_x_l = center_x;
-      var center_y_l = center_y;
-
       var currentSettings = System.getDeviceSettings();
       var clockTime = System.getClockTime();
       var hour = clockTime.hour;
@@ -125,22 +118,22 @@ class DigitalDial extends Ui.Drawable {
       var digital_style = Application.getApp().getProperty("digital_style");
       var alwayon_style = Application.getApp().getProperty("always_on_style");
       if (digital_style == 0 || digital_style == 2) {
-         // Big number in center style
+         // Big number in center_x style
          var big_number_type = Application.getApp().getProperty("big_number_type");
          var bignumber = (big_number_type == 0) ? minute : hour;
          var smallnumber = (big_number_type == 0) ? hour : minute;
 
          var target_center_font = digital_style == 0 ? digitalFont : xdigitalFont;
 
-         // Draw center number
+         // Draw center_x number
          var bigText = bignumber.format(number_formater);
          dc.setPenWidth(1);
          dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
          var h = dc.getFontHeight(target_center_font);
          var w = dc.getTextWidthInPixels(bigText, target_center_font);
          dc.drawText(
-            center_x_l,
-            center_y_l - h / 4,
+            center_x,
+            center_y - h / 4,
             target_center_font,
             bigText,
             alignment
@@ -151,8 +144,8 @@ class DigitalDial extends Ui.Drawable {
             dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
             var w2 = dc.getTextWidthInPixels("\\", target_center_font);
             dc.drawText(
-               center_x_l + w2 - w / 2,
-               center_y_l - h / 4,
+               center_x + w2 - w / 2,
+               center_y - h / 4,
                target_center_font,
                "\\",
                Graphics.TEXT_JUSTIFY_VCENTER
@@ -161,19 +154,20 @@ class DigitalDial extends Ui.Drawable {
 
          // Calculate global offsets
          var f_align = digital_style == 0 ? 62 : 71;
-         if (center_x_l == 195) {
+         if (center_x == 195) {
             f_align = f_align + 40;
          }
-         second_x_l = center_x_l + w / 2 + 3;
-         heart_x_l = center_x_l - w / 2 - 3;
-         if (center_x_l == 109 && digital_style == 2) {
+         var second_x_l = center_x + w / 2 + 3;
+         var heart_x_l = center_x - w / 2 - 3;
+         var second_y_l = 0;
+         if (center_x == 109 && digital_style == 2) {
             second_y_l =
-               center_y_l -
+               center_y -
                second_font_height_half / 2 -
                (alwayon_style == 0 ? 3 : 6);
          } else {
             second_y_l =
-               center_y_l +
+               center_y +
                (h - f_align) / 2 -
                second_font_height_half * 2 +
                (alwayon_style == 0 ? 0 : 5);
@@ -184,20 +178,20 @@ class DigitalDial extends Ui.Drawable {
          var bonus_alignment = 0;
          var extra_info_alignment = 0;
          var vertical_alignment = 0;
-         if (center_x_l == 109) {
+         if (center_x == 109) {
             bonus_alignment = 4;
             if (digital_style == 2) {
                bonus_alignment = 4;
                vertical_alignment = -23;
             }
-         } else if (center_x_l == 120 && digital_style == 2) {
+         } else if (center_x == 120 && digital_style == 2) {
             bonus_alignment = 6;
             extra_info_alignment = 4;
          }
-         var target_info_x = center_x_l * 1.6;
+         var target_info_x = center_x * 1.6;
          var left_digital_info = Application.getApp().getProperty("left_digital_info");
          if (left_digital_info) {
-            target_info_x = center_x_l * 0.4;
+            target_info_x = center_x * 0.4;
             bonus_alignment = -bonus_alignment;
             extra_info_alignment = -extra_info_alignment;
          }
@@ -208,8 +202,8 @@ class DigitalDial extends Ui.Drawable {
          dc.setPenWidth(20);
          if (left_digital_info) {
             dc.drawArc(
-               center_x_l,
-               center_y_l,
+               center_x,
+               center_y,
                barRadius,
                Graphics.ARC_CLOCKWISE,
                180 - 10,
@@ -217,8 +211,8 @@ class DigitalDial extends Ui.Drawable {
             );
          } else {
             dc.drawArc(
-               center_x_l,
-               center_y_l,
+               center_x,
+               center_y,
                barRadius,
                Graphics.ARC_CLOCKWISE,
                60 - 10,
@@ -232,14 +226,14 @@ class DigitalDial extends Ui.Drawable {
          var h2 = dc.getFontHeight(midDigitalFont);
          dc.drawText(
             target_info_x + bonus_alignment,
-            center_y_l * 0.7 - h2 / 4 + 5 + vertical_alignment,
+            center_y * 0.7 - h2 / 4 + 5 + vertical_alignment,
             midDigitalFont,
             smallnumber.format(number_formater),
             alignment
          );
 
          // If there is no room for the date, return and don't draw it
-         if (center_x_l == 109 && digital_style == 2) {
+         if (center_x == 109 && digital_style == 2) {
             return;
          }
 
@@ -249,7 +243,7 @@ class DigitalDial extends Ui.Drawable {
          var h3 = dc.getFontHeight(small_digi_font);
          dc.drawText(
             target_info_x - bonus_alignment + extra_info_alignment,
-            center_y_l * 0.4 - h3 / 4 + 7,
+            center_y * 0.4 - h3 / 4 + 7,
             small_digi_font,
             dateText,
             alignment
@@ -261,57 +255,56 @@ class DigitalDial extends Ui.Drawable {
          dc.setColor(gsecondary_color, Graphics.COLOR_TRANSPARENT);
          dc.drawLine(
             target_info_x - bonus_alignment - w3 / 2 + extra_info_alignment,
-            center_y_l * 0.5 + 7,
+            center_y * 0.5 + 7,
             target_info_x - bonus_alignment + w3 / 2 + extra_info_alignment,
-            center_y_l * 0.5 + 7
+            center_y * 0.5 + 7
          );
+
+         // Save globals
+         second_x = second_x_l;
+         second_y = second_y_l;
+         heart_x = heart_x_l;
+
       } else if (digital_style == 1 || digital_style == 3) {
-         // All numbers in center style
+         // All numbers in center_x style
          var hourText = hour.format(number_formater);
          var minuText = minute.format("%02d");
 
          var boldF = digital_style == 3 ? xmidBoldFont : midBoldFont;
          var normF = digital_style == 3 ? xmidSemiFont : midSemiFont;
 
+         
+         // BUG: Digital font is bottom-aligned at 2x character height (font bounds are incorrect)
+         var height = dc.getFontHeight(boldF);
+         var y_offset = height * 0.75;
          var hourW = dc.getTextWidthInPixels(hourText, boldF);
          var minuW = dc.getTextWidthInPixels(minuText, normF);
          var width = hourW + minuW + 6;
-         var height = dc.getFontHeight(boldF);
-         var left = center_x_l - width/2;
-
+         var left = center_x - width/2;
+         
          // Draw time
-         // FIXME: Digital font height is 2x character height (font bounds are incorrect)
          dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
          dc.drawText(
             left,
-            center_y - height*0.75,
+            center_y - y_offset,
             boldF,
             hourText,
             Graphics.TEXT_JUSTIFY_LEFT
          );
          dc.drawText(
             left + hourW + 6,
-            center_y - height*0.75,
+            center_y - y_offset,
             normF,
             minuText,
             Graphics.TEXT_JUSTIFY_LEFT
          );
 
-         // Calculate global offsets
-         second_x_l = center_x_l + width/2 + 1;
-         heart_x_l = center_x_l - width/2 - 1;
-
-         second_y_l =
-            center_y_l -
-            second_font_height_half / 2 -
-            (alwayon_style == 0 ? 3 : 6);
+         // Save globals - Calculate Layout of seconds and heart rate 
+         second_x = center_x + width/2 + 1;
+         heart_x = center_x - width/2 - 1;
+         second_y = center_y - second_font_height_half; // centre-justified
       }
 
-      // Save globals
-      second_x = second_x_l;
-      second_y = second_y_l;
-      heart_x = heart_x_l;
-
-      removeFont();
+      removeFont(); // XXX: Why removing font on background draw?? - is this valid to save memory?
    }
 }
