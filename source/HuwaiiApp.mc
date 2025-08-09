@@ -93,8 +93,7 @@ class HuwaiiApp extends Application.AppBase {
          // checkPendingWebRequests() can be excluded to save memory.
          checkPendingWebRequests();
       }
-      mView.checkGlobals();
-      mView.last_draw_minute = -1;
+      mView.onSettingsChanged();
       WatchUi.requestUpdate(); // update the view to reflect changes
    }
 
@@ -286,7 +285,6 @@ class HuwaiiApp extends Application.AppBase {
       for(var i=0; i< keys.size(); i++) {
          var type = keys[i];
 
-         var storedData = getProperty(type);
          var receivedData = data[type]; // The actual data received: strip away type key.
 
          // New data received: clear pendingWebRequests flag and overwrite stored data.

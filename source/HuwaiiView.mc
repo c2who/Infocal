@@ -36,19 +36,19 @@ var last_battery_percent = -1;
 var last_hour_consumption = -1;
 
 class HuwaiiView extends WatchUi.WatchFace {
-   var last_draw_minute = -1;
-   var last_resume_milli = 0;
-   var restore_from_resume = false;
-   var restore_web_requests = false;
+   private var _layout_changed as Lang.Boolean = false;
+   private var last_draw_minute = -1;
+   private var last_resume_milli = 0;
+   private var restore_from_resume = false;
+   private var restore_web_requests = false;
 
-   var last_battery_hour = null;
+   private var last_battery_hour = null;
 
-   var font_padding = 12;
-   var font_height_half = 7;
+   private var font_height_half = 7;
 
-   var face_radius;
+   private var face_radius;
 
-   var did_clear = false;
+   private var did_clear = false;
 
    //! Screen buffer stores a copy of the bitmap rendered to the screen.
    //! This avoids having to fully redraw the screen each update, improving battery life
@@ -62,12 +62,19 @@ class HuwaiiView extends WatchUi.WatchFace {
 
    // Load your resources here
    function onLayout(dc) {
-      small_digi_font = WatchUi.loadResource(Rez.Fonts.smadigi);
+      _layout_changed = false;
+
+      // Set globals
       center_x = dc.getWidth() / 2;
       center_y = dc.getHeight() / 2;
-
       face_radius = center_x - ((18 * center_x) / 120).toNumber();
 
+      // Load global fonts
+      if (small_digi_font == null) {
+         small_digi_font = WatchUi.loadResource(Rez.Fonts.smadigi);
+      }
+
+      // Load Watchface drawables from layout.xml (creates all Ui.Drawable classes)
       setLayout(Rez.Layouts.WatchFace(dc));
 
       // vivoactive4(s) sometimes clears the watch dc before onupdate
@@ -85,7 +92,8 @@ class HuwaiiView extends WatchUi.WatchFace {
             screenbuffer = new Graphics.BufferedBitmap(params);
          }
       }
-      checkGlobals();
+      checkTheme();
+      updateAlwaysOnFieldsLayout(dc);
    }
 
    // Called when this View is brought to the foreground. Restore
@@ -97,6 +105,11 @@ class HuwaiiView extends WatchUi.WatchFace {
       restore_web_requests = true;
       last_resume_milli = System.getTimer();
       checkBackgroundRequest();
+   }
+
+   function onSettingsChanged() {
+      last_draw_minute = -1;
+      _layout_changed = true;
    }
 
    function calculateBatteryConsumption() {
@@ -158,6 +171,11 @@ class HuwaiiView extends WatchUi.WatchFace {
       var current_milli = System.getTimer();
       var minute_changed = clockTime.min != last_draw_minute;
 
+      // force update layout if settings changed
+      if (_layout_changed) {
+         onLayout(dc);
+      }
+      
       calculateBatteryConsumption();
 
       // if this device has the clear dc bug
@@ -293,9 +311,9 @@ class HuwaiiView extends WatchUi.WatchFace {
       if (Application.getApp().getProperty("always_on_heart")) {
          var width = second_clip_size[0];
          dc.setClip(
-            heart_x - width - 1, 
-            second_y, 
-            width + 2, 
+            heart_x - width - 1,
+            second_y,
+            width + 2,
             second_clip_size[1]);
          dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
          dc.clear();
@@ -346,11 +364,6 @@ class HuwaiiView extends WatchUi.WatchFace {
             dialDisplay.disableSecondHand();
          }
       }
-   }
-
-   function checkGlobals() {
-      checkTheme();
-      checkAlwaysOnStyle();
    }
 
    function checkTheme() {
@@ -432,12 +445,12 @@ class HuwaiiView extends WatchUi.WatchFace {
       }
    }
 
-   function checkAlwaysOnStyle() {
+   function updateAlwaysOnFieldsLayout(dc as Graphics.Dc) {
       var always_on_style = Application.getApp().getProperty("always_on_style");
-         if (always_on_style == 0) {
-            second_digi_font = WatchUi.loadResource(Rez.Fonts.secodigi);
-         } else {
-            second_digi_font = WatchUi.loadResource(Rez.Fonts.xsecodigi);
+      if (always_on_style == 0) {
+         second_digi_font = WatchUi.loadResource(Rez.Fonts.secodigi);
+      } else {
+         second_digi_font = WatchUi.loadResource(Rez.Fonts.xsecodigi);
       }
 
       // Measure clipping area for seconds and heart rate AOD
