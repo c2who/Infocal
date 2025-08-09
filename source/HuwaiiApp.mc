@@ -122,8 +122,9 @@ class HuwaiiApp extends Application.AppBase {
 
       setProperty("PendingWebRequests", pendingWebRequests);
 
-      // If there are any pending requests:
-      if (pendingWebRequests.keys().size() > 0) {
+      // If there are any pending data requests (and phone is connected)
+      var settings = System.getDeviceSettings();
+      if (settings.phoneConnected && (pendingWebRequests.keys().size() > 0)) {
          // Register for background temporal event as soon as possible.
          var lastTime = Bg.getLastTemporalEventTime();
 
