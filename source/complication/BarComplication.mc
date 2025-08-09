@@ -88,7 +88,7 @@ class BarComplication extends Ui.Drawable {
    }
 
    function get_title() {
-      return "Step 2577";
+      return "Step ----";
    }
 
    function get_weather_icon() {
