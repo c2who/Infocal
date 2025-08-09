@@ -1,7 +1,7 @@
 using Toybox.Application;
+using Toybox.Background;
 using Toybox.Activity as Activity;
 using Toybox.System as Sys;
-using Toybox.Background as Bg;
 using Toybox.WatchUi as Ui;
 using Toybox.Time;
 using Toybox.Math;
@@ -11,7 +11,6 @@ import Toybox.Lang;
 
 // In-memory current location.
 // Previously persisted in App.Storage, but now persisted in Object Store due to #86 workaround for App.Storage firmware bug.
-// Current location retrieved/saved in checkPendingWebRequests().
 // Persistence allows weather and sunrise/sunset features to be used after watch face restart, even if watch no longer has current
 // location available.
 var gLocationLat = null;
@@ -35,15 +34,10 @@ function convertCoorY(radians, radius) {
 
 (:background)
 class HuwaiiApp extends Application.AppBase {
-   var mView;
-   var days;
-   var months;
-
+   var _View;
    var _currentFieldIds as Array<Number> = {};
 
-   function initialize() {
-      AppBase.initialize();
-      days = {
+   static const days = {
          Date.DAY_MONDAY => "MON",
          Date.DAY_TUESDAY => "TUE",
          Date.DAY_WEDNESDAY => "WED",
@@ -52,7 +46,7 @@ class HuwaiiApp extends Application.AppBase {
          Date.DAY_SATURDAY => "SAT",
          Date.DAY_SUNDAY => "SUN",
       };
-      months = {
+   static const months = {
          Date.MONTH_JANUARY => "JAN",
          Date.MONTH_FEBRUARY => "FEB",
          Date.MONTH_MARCH => "MAR",
@@ -66,6 +60,10 @@ class HuwaiiApp extends Application.AppBase {
          Date.MONTH_NOVEMBER => "NOV",
          Date.MONTH_DECEMBER => "DEC",
       };
+
+
+   function initialize() {
+      AppBase.initialize();
    }
 
    // onStart() is called on application start up
@@ -77,23 +75,21 @@ class HuwaiiApp extends Application.AppBase {
    // Return the initial view of your application here
    function getInitialView() {
       updateCurrentDataFieldIds();
-      mView = new HuwaiiView();
-      return [mView];
+      _View = new HuwaiiView();
+      return [_View];
    }
 
    function getView() {
-      return mView;
+      return _View;
    }
 
    function onSettingsChanged() {
       // triggered by settings change in GCM
       updateCurrentDataFieldIds();
 
-      if (HuwaiiApp has :checkPendingWebRequests) {
-         // checkPendingWebRequests() can be excluded to save memory.
-         checkPendingWebRequests();
-      }
-      mView.onSettingsChanged();
+      checkPendingWebRequests();
+      
+      _View.onSettingsChanged();
       WatchUi.requestUpdate(); // update the view to reflect changes
    }
 
@@ -101,7 +97,6 @@ class HuwaiiApp extends Application.AppBase {
    // If so, set approrpiate pendingWebRequests flag for use by BackgroundService, then register for
    // temporal event.
    // Currently called on layout initialisation, when settings change, and on exiting sleep.
-   (:background_method)
    function checkPendingWebRequests() {
       // Update last known location
       updateLastLocation();
@@ -116,8 +111,11 @@ class HuwaiiApp extends Application.AppBase {
          pendingWebRequests[$.DATA_TYPE_WEATHER] = true;
       }
 
-      if (needAirQualityDataUpdate()) {
-         pendingWebRequests[$.DATA_TYPE_AIR_QUALITY] = true;
+      // If AirQuality data in used
+      if (isAnyDataFieldsInUse( [FIELD_TYPE_AIR_QUALITY] )) {
+         if (AirQualityField.needsDataUpdate()) {
+            pendingWebRequests[IQAirClient.DATA_TYPE] = true;
+         }
       }
 
       setProperty("PendingWebRequests", pendingWebRequests);
@@ -126,14 +124,14 @@ class HuwaiiApp extends Application.AppBase {
       var settings = System.getDeviceSettings();
       if (settings.phoneConnected && (pendingWebRequests.keys().size() > 0)) {
          // Register for background temporal event as soon as possible.
-         var lastTime = Bg.getLastTemporalEventTime();
-
+         var lastTime = Background.getLastTemporalEventTime();
+         
          if (lastTime) {
             // Events scheduled for a time in the past trigger immediately.
             var nextTime = lastTime.add(new Time.Duration(5 * 60));
-            Bg.registerForTemporalEvent(nextTime);
+            Background.registerForTemporalEvent(nextTime);
          } else {
-            Bg.registerForTemporalEvent(Time.now());
+            Background.registerForTemporalEvent(Time.now());
          }
       }
    }
@@ -201,23 +199,23 @@ class HuwaiiApp extends Application.AppBase {
          return false;
       }
 
-      var lastData = getProperty($.DATA_TYPE_WEATHER);
+      var data = getProperty($.DATA_TYPE_WEATHER);
 
-      if ((lastData == null) || (lastData["clientTs"] == null)) {
+      if ((data == null) || (data["clientTs"] == null)) {
          // No existing data.
          return true;
-      } else if (lastData["cod"] == 200) {
+      } else if (data["cod"] == 200) {
          // Successfully received weather data.
          // TODO: Consider requesting weather at sunrise/sunset to update weather icon.
          if (
             // Existing data is older than 15 mins.
             // Note: We use clientTs as we do not *know* how often weather data is updated (typically hourly)
-            Time.now().value() > (lastData["clientTs"] + (15 * 60)) ||
+            Time.now().value() > (data["clientTs"] + (15 * 60)) ||
             // Existing data not for this location.
             // Not a great test, as a degree of longitude varies betwee 69 (equator) and 0 (pole) miles, but simpler than
             // true distance calculation. 0.02 degree of latitude is just over a mile.
-            (gLocationLat - lastData["lat"]).abs() > 0.02 ||
-            (gLocationLng - lastData["lon"]).abs() > 0.02) {
+            (gLocationLat - data["lat"]).abs() > 0.02 ||
+            (gLocationLng - data["lon"]).abs() > 0.02) {
             return true;
          }
       } else {
@@ -226,72 +224,37 @@ class HuwaiiApp extends Application.AppBase {
       }
    }
 
-   function needAirQualityDataUpdate() as Boolean {
-      // AirQuality data field must be shown.
-      if (!isAnyDataFieldsInUse( [FIELD_TYPE_AIR_QUALITY] )) {
-         return false;
-      }
-
-      // Check data validity
-      var lastData = getProperty($.DATA_TYPE_AIR_QUALITY);
-      if (  (
-               // No valid data.
-               (lastData == null) || (lastData["clientTs"] == null)
-            ) || (
-               // Existing data is older than 30 mins.
-               // Note: We use clientTs as we do not *know* how often weather data is updated (typically hourly)
-               Time.now().value() > (lastData["clientTs"] + (30 * 60))
-            )
-      ) {
-         return true;
-      }
-
-      // Check location
-      // Note: As we use "Nearest City" API, we expect there to be some distance between user and location returned from API.
-      if (  (
-               // Current location data valid
-               (gLocationLat != null) && (gLocationLat != null)
-            ) && (
-               // Existing data not for this location.
-               // Not a great test, as a degree of longitude varies betwee 69 (equator) and 0 (pole) miles, but simpler than
-               // true distance calculation. 0.145 degree of latitude is 10 mile.
-               // Note as API is using "Nearest City" we use 10 mile resolution before faster update
-               ((gLocationLat - lastData["lat"]).abs() > 0.145) ||
-               ((gLocationLng - lastData["lon"]).abs() > 0.145)
-            )
-      ) {
-         return true;
-      }
-
-      // Data still valid
-      return false;
-   }
-
-   (:background_method)
+   //! Get a ServiceDelegate to run background tasks for this app.
+   //! When a ServiceDelegate is retrieved, the following will occur:
+   //! - The method triggered within the ServiceDelegate will be run
+   //! - The background task will exit using Background.exit() or System.exit()
+   //! @warn The background task will be automatically terminated after 30 seconds if it is not exited by these methods
    function getServiceDelegate() {
       return [new BackgroundService()];
    }
 
-   // Handle data received from BackgroundService.
-   // On success, clear appropriate pendingWebRequests flag.
-   // data is Dictionary with single key that indicates the data type received. This corresponds with Object Store and
-   // pendingWebRequests keys.
-   function onBackgroundData(data) {
+   //! Handle data passed from a ServiceDelegate to the application.
+   //! @param  service_data  Dictionary of data returned from service delegate
+   //!
+   //! When the Background process terminates, a data payload may be available. 
+   //! - If the main application is active when this occurs, the data will be passed to the application's onBackgroundData() method. 
+   //! - If the main application is not active, the data will be saved until the next time the application is launched and  
+   //!   will be passed to the application after the onStart() method completes.
+   function onBackgroundData(service_data) {
       var pendingWebRequests = getProperty("PendingWebRequests");
       if (pendingWebRequests == null) {
          pendingWebRequests = {};
       }
 
-      var keys = data.keys();
+      var keys = service_data.keys();
       for(var i=0; i< keys.size(); i++) {
          var type = keys[i];
+         var data = service_data[type];
 
-         var receivedData = data[type]; // The actual data received: strip away type key.
-
-         // New data received: clear pendingWebRequests flag and overwrite stored data.
+         // New data received: clear pendingWebRequests flag and persist data.
          pendingWebRequests.remove(type);
          setProperty("PendingWebRequests", pendingWebRequests);
-         setProperty(type, receivedData);
+         setProperty(type, data);
       }
 
       // Save list of any remaining background requests

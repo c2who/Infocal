@@ -1,14 +1,20 @@
-using Toybox.Background as Bg;
+using Toybox.Background;
 using Toybox.System as Sys;
 using Toybox.Communications as Comms;
 using Toybox.Application as App;
 
 import Toybox.Lang;
 
-const DATA_TYPE_AIR_QUALITY = "AirQuality";
 const DATA_TYPE_WEATHER     = "OpenWeather";
 
 const DATA_TYPE_ERROR_SUFFIX = ".Error";
+
+
+
+// [ ] ? Update application to use Application.Properties, Application.Storage (API level 2.4.0+) ?
+//        https://developer.garmin.com/connect-iq/core-topics/persisting-data/
+//        (1) Background processes cannot save Properties.
+//        (2) Application.Storage can save in background process since ConnectIQ 3.2.0
 
 //! Background Service
 //! Container for all background service requests.
@@ -31,24 +37,24 @@ class BackgroundService extends Sys.ServiceDelegate {
    function initialize() {
       Sys.ServiceDelegate.initialize();
    }
-
+   
    // Read pending web requests, and call appropriate web request function.
    // This function determines priority of web requests, if multiple are pending.
    // Pending web request flag will be cleared only once the background data has been successfully received.
    (:background_method)
    function onTemporalEvent() {
-      var pendingWebRequests = App.getApp().getProperty("PendingWebRequests");
+      var pendingWebRequests = App.AppBase.getProperty("PendingWebRequests");
       if (pendingWebRequests != null) {
          if (pendingWebRequests[$.DATA_TYPE_WEATHER] != null) {
-            var api_key = App.getApp().getProperty("openweather_api");
+            var api_key = App.AppBase.getProperty("openweather_api");
             if (api_key.length() == 0) {
                api_key = SECRETS_DEFAULT_OPENWEATHER_API_KEY; 
             }
             makeWebRequest(
                "https://api.openweathermap.org/data/2.5/weather",
                {
-                  "lat" => App.getApp().getProperty("LastLocationLat"),
-                  "lon" => App.getApp().getProperty("LastLocationLng"),
+                  "lat" => App.AppBase.getProperty("LastLocationLat"),
+                  "lon" => App.AppBase.getProperty("LastLocationLng"),
                   "appid" => api_key,
                   "units" => "metric", // Celsius.
                },
@@ -57,13 +63,13 @@ class BackgroundService extends Sys.ServiceDelegate {
             _expectedResults[$.DATA_TYPE_WEATHER] = 1;
          }
 
-         if (pendingWebRequests[$.DATA_TYPE_AIR_QUALITY] != null) {
+         if (pendingWebRequests[IQAirClient.DATA_TYPE] != null) {
             // Create client
             if (_iqAirClient == null) {
                _iqAirClient = new IQAirClient();
             }
             _iqAirClient.requestAirQualityData(method(:onReceiveClientData));
-            _expectedResults[$.DATA_TYPE_AIR_QUALITY] = 1;
+            _expectedResults[IQAirClient.DATA_TYPE] = 1;
          }
       }
    }
@@ -74,7 +80,7 @@ class BackgroundService extends Sys.ServiceDelegate {
       // Store data
       if (responseCode == 200) {
          // Valid data
-         _results[type] = data;
+      _results[type] = data;
       } else {
          // return error to the caller, without over-writing valid data
          // Note: Does not clear PendingWebRequests so request will be re-tried on next temporal event (every 5 minutes)
@@ -84,7 +90,7 @@ class BackgroundService extends Sys.ServiceDelegate {
       // Exit background service and return results when all requests complete
       _expectedResults.remove(type);
       if (_expectedResults.size() == 0) {
-         Bg.exit(_results);
+         Background.exit(_results);
       }
    }
 

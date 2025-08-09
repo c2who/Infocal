@@ -16,7 +16,7 @@ import Toybox.Lang;
 class IQAirClient {
 
    const CLIENT_NAME = "IQAir";
-   const DATA_TYPE_AIR_QUALITY = "AirQuality";
+   static const DATA_TYPE = "AirQuality";
 
    //! Uses "Get nearest city data" API to read AQI data
    //! (IP geolocation) http://api.airvisual.com/v2/nearest_city?key={{YOUR_API_KEY}}
@@ -100,7 +100,7 @@ class IQAirClient {
       }
 
       // Send formatted result to registered callback
-      _callback.invoke(DATA_TYPE_AIR_QUALITY, responseCode, result);
+      _callback.invoke(DATA_TYPE, responseCode, result);
    }
 
    protected function makeWebRequest(url, params, callback) as Void {

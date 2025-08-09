@@ -106,7 +106,7 @@ class HuwaiiView extends WatchUi.WatchFace {
    function onShow() {
       last_draw_minute = -1;
       restore_from_resume = true;
-      checkBackgroundRequest();
+      App.getApp().checkPendingWebRequests();
    }
 
    function onSettingsChanged() {
@@ -183,7 +183,7 @@ class HuwaiiView extends WatchUi.WatchFace {
       }
       
       if (restore_from_resume || minute_changed) {
-         checkBackgroundRequest();
+         App.getApp().checkPendingWebRequests();
       }
 
       // On older watches, can get away with only performing full update every minute
@@ -334,7 +334,7 @@ class HuwaiiView extends WatchUi.WatchFace {
       if (dialDisplay != null) {
          dialDisplay.enableSecondHand();
       }
-      checkBackgroundRequest();
+      App.getApp().checkPendingWebRequests();
    }
 
    //! The device is entering low power mode.
@@ -446,12 +446,5 @@ class HuwaiiView extends WatchUi.WatchFace {
    function removeAllFonts() {
       View.findDrawableById("analog").removeFont();
       View.findDrawableById("digital").removeFont();
-   }
-
-   function checkBackgroundRequest() {
-      if (HuwaiiApp has :checkPendingWebRequests) {
-         // checkPendingWebRequests() can be excluded to save memory.
-         App.getApp().checkPendingWebRequests(); // Depends on mDataFields.hasField().
-      }
    }
 }
