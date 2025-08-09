@@ -1,3 +1,4 @@
 <properties>
+    <!-- Enable screen buffering (devices have sufficient memory)-->
     <property id="enable_buffering" type="boolean">true</property>
 </properties>

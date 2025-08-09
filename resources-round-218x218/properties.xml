@@ -1,0 +1,8 @@
+<properties>
+    <!-- Enable screen buffering (selected devices have sufficient memory)-->
+    <property id="enable_buffering" type="boolean">true</property>
+
+    <!-- Default to smaller size selections -->
+    <property id="digital_style" type="number">1</property>
+    <property id="always_on_style" type="number">0</property>
+</properties>

@@ -2,7 +2,7 @@
     <!-- Enable screen buffering (devices have sufficient memory)-->
     <property id="enable_buffering" type="boolean">true</property>
 
-    <!-- Default to medium size selections -->
+    <!-- Default to medium+small size selections -->
     <property id="digital_style" type="number">3</property>
-    <property id="always_on_style" type="number">1</property>
+    <property id="always_on_style" type="number">0</property>
 </properties>
