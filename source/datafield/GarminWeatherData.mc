@@ -39,11 +39,11 @@ class TemperatureHLGarminField extends BaseDataField {
          var settings = Sys.getDeviceSettings();
          var temp_min = garmin_weather.lowTemperature;
          var temp_max = garmin_weather.highTemperature;
-         var unit = "°C";
+         //var unit = "°C";
          if (settings.temperatureUnits == System.UNIT_STATUTE) {
             temp_min = temp_min * (9.0 / 5) + 32; // Convert to Farenheit: ensure floating point division.
             temp_max = temp_max * (9.0 / 5) + 32; // Convert to Farenheit: ensure floating point division.
-            unit = "°F";
+            //unit = "°F";
          }
          if (need_minimal) {
             return Lang.format("$1$ $2$", [

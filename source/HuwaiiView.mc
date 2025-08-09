@@ -170,7 +170,6 @@ class HuwaiiView extends WatchUi.WatchFace {
    //! @note More than one call to onUpdate() may occur during View transitions
    function onUpdate(screenDc) {
       var clockTime = System.getClockTime();
-      var current_milli = System.getTimer();
       var minute_changed = clockTime.min != last_draw_minute;
 
       // force update layout if settings changed
