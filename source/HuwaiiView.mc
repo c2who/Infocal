@@ -40,7 +40,6 @@ class HuwaiiView extends WatchUi.WatchFace {
    private var last_draw_minute = -1;
    private var last_resume_milli = 0;
    private var restore_from_resume = false;
-   private var restore_web_requests = false;
 
    private var last_battery_hour = null;
 
@@ -54,7 +53,7 @@ class HuwaiiView extends WatchUi.WatchFace {
    //! This avoids having to fully redraw the screen each update, improving battery life
    //! @note Screen bufferring can only be used on (newer) devices with larger memory,
    //!       on lower-end devices it must be disabled to avoid out of memory errors.
-   var screenbuffer as Graphics.BufferedBitmap? = null;
+   private var _screen_buffer as Graphics.BufferedBitmap? = null;
 
    function initialize() {
       WatchFace.initialize();
@@ -77,23 +76,28 @@ class HuwaiiView extends WatchUi.WatchFace {
       // Load Watchface drawables from layout.xml (creates all Ui.Drawable classes)
       setLayout(Rez.Layouts.WatchFace(dc));
 
-      // vivoactive4(s) sometimes clears the watch dc before onupdate
-      if (Application.getApp().getProperty("enable_buffering")) {
-         // create a buffer to draw to
-         // so it can be pasted straight to
-         // the screen instead of redrawing
+      // Use screen buffer (to speed up onDraw; requires extra memory)
+      var enable_buffering = Application.getApp().getProperty("enable_buffering");
+      if (enable_buffering && (_screen_buffer == null)) {
          var params = {
             :width => dc.getWidth(),
             :height => dc.getHeight(),
          };
          if (Toybox.Graphics has :createBufferedBitmap) {
-            screenbuffer = Graphics.createBufferedBitmap(params).get();
+            _screen_buffer = Graphics.createBufferedBitmap(params).get();
          } else if (Toybox.Graphics has :BufferedBitmap) {
-            screenbuffer = new Graphics.BufferedBitmap(params);
+            _screen_buffer = new Graphics.BufferedBitmap(params);
+         } else {
+            // Not supported
+            _screen_buffer = null;
          }
+      } else {
+         // Unload
+         _screen_buffer = null;
       }
-      checkTheme();
-      updateAlwaysOnFieldsLayout(dc);
+
+      updateLayoutColors();
+      updateLayoutFonts(dc);
    }
 
    // Called when this View is brought to the foreground. Restore
@@ -102,8 +106,6 @@ class HuwaiiView extends WatchUi.WatchFace {
    function onShow() {
       last_draw_minute = -1;
       restore_from_resume = true;
-      restore_web_requests = true;
-      last_resume_milli = System.getTimer();
       checkBackgroundRequest();
    }
 
@@ -166,65 +168,46 @@ class HuwaiiView extends WatchUi.WatchFace {
    //! - Once per second in Data Fields
    //! 
    //! @note More than one call to onUpdate() may occur during View transitions
-   function onUpdate(dc) {
+   function onUpdate(screenDc) {
       var clockTime = System.getClockTime();
       var current_milli = System.getTimer();
       var minute_changed = clockTime.min != last_draw_minute;
 
       // force update layout if settings changed
       if (_layout_changed) {
-         onLayout(dc);
+         onLayout(screenDc);
       }
       
-      calculateBatteryConsumption();
-
-      // if this device has the clear dc bug
-      // use a screen buffer to save having to redraw
-      // everything on every update
-      if (
-         Application.getApp().getProperty("power_save_mode") &&
-         screenbuffer != null
-      ) {
-         // if minute has changed, draw to the buffer
-         if (minute_changed) {
-            last_draw_minute = clockTime.min;
-            minute_changed = false;
-            mainDrawComponents(screenbuffer.getDc());
-         }
-         // copy buffer to screen
-         dc.drawBitmap(0, 0, screenbuffer);
+      if (minute_changed) {
+         calculateBatteryConsumption();
       }
-
-      if (restore_web_requests || minute_changed) {
-         // After resuming (`onShow()` called), allow web requests
-         // to keep trying for 5s, or allow it on the minute change
-         if (restore_web_requests && (current_milli - last_resume_milli > 5000)) {
-            restore_web_requests = false;
-         }
+      
+      if (restore_from_resume || minute_changed) {
          checkBackgroundRequest();
       }
 
-      if (Application.getApp().getProperty("power_save_mode")) {
-         if (restore_from_resume || minute_changed) {
-            if (restore_from_resume) {
-               restore_from_resume = false;
-            }
-            last_draw_minute = clockTime.min;
-            minute_changed = false;
-            mainDrawComponents(dc);
-         }
-      } else {
-         if (minute_changed) {
-            last_draw_minute = clockTime.min;
-         }
-         if (restore_from_resume) {
-            restore_from_resume = false;
-         }
+      // On older watches, can get away with only performing full update every minute
+      // (do not need to perform full redraw on every update as screen is not cleared)
+      var power_save_mode = Application.getApp().getProperty("power_save_mode");
+      if ((power_save_mode == false) || minute_changed || _layout_changed || restore_from_resume) {
+         // Use screen_buffer if available
+         var dc = (_screen_buffer != null) ? _screen_buffer.getDc() : screenDc;
+
          mainDrawComponents(dc);
+
+         // Copy screen buffer to screen
+         if (_screen_buffer != null) {
+            screenDc.drawBitmap(0, 0, _screen_buffer);
+         }
       }
 
-      // Update always on seconds and HR
-      onPartialUpdate(dc);
+      // Reset draw state flags
+      last_draw_minute = clockTime.min;
+      restore_from_resume = false;
+      minute_changed = false;
+
+      // Always update seconds and hr fields in high power mode
+      onPartialUpdate(screenDc);
    }
 
    function mainDrawComponents(dc) {
@@ -366,7 +349,7 @@ class HuwaiiView extends WatchUi.WatchFace {
       }
    }
 
-   function checkTheme() {
+   function updateLayoutColors() {
       var theme_code = Application.getApp().getProperty("theme_code");
       if (gtheme != theme_code || theme_code == 18) {
          if (theme_code == 18) {
@@ -445,7 +428,7 @@ class HuwaiiView extends WatchUi.WatchFace {
       }
    }
 
-   function updateAlwaysOnFieldsLayout(dc as Graphics.Dc) {
+   function updateLayoutFonts(dc as Graphics.Dc) {
       var always_on_style = Application.getApp().getProperty("always_on_style");
       if (always_on_style == 0) {
          second_digi_font = WatchUi.loadResource(Rez.Fonts.secodigi);
@@ -454,7 +437,7 @@ class HuwaiiView extends WatchUi.WatchFace {
       }
 
       // Measure clipping area for seconds and heart rate AOD
-      var width  = dc.getTextWidthInPixels("200", second_digi_font) +;
+      var width  = dc.getTextWidthInPixels("200", second_digi_font) + 2;
       var height = Graphics.getFontHeight(second_digi_font);
       second_font_height_half = height/2;
       second_clip_size = [width, height];

@@ -96,6 +96,7 @@ class DigitalDial extends Ui.Drawable {
       }
    }
 
+   // XXX: Why using draw() not onUpdate?
    function draw(dc) {
       if (Application.getApp().getProperty("use_analog") == true) {
          removeFont();
@@ -305,6 +306,6 @@ class DigitalDial extends Ui.Drawable {
          second_y = center_y - second_font_height_half; // centre-justified
       }
 
-      removeFont(); // XXX: Why removing font on background draw?? - is this valid to save memory?
+      removeFont(); // XXX: Why removing font after draw?? - is this valid to save memory?
    }
 }
