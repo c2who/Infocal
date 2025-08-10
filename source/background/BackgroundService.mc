@@ -9,13 +9,6 @@ const DATA_TYPE_WEATHER     = "OpenWeather";
 
 const DATA_TYPE_ERROR_SUFFIX = ".Error";
 
-
-
-// [ ] ? Update application to use Application.Properties, Application.Storage (API level 2.4.0+) ?
-//        https://developer.garmin.com/connect-iq/core-topics/persisting-data/
-//        (1) Background processes cannot save Properties.
-//        (2) Application.Storage can save in background process since ConnectIQ 3.2.0
-
 //! Background Service
 //! Container for all background service requests.
 //!
@@ -33,7 +26,6 @@ class BackgroundService extends Sys.ServiceDelegate {
    // Clients
    var _iqAirClient as IQAirClient?;
 
-   (:background_method)
    function initialize() {
       Sys.ServiceDelegate.initialize();
    }
@@ -41,7 +33,6 @@ class BackgroundService extends Sys.ServiceDelegate {
    // Read pending web requests, and call appropriate web request function.
    // This function determines priority of web requests, if multiple are pending.
    // Pending web request flag will be cleared only once the background data has been successfully received.
-   (:background_method)
    function onTemporalEvent() {
       var pendingWebRequests = App.AppBase.getProperty("PendingWebRequests");
       if (pendingWebRequests != null) {
@@ -75,7 +66,6 @@ class BackgroundService extends Sys.ServiceDelegate {
    }
 
    //! Receives client data and evaluate exiting background service
-   (:background_method)
    function onReceiveClientData(type as String, responseCode as Number, data as Dictionary<String, Lang.Any>) {
       // Store data
       if (responseCode == 200) {
@@ -94,7 +84,6 @@ class BackgroundService extends Sys.ServiceDelegate {
       }
    }
 
-   (:background_method)
    function onReceiveOpenWeather(responseCode, data) {
       var result;
 
@@ -127,7 +116,6 @@ class BackgroundService extends Sys.ServiceDelegate {
       onReceiveClientData($.DATA_TYPE_WEATHER, responseCode, result);
    }
 
-   (:background_method)
    function makeWebRequest(url, params, callback) {
       var options = {
          :method => Comms.HTTP_REQUEST_METHOD_GET,
