@@ -107,6 +107,12 @@ class HuwaiiApp extends Application.AppBase {
          return;
       }
 
+      // Check for need data / retry policy only if have data connection
+      var settings = System.getDeviceSettings();
+      if (!settings.phoneConnected) {
+         return;
+      }
+
       var pendingWebRequests = {};
 
       if (needWeatherDataUpdate()) {
