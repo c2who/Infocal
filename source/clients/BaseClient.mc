@@ -36,7 +36,7 @@ class BaseClientHelper {
 
     // Defaults
     protected var _max_retries = 3;
-    protected var _retry_backoff_seconds = 30 * SECONDS_PER_MINUTE;
+    protected var _retry_backoff_minutes = 30;
     protected var _max_age_seconds = 30 * SECONDS_PER_MINUTE;
 
     function initialize(type as String) {
@@ -44,6 +44,7 @@ class BaseClientHelper {
     }
 
     //! Determines if the current data needs to be updated
+    //! @internal This method _must_ be called every minute to avoid missing the retry remain=0 roll-over 
     function needsDataUpdate() as Boolean {
         var type = _type;
 
@@ -59,7 +60,8 @@ class BaseClientHelper {
 
         } else if ((retries != null) && (retries > _max_retries)) {
             // FIXED: If API is not responding after retries, back off (retry every 30 minutes)
-            var remain = (Time.now().value() - data["clientTs"]) % _retry_backoff_seconds;
+            // Note: Calculation must be performed in minutes (not seconds) as we only evaluate this every minute
+            var remain = ((Time.now().value() - data["clientTs"]) / SECONDS_PER_MINUTE) % _retry_backoff_minutes;
             return (remain == 0);
 
         } else if (data["clientTs"] < (Time.now().value() - _max_age_seconds)) {
