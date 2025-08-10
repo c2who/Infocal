@@ -37,16 +37,16 @@ var kerning_ratios = {
    'N' => 0.73,
    'O' => 0.68,
    'P' => 0.66,
-   'Q' => 0.64, // TODO
+   'Q' => 0.64, // TODO : Add letter Q to all arc text fonts
    'R' => 0.67,
    'S' => 0.67,
    'T' => 0.55,
    'U' => 0.68,
    'V' => 0.64,
    'W' => 1.0,
-   'X' => 0.64, // TODO
+   'X' => 0.64, // TODO : Add letter X to all arc text fonts
    'Y' => 0.64,
-   'Z' => 0.64, // TODO
+   'Z' => 0.64, // TODO : Add letter Z to all arc text fonts
    '°' => 0.47,
 };
 

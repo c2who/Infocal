@@ -32,6 +32,8 @@ function convertCoorY(radians, radius) {
    return center_y + radius * Math.sin(radians);
 }
 
+// FIXME: Move all code not required for (:background) runtime out of HuwaiiApp class
+//        - background runtime is *very* memory limited, so must avoid issues on smaller devices
 (:background)
 class HuwaiiApp extends Application.AppBase {
    var _View;
