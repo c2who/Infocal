@@ -10,7 +10,7 @@ class TemparatureHLField extends BaseDataField {
    function cur_label(value) {
       // WEATHER
       var need_minimal = App.getApp().getProperty("minimal_data");
-      var weather_data = App.getApp().getProperty("OpenWeather");
+      var weather_data = App.getApp().getProperty("Weather");
       if (weather_data != null) {
          var settings = Sys.getDeviceSettings();
          var temp_min = weather_data["temp_min"];
@@ -51,7 +51,7 @@ class TemparatureOutField extends BaseDataField {
    function cur_label(value) {
       // WEATHER
       var need_minimal = App.getApp().getProperty("minimal_data");
-      var weather_data = App.getApp().getProperty("OpenWeather");
+      var weather_data = App.getApp().getProperty("Weather");
       if (weather_data != null) {
          var settings = Sys.getDeviceSettings();
          var temp = weather_data["temp"];
@@ -108,7 +108,7 @@ class WeatherField extends BaseDataField {
    }
 
    function cur_icon() {
-      var weather_data = App.getApp().getProperty("OpenWeather");
+      var weather_data = App.getApp().getProperty("Weather");
       if (weather_data != null) {
          return weather_icon_mapper[weather_data["icon"]];
       }
@@ -118,7 +118,7 @@ class WeatherField extends BaseDataField {
    function cur_label(value) {
       // WEATHER
       //var need_minimal = App.getApp().getProperty("minimal_data");
-      var weather_data = App.getApp().getProperty("OpenWeather");
+      var weather_data = App.getApp().getProperty("Weather");
       if (weather_data != null) {
          var settings = Sys.getDeviceSettings();
          var temp = weather_data["temp"];
@@ -170,7 +170,7 @@ class WindField extends BaseDataField {
 
    function cur_label(value) {
       //var need_minimal = App.getApp().getProperty("minimal_data");
-      var weather_data = App.getApp().getProperty("OpenWeather");
+      var weather_data = App.getApp().getProperty("Weather");
       if (weather_data != null) {
          var settings = Sys.getDeviceSettings();
          var speed = weather_data["wind_speed"] * 3.6; // kph

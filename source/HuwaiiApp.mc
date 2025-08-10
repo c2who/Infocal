@@ -38,6 +38,8 @@ function convertCoorY(radians, radius) {
 class HuwaiiApp extends Application.AppBase {
    var _View;
    var _currentFieldIds as Array<Number> = {};
+   var _iqAirClientHelper as IQAirClientHelper;
+   var _openWeatherClientHelper as OpenWeatherHelper;
 
    static const days = {
          Date.DAY_MONDAY => "MON",
@@ -69,7 +71,8 @@ class HuwaiiApp extends Application.AppBase {
    }
 
    // onStart() is called on application start up
-   function onStart(state) {}
+   function onStart(state) {
+   }
 
    // onStop() is called when your application is exiting
    function onStop(state) {}
@@ -77,6 +80,9 @@ class HuwaiiApp extends Application.AppBase {
    // Return the initial view of your application here
    function getInitialView() {
       updateCurrentDataFieldIds();
+
+      _iqAirClientHelper = new IQAirClientHelper();
+      _openWeatherClientHelper = new OpenWeatherHelper();
       _View = new HuwaiiView();
       return [_View];
    }
@@ -103,6 +109,7 @@ class HuwaiiApp extends Application.AppBase {
       // Update last known location
       updateLastLocation();
 
+      // If watch device does not support background services
       if (!(Sys has :ServiceDelegate)) {
          return;
       }
@@ -114,23 +121,28 @@ class HuwaiiApp extends Application.AppBase {
       }
 
       var pendingWebRequests = {};
-
-      if (needWeatherDataUpdate()) {
-         pendingWebRequests[$.DATA_TYPE_WEATHER] = true;
+      
+      // If AirQuality data fields in use
+      if (isAnyDataFieldsInUse( [FIELD_TYPE_AIR_QUALITY] )) {
+         if (_iqAirClientHelper.needsDataUpdate()) {
+            pendingWebRequests[IQAirClient.DATA_TYPE] = true;
+         }
       }
 
-      // If AirQuality data in used
-      if (isAnyDataFieldsInUse( [FIELD_TYPE_AIR_QUALITY] )) {
-         if (AirQualityField.needsDataUpdate()) {
-            pendingWebRequests[IQAirClient.DATA_TYPE] = true;
+      // If Weather data fields in use
+      if (isAnyDataFieldsInUse( [FIELD_TYPE_TEMPERATURE_OUT, 
+                                 FIELD_TYPE_TEMPERATURE_HL, 
+                                 FIELD_TYPE_WEATHER, 
+                                 FIELD_TYPE_WIND ] )) {
+         if (_openWeatherClientHelper.needsDataUpdate()) {
+            pendingWebRequests[OpenWeatherClient.DATA_TYPE] = true;
          }
       }
 
       setProperty("PendingWebRequests", pendingWebRequests);
 
       // If there are any pending data requests (and phone is connected)
-      var settings = System.getDeviceSettings();
-      if (settings.phoneConnected && (pendingWebRequests.keys().size() > 0)) {
+      if (pendingWebRequests.keys().size() > 0) {
          // Register for background temporal event as soon as possible.
          var lastTime = Background.getLastTemporalEventTime();
          
@@ -196,42 +208,7 @@ class HuwaiiApp extends Application.AppBase {
       }
    }
 
-   function needWeatherDataUpdate() as Boolean {
-      // OpenWeather data field must be shown.
-      if (!isAnyDataFieldsInUse( [FIELD_TYPE_TEMPERATURE_HL, FIELD_TYPE_TEMPERATURE_OUT, FIELD_TYPE_WEATHER, FIELD_TYPE_WIND] )) {
-         return false;
-      }
-
-      // Location must be available
-      if ((gLocationLat == null) || (gLocationLon == null)) {
-         return false;
-      }
-
-      var data = getProperty($.DATA_TYPE_WEATHER);
-
-      if ((data == null) || (data["clientTs"] == null)) {
-         // No existing data.
-         return true;
-      } else if (data["cod"] == 200) {
-         // Successfully received weather data.
-         // TODO: Consider requesting weather at sunrise/sunset to update weather icon.
-         if (
-            // Existing data is older than 15 mins.
-            // Note: We use clientTs as we do not *know* how often weather data is updated (typically hourly)
-            Time.now().value() > (data["clientTs"] + (15 * 60)) ||
-            // Existing data not for this location.
-            // Not a great test, as a degree of longitude varies betwee 69 (equator) and 0 (pole) miles, but simpler than
-            // true distance calculation. 0.02 degree of latitude is just over a mile.
-            (gLocationLat - data["lat"]).abs() > 0.02 ||
-            (gLocationLon - data["lon"]).abs() > 0.02) {
-            return true;
-         }
-      } else {
-         // Retry on error
-         return true;
-      }
-   }
-
+   
    //! Get a ServiceDelegate to run background tasks for this app.
    //! When a ServiceDelegate is retrieved, the following will occur:
    //! - The method triggered within the ServiceDelegate will be run
@@ -259,10 +236,23 @@ class HuwaiiApp extends Application.AppBase {
          var type = keys[i];
          var data = service_data[type];
 
-         // New data received: clear pendingWebRequests flag and persist data.
+         // New data received: clear pendingWebRequests flag and process data.
          pendingWebRequests.remove(type);
          setProperty("PendingWebRequests", pendingWebRequests);
-         setProperty(type, data);
+
+         // Pass to correct client 
+         switch (type) {
+            case IQAirClient.DATA_TYPE:
+               _iqAirClientHelper.onBackgroundData(type, data);
+               break;
+            case OpenWeatherClient.DATA_TYPE:
+               _openWeatherClientHelper.onBackgroundData(type, data);
+               break;
+            default:
+               throw new InvalidValueException(type);
+               break;
+         }
+         
       }
 
       // Save list of any remaining background requests

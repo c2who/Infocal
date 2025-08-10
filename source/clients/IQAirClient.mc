@@ -1,12 +1,11 @@
+using Toybox.Application;
 using Toybox.Background;
 using Toybox.System;
 using Toybox.Communications;
-using Toybox.Application;
-using Toybox.Time;
 
 import Toybox.Lang;
 
-//! IQAir Client for Air Quality Index (AQI) Service
+//! IQAir (Background) Client for Air Quality Index (AQI) Service
 //!
 //! @note Uses "Get nearest city data" to read AQI data
 //!
@@ -26,26 +25,22 @@ class IQAirClient {
    //! Consumer callback for returning formatted data
    private var _callback as Method(type as String, responseCode as Number, data as Dictionary<String, Lang.Any>) as Void;
 
-   function initialize() {
-      System.ServiceDelegate.initialize();
-   }
-
    //! Public entry method to make background request to get data from remote service
-   function requestAirQualityData(callback as Method(type as String, responseCode as Number, data as Dictionary<String, Lang.Any>) as Void) as Void {
+   function requestData(callback as Method(type as String, responseCode as Number, data as Dictionary<String, Lang.Any>) as Void) as Void {
       var app = Application.getApp();
-      var key = app.getProperty("iqair_api");
+      var api_key = app.getProperty("iqair_api");
       var lat = app.getProperty("LastLocationLat");
       var lon = app.getProperty("LastLocationLon");
 
       // Save callback method
       self._callback = callback;
 
-      if (key.length() == 0) {
-         key = SECRETS_DEFAULT_IQAIR_API_KEY;
+      if (api_key.length() == 0) {
+         api_key = SECRETS_DEFAULT_IQAIR_API_KEY;
       }
 
       var params = {
-         "key" => key
+         "key" => api_key
       };
 
       if ((lat != null) && (lon != null)) {
@@ -54,7 +49,7 @@ class IQAirClient {
          params["lon"] = lon;
       }
 
-      makeWebRequest(
+      BaseClient.makeWebRequest(
          API_NEAREST_CITY_URL,
          params,
          method(:onReceiveAirQualityData)
@@ -103,15 +98,15 @@ class IQAirClient {
       _callback.invoke(DATA_TYPE, responseCode, result);
    }
 
-   protected function makeWebRequest(url, params, callback) as Void {
-      var options = {
-         :method => Communications.HTTP_REQUEST_METHOD_GET,
-         :headers => {
-            "Content-Type" => Communications.REQUEST_CONTENT_TYPE_URL_ENCODED,
-         },
-         :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON,
-      };
+}
 
-      Communications.makeWebRequest(url, params, options, callback);
+//! IQAir (Foreground) client support 
+//!
+//! @note Where possible, code is placed in the foreground client, to avoid
+//! bloating the background service memory usage.
+public class IQAirClientHelper extends BaseClientHelper {
+
+   function initialize() {
+        BaseClientHelper.initialize(IQAirClient.DATA_TYPE);
    }
 }
