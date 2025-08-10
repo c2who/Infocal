@@ -45,7 +45,7 @@ class BackgroundService extends Sys.ServiceDelegate {
                "https://api.openweathermap.org/data/2.5/weather",
                {
                   "lat" => App.AppBase.getProperty("LastLocationLat"),
-                  "lon" => App.AppBase.getProperty("LastLocationLng"),
+                  "lon" => App.AppBase.getProperty("LastLocationLon"),
                   "appid" => api_key,
                   "units" => "metric", // Celsius.
                },

@@ -22,7 +22,7 @@ class SunField extends BaseDataField {
          // Get today's sunrise/sunset times in current time zone.
          var sunTimes = getSunTimes(
             gLocationLat,
-            gLocationLng,
+            gLocationLon,
             null,
             /* tomorrow */ false
          );
@@ -43,7 +43,7 @@ class SunField extends BaseDataField {
             } else {
                sunTimes = getSunTimes(
                   gLocationLat,
-                  gLocationLng,
+                  gLocationLon,
                   null,
                   /* tomorrow */ true
                );
@@ -95,16 +95,16 @@ class SunField extends BaseDataField {
     *
     * @method getSunTimes
     * @param {Float} lat Latitude of location (South is negative)
-    * @param {Float} lng Longitude of location (West is negative)
+    * @param {Float} lon Longitude of location (West is negative)
     * @param {Integer || null} tz Timezone hour offset. e.g. Pacific/Los Angeles is -8 (Specify null for system timezone)
     * @param {Boolean} tomorrow Calculate tomorrow's sunrise and sunset, instead of today's.
     * @return {Array} Returns array of length 2 with sunrise and sunset as floats.
     *                 Returns array with [null, -1] if the sun never rises, and [-1, null] if the sun never sets.
     */
-   function getSunTimes(lat, lng, tz, tomorrow) {
+   function getSunTimes(lat, lon, tz, tomorrow) {
       // Use double precision where possible, as floating point errors can affect result by minutes.
       lat = lat.toDouble();
-      lng = lng.toDouble();
+      lon = lon.toDouble();
 
       var now = Time.now();
       if (tomorrow) {
@@ -131,7 +131,7 @@ class SunField extends BaseDataField {
       var n = jDate - 2451545.0d + 0.0008d;
 
       // Mean solar noon.
-      var jStar = n - lng / 360.0d;
+      var jStar = n - lon / 360.0d;
 
       // Solar mean anomaly.
       var M = 357.5291d + 0.98560028d * jStar;

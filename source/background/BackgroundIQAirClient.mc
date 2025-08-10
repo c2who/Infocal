@@ -35,7 +35,7 @@ class IQAirClient {
       var app = Application.getApp();
       var key = app.getProperty("iqair_api");
       var lat = app.getProperty("LastLocationLat");
-      var lon = app.getProperty("LastLocationLng");
+      var lon = app.getProperty("LastLocationLon");
 
       // Save callback method
       self._callback = callback;

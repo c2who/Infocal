@@ -62,14 +62,14 @@ class AirQualityField extends BaseDataField {
       //        (every 5 mins - potentially burning thru the license api call quota)
       if (  (
                // Current location data valid
-               (gLocationLat != null) && (gLocationLng != null)
+               (gLocationLat != null) && (gLocationLon != null)
             ) && (
                // Existing data not for this location.
                // Not a great test, as a degree of longitude varies betwee 69 (equator) and 0 (pole) miles, but simpler than
                // true distance calculation. 0.145 degree of latitude is 10 mile.
                // Note as API is using "Nearest City" we use 10 mile resolution before faster update
                ((gLocationLat - data["lat"]).abs() > 0.145) ||
-               ((gLocationLng - data["lon"]).abs() > 0.145)
+               ((gLocationLon - data["lon"]).abs() > 0.145)
             )
       ) {
          return true;

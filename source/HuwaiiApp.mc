@@ -14,7 +14,7 @@ import Toybox.Lang;
 // Persistence allows weather and sunrise/sunset features to be used after watch face restart, even if watch no longer has current
 // location available.
 var gLocationLat = null;
-var gLocationLng = null;
+var gLocationLon = null;
 
 function degreesToRadians(degrees) {
    return (degrees * Math.PI) / 180;
@@ -172,18 +172,18 @@ class HuwaiiApp extends Application.AppBase {
          // Save current location to globals
          location = location.toDegrees(); // Array of Doubles.
          gLocationLat = location[0].toFloat();
-         gLocationLng = location[1].toFloat();
+         gLocationLon = location[1].toFloat();
 
          Application.getApp().setProperty("LastLocationLat", gLocationLat);
-         Application.getApp().setProperty("LastLocationLng", gLocationLng);
+         Application.getApp().setProperty("LastLocationLon", gLocationLon);
       } else {
          // current location is not available, read stored value from Object Store, being careful not to overwrite a valid
          // in-memory value with an invalid stored one.
          var lat = Application.getApp().getProperty("LastLocationLat");
-         var lng = Application.getApp().getProperty("LastLocationLng");
-         if ((lat != null) && (lng != null)) {
+         var lon = Application.getApp().getProperty("LastLocationLon");
+         if ((lat != null) && (lon != null)) {
             gLocationLat = lat;
-            gLocationLng = lng;
+            gLocationLon = lon;
          }
       }
    }
@@ -195,7 +195,7 @@ class HuwaiiApp extends Application.AppBase {
       }
 
       // Location must be available
-      if ((gLocationLat == null) || (gLocationLng == null)) {
+      if ((gLocationLat == null) || (gLocationLon == null)) {
          return false;
       }
 
@@ -215,7 +215,7 @@ class HuwaiiApp extends Application.AppBase {
             // Not a great test, as a degree of longitude varies betwee 69 (equator) and 0 (pole) miles, but simpler than
             // true distance calculation. 0.02 degree of latitude is just over a mile.
             (gLocationLat - data["lat"]).abs() > 0.02 ||
-            (gLocationLng - data["lon"]).abs() > 0.02) {
+            (gLocationLon - data["lon"]).abs() > 0.02) {
             return true;
          }
       } else {
