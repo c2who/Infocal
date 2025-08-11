@@ -1,13 +1,14 @@
-# Infocal with Air Quality
-A watchface for Garmin devices ([Garmin Connect IQ store](https://apps.garmin.com/apps/f86d1406-8272-4ede-abe5-cc566dd8e2d6)). 
+A watchface for Garmin devices, available free on the [Garmin App Store](https://apps.garmin.com/apps/f86d1406-8272-4ede-abe5-cc566dd8e2d6) 
+
+# Description
+
+Infocal is a digital and analogue watchface, carefully made with high quality rendering. 
 
 This project was forked from [Infocal](https://github.com/RyanDam/Infocal), and would not exist if not for the work RyanDam put into that project.
 
 This project is free and will remain free under the MIT License.
 
-# Description
-
-Infocal is a digital and analogue watchface, carefully made with high quality rendering. It's both customizable and functional. With up to 8 complications on the screen, each complication can show a variety of data:
+It's both customizable and functional. With up to 8 complications on the screen, each complication can show a variety of data:
 
 - Air Quality
 - Date
