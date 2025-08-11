@@ -77,28 +77,10 @@ class HuwaiiView extends WatchUi.WatchFace {
       // Load Watchface drawables from layout.xml (creates all Ui.Drawable classes)
       setLayout(Rez.Layouts.WatchFace(dc));
 
-      // Use screen buffer (to speed up onDraw; requires extra memory)
-      var enable_buffering = Application.getApp().getProperty("enable_buffering");
-      if (enable_buffering && (_screen_buffer == null)) {
-         var params = {
-            :width => dc.getWidth(),
-            :height => dc.getHeight(),
-         };
-         if (Toybox.Graphics has :createBufferedBitmap) {
-            _screen_buffer = Graphics.createBufferedBitmap(params).get();
-         } else if (Toybox.Graphics has :BufferedBitmap) {
-            _screen_buffer = new Graphics.BufferedBitmap(params);
-         } else {
-            // Not supported
-            _screen_buffer = null;
-         }
-      } else {
-         // Unload
-         _screen_buffer = null;
-      }
-
       updateLayoutColors();
       updateLayoutFonts(dc);
+
+      setupScreenBuffer(dc);
    }
 
    // Called when this View is brought to the foreground. Restore
@@ -113,6 +95,46 @@ class HuwaiiView extends WatchUi.WatchFace {
    function onSettingsChanged() {
       last_draw_minute = -1;
       _layout_changed = true;
+   }
+
+   //! Create screen buffer, if enabled and memory available.
+   //! Use screen buffer (to speed up onDraw; requires extra memory)
+   //!
+   //! @note Includes a runtime check to permanently disable memory-intensive
+   //!       operations that have previously caused an application crash!
+   //!       (out-of-memory errors are fatal so cannot be handled)
+   function setupScreenBuffer(dc) as Void {
+      var enable_buffering = Application.getApp().getProperty("enable_buffering");
+      var err_runtime_oom = Application.Storage.getValue("err_runtime_oom");
+
+      // FIXED: Permanently disable memory-intensive operation if previously caused OOM crash
+      if (enable_buffering && (_screen_buffer == null) && (err_runtime_oom != true)) {
+         
+         try {
+            // Safety: Do not allocate screen buffer on low-memory devices (to avoid OOM crash)
+            Application.Storage.setValue("err_runtime_oom", true);
+            
+            // Allow buffer (requires 65KB+ free memory)
+            var params = {
+               :width => dc.getWidth(),
+               :height => dc.getHeight(),
+            };
+            if (Toybox.Graphics has :createBufferedBitmap) {
+               _screen_buffer = Graphics.createBufferedBitmap(params).get();
+            } else if (Toybox.Graphics has :BufferedBitmap) {
+               _screen_buffer = new Graphics.BufferedBitmap(params);
+            } else {
+               // Not supported
+               _screen_buffer = null;
+            }
+         } finally {
+            // OK
+            Application.Storage.deleteValue("err_runtime_oom");
+         }
+      } else {
+         // Unload
+         _screen_buffer = null;
+      }
    }
 
    function calculateBatteryConsumption() {
