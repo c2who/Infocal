@@ -34,8 +34,8 @@ class OpenWeatherClient {
         // Save callback method
         self._callback = callback;
 
-        if (api_key.length() == 0) {
-            api_key = SECRETS_DEFAULT_OPENWEATHER_API_KEY;
+        if ((api_key == null) || (api_key.length() == 0)) {
+            api_key = app.getProperty("owm_api_2");;
         }
 
         var params = {
@@ -104,7 +104,7 @@ public class OpenWeatherHelper extends BaseClientHelper {
         _max_age_seconds = 15 * SECONDS_PER_MINUTE;
    }
 
-   function needDataUpdate() as Boolean {
+   function needsDataUpdate() as Boolean {
         // Location must be available
         var lat = Application.getApp().getProperty("LastLocationLat");
         var lon = Application.getApp().getProperty("LastLocationLon");
@@ -112,8 +112,11 @@ public class OpenWeatherHelper extends BaseClientHelper {
             return false;
         }
 
+        // Get the default api key for new users    
+        var default_key = Keys.getOpenWeatherDefaultKey();
+        Application.AppBase.setProperty("owm_api_2", default_key);
+
         // Check based on default behavior with retries
         return BaseClientHelper.needsDataUpdate();
     }
-
 }

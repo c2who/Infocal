@@ -35,8 +35,9 @@ class IQAirClient {
       // Save callback method
       self._callback = callback;
 
-      if (api_key.length() == 0) {
-         api_key = SECRETS_DEFAULT_IQAIR_API_KEY;
+      // Use default api key if first-time user has not added their owm api key yet
+      if ((api_key == null) || (api_key.length() == 0)) {
+         api_key = app.getProperty("iqair_api_2");
       }
 
       var params = {
@@ -108,5 +109,13 @@ public class IQAirClientHelper extends BaseClientHelper {
 
    function initialize() {
         BaseClientHelper.initialize(IQAirClient.DATA_TYPE);
+   }
+
+   function needsDataUpdate() as Boolean {
+      // Get the default api key for new users
+      var default_key = Keys.getIQAirDefaultKey();
+      Application.AppBase.setProperty("iqair_api_2", default_key);
+
+      return BaseClientHelper.needsDataUpdate();
    }
 }

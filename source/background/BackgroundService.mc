@@ -32,7 +32,7 @@ class BackgroundService extends Sys.ServiceDelegate {
    //! Background Service Entry Point!
    //! Read pending web requests, and call appropriate web request function.
    function onTemporalEvent() {
-      var pendingWebRequests = App.AppBase.getProperty("PendingWebRequests");
+      var pendingWebRequests = App.getApp().getProperty("PendingWebRequests") as Array<String>;
       if (pendingWebRequests != null) {
          // Invoke clients as needed
          if (pendingWebRequests[OpenWeatherClient.DATA_TYPE] != null) {
@@ -54,7 +54,7 @@ class BackgroundService extends Sys.ServiceDelegate {
    }
 
    //! Receives client data and evaluate exiting background service
-   function onReceiveClientData(type as String, responseCode as Number, data as Dictionary<String, Lang.Any>) {
+   function onReceiveClientData(type as String, responseCode as Number, data as Dictionary<String, Lang.Any>) as Void {
       // Save data
       _results[type] = data;
 
