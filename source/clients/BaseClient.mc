@@ -94,4 +94,14 @@ class BaseClientHelper {
             app.setProperty(type + Constants.DATA_TYPE_RETRIES_SUFFIX, retries);
         }
     }
+
+    static function getHttpErrorCodeText(code as Number) as String {
+        switch (code) {
+            case 429: // Too Many Requests (often due to shared api key)
+                return "API KEY";
+            break;
+            default:
+                return Lang.format("ERR $1$", code);
+        }
+    }
 }
