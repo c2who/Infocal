@@ -95,13 +95,22 @@ class BaseClientHelper {
         }
     }
 
-    static function getHttpErrorCodeText(code as Number) as String {
-        switch (code) {
-            case 429: // Too Many Requests (often due to shared api key)
-                return "API KEY";
-            break;
-            default:
-                return Lang.format("ERR $1$", code);
+    static function getHttpErrorCodeText(code as String) as String {
+        try {
+            // FIXED: Handle negative numbers from server
+            switch (code.toNumber().abs()) {
+                case 401: // Unauthorized
+                case 403: // Forbidden
+                case 429: // Too Many Requests (often due to api key quota)
+                    return "API KEY";
+                    break;
+                default:
+                    return Lang.format("ERR $1$", code);
+            }   
+    
+        } catch (ex) {
+            System.println((ex.getErrorMessage()));
+            return "ERR";
         }
     }
 }
