@@ -48,7 +48,7 @@ class HuwaiiView extends WatchUi.WatchFace {
    private var face_radius;
 
    private var did_clear = false;
-   private var _is_partial_updates_active as Boolean = false;
+   private var _is_power_budget_exceeded as Boolean = false;
 
    //! Screen buffer stores a copy of the bitmap rendered to the screen.
    //! This avoids having to fully redraw the screen each update, improving battery life
@@ -229,7 +229,7 @@ class HuwaiiView extends WatchUi.WatchFace {
       minute_changed = false;
 
       // Update seconds and hr fields in high power mode
-      if (_is_partial_updates_active) {
+      if (!_is_power_budget_exceeded) {
          onPartialUpdate(screenDc);
       }
    }
@@ -288,7 +288,6 @@ class HuwaiiView extends WatchUi.WatchFace {
    //!           invoked, but can be used in the device *simulator*.
    (:partial_update)
    function onPartialUpdate(dc) {
-      _is_partial_updates_active = true;
 
       if (Application.getApp().getProperty("use_analog")) {
          // not supported
@@ -342,8 +341,6 @@ class HuwaiiView extends WatchUi.WatchFace {
             );
          }
       }
-      // Finally, remove any applied dc clipping
-      dc.clearClip();
    }
 
    //! Handle a partial update exceeding the power budget.
@@ -351,10 +348,8 @@ class HuwaiiView extends WatchUi.WatchFace {
    //! If the onPartialUpdate() callback of the associated WatchFace exceeds the power budget of the device, 
    //! this method will be called with information about the limits that were exceeded.
    function onPowerBudgetExceeded(powerInfo as WatchUi.WatchFacePowerInfo) as Void {
-      // TODO: DEBUG: Write out power error information
-
       // Watch has shut down partial updates
-      _is_partial_updates_active = false;
+      _is_power_budget_exceeded = true;
    }
 
    // Called when this View is removed from the screen. Save the
