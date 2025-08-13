@@ -36,6 +36,11 @@ var last_battery_percent = -1;
 var last_hour_consumption = -1;
 
 class HuwaiiView extends WatchUi.WatchFace {
+
+   //! Additional memory margin (in bytes) to safely create screen BufferedBitmap
+   // Minimum memory = (screen buffer size) + (runtime margin)
+   private static const RUNTIME_MEM_MARGIN_MIN = 5000;   //bytes
+   
    private var _layout_changed as Lang.Boolean = false;
    private var last_draw_minute = -1;
    private var last_resume_milli = 0;
@@ -106,15 +111,23 @@ class HuwaiiView extends WatchUi.WatchFace {
    function setupScreenBuffer(dc) as Void {
       var enable_buffering = Application.getApp().getProperty("enable_buffering");
       var err_runtime_oom = Application.Storage.getValue("err_runtime_oom");
+      var stats = System.getSystemStats();
+      var buffer_size = (dc.getWidth() * dc.getHeight()) + 1000 ; // Rough estimate of screen buffer size, in bytes (based on default 256 colors)
+      var free_mem = stats.freeMemory;
 
       // FIXED: Permanently disable memory-intensive operation if previously caused OOM crash
-      if (enable_buffering && (_screen_buffer == null) && (err_runtime_oom != true)) {
+      // FIXED: Do not create screen buffer if insufficient memory (based on screen size)
+      if (   (enable_buffering)
+          && (_screen_buffer == null) 
+          && (err_runtime_oom != true)
+          && (free_mem >= buffer_size + RUNTIME_MEM_MARGIN_MIN) ) {
          
          try {
-            // Safety: Do not allocate screen buffer on low-memory devices (to avoid OOM crash)
+            // Safety: Store semaphore to detect if operation causes runtime OOM fatal
             Application.Storage.setValue("err_runtime_oom", true);
             
             // Allow buffer (requires 65KB+ free memory)
+            // TODO: Specify the color palette required, to reduce buffer memory size
             var params = {
                :width => dc.getWidth(),
                :height => dc.getHeight(),
@@ -127,9 +140,12 @@ class HuwaiiView extends WatchUi.WatchFace {
                // Not supported
                _screen_buffer = null;
             }
-         } finally {
-            // OK
+             
+            // OK (not run during fatal oom; or catchable exceptions)
             Application.Storage.deleteValue("err_runtime_oom");
+         } catch (ex) {
+            // API 5.0.0 supports catching insufficient memory error
+            // Do nothing - leave semaphore set
          }
       } else {
          // Unload
@@ -349,6 +365,7 @@ class HuwaiiView extends WatchUi.WatchFace {
    //! this method will be called with information about the limits that were exceeded.
    function onPowerBudgetExceeded(powerInfo as WatchUi.WatchFacePowerInfo) as Void {
       // Watch has shut down partial updates
+      System.println("Power budget exceeded:" + power.executionTimeAverage.toString());
       _is_power_budget_exceeded = true;
    }
 
