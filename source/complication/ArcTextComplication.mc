@@ -4,12 +4,15 @@ using Toybox.Graphics;
 using Toybox.System;
 using Toybox.Application;
 
+import Toybox.Lang;
+
 var kerning_ratios = {
    ' ' => 0.4,
    '%' => 0.92,
    '+' => 0.7,
    '-' => 0.38,
    '.' => 0.25,
+   ',' => 0.25,   // TODO: international numbers use comma delimeters
    '0' => 0.66,
    '1' => 0.41,
    '2' => 0.6,
@@ -37,7 +40,7 @@ var kerning_ratios = {
    'N' => 0.73,
    'O' => 0.68,
    'P' => 0.66,
-   'Q' => 0.64, // TODO : Add letter Q to all arc text fonts
+   'Q' => 0.80, // TODO : Add letter Q to all arc text fonts
    'R' => 0.67,
    'S' => 0.67,
    'T' => 0.55,
@@ -59,7 +62,6 @@ class ArcTextComplication extends Ui.Drawable {
    hidden var perCharRadius;
    hidden var text;
    hidden var last_draw_text;
-   hidden var curved_radian;
 
    var accumulation_sign;
    var angle;
@@ -80,7 +82,6 @@ class ArcTextComplication extends Ui.Drawable {
 
       baseDegree = params.get(:base);
       baseRadian = degreesToRadians(baseDegree);
-      curved_radian = 60.0;
 
       text = params.get(:text);
       angle = params.get(:angle);
@@ -128,6 +129,14 @@ class ArcTextComplication extends Ui.Drawable {
       last_draw_text = text;
    }
 
+   //! Prevent invalid characters from causing runtime exception
+   private function get_kerning_ratio(c as Char) as Float {
+      var kr = kerning_ratios.get(c);
+
+      // return default kr if char unknown
+      return (kr != null) ? kr : 0.64;
+   }
+
    hidden function drawArcText(dc, text) {
       var totalChar = 0;
       if (text instanceof String) {
@@ -141,13 +150,13 @@ class ArcTextComplication extends Ui.Drawable {
 
       var totalRad = 0.0;
       for (var i = 0; i < totalChar; i++) {
-         var ra = perCharRadius * kerning_ratios[charArray[i]];
+         var ra = perCharRadius * get_kerning_ratio(charArray[i]);
          totalRad += ra;
       }
       var lastRad = -totalRad / 2.0;
 
       for (var i = 0; i < totalChar; i++) {
-         var ra = perCharRadius * kerning_ratios[charArray[i]];
+         var ra = perCharRadius * get_kerning_ratio(charArray[i]);
 
          lastRad += ra;
          if (charArray[i] == ' ') {
@@ -160,7 +169,6 @@ class ArcTextComplication extends Ui.Drawable {
             var labelCurY = convertCoorY(targetRadian, barRadius);
 
             set_font(targetRadian);
-
             dc.drawText(labelCurX, labelCurY, font, charArray[i].toString(), alignment);
             font = null;
          }
