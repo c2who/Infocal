@@ -4,6 +4,7 @@ using Toybox.System;
 using Toybox.Application;
 using Toybox.Time.Gregorian as Date;
 
+//! Background View draws the Tick Marks around the watch face
 class BackgroundView extends Ui.Drawable {
    hidden var bgcir_font, bgcir_info;
 

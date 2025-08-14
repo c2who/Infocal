@@ -96,7 +96,10 @@ class DigitalDial extends Ui.Drawable {
       }
    }
 
-   // XXX: Why using draw() not onUpdate?
+   //! Draw an object to the device context (Dc).
+   //!
+   //! This method assumes that the device context has already been configured to the proper options.
+   //! Derived classes should check the isVisible property, if it exists, before trying to draw.
    function draw(dc) {
       if (Application.getApp().getProperty("use_analog") == true) {
          removeFont();

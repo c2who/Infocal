@@ -234,6 +234,8 @@ class HuwaiiView extends WatchUi.WatchFace {
          // Use screen_buffer if available
          var dc = (_screen_buffer != null) ? _screen_buffer.getDc() : screenDc;
 
+         //! @note because we can use screen buffering, call mainDrawComponents() instead of View.onUpdate() to draw drawables
+         // XXX: Can we just call View.onUpdate(d) here?
          mainDrawComponents(dc);
 
          // Copy screen buffer to screen
@@ -253,7 +255,11 @@ class HuwaiiView extends WatchUi.WatchFace {
       }
    }
 
+   //! Draw Drawables using our own device context (potentially a screen buffer)
+   //! Used instead of View.onUpdate() to draw drawables
    function mainDrawComponents(dc) {
+      // XXX: Why is this clearing the background twice?
+      // XXX: Can we move this to the BackgroundView class?
       dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
       dc.clear();
       dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
@@ -278,7 +284,7 @@ class HuwaiiView extends WatchUi.WatchFace {
 
       dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
       dc.fillCircle(center_x, center_y, face_radius);
-
+      // XXX: Move to call backgroundView first
       backgroundView.draw(dc);
       bbar1.draw(dc);
       bbar2.draw(dc);
@@ -288,6 +294,7 @@ class HuwaiiView extends WatchUi.WatchFace {
       bgraph1.draw(dc);
       bgraph2.draw(dc);
 
+      // XXX: Set/Use View.isVisible instead
       if (Application.getApp().getProperty("use_analog")) {
          View.findDrawableById("analog").draw(dc);
       } else {

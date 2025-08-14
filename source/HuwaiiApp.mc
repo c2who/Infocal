@@ -1,13 +1,13 @@
 using Toybox.Application;
 using Toybox.Background;
-using Toybox.Activity as Activity;
-using Toybox.System as Sys;
-using Toybox.WatchUi as Ui;
+using Toybox.Activity;
+using Toybox.System;
 using Toybox.Time;
 using Toybox.Math;
 using Toybox.Time.Gregorian as Date;
 
 import Toybox.Lang;
+import Toybox.WatchUi;
 
 // In-memory current location.
 // Previously persisted in App.Storage, but now persisted in Object Store due to #86 workaround for App.Storage firmware bug.
@@ -70,35 +70,50 @@ class HuwaiiApp extends Application.AppBase {
       AppBase.initialize();
    }
 
-   // onStart() is called on application start up
-   function onStart(state) {
+   //! Method called at startup to allow handling of app initialization.
+   //!
+   //! Before the initial WatchUi.View is retrieved, onStart() is called. 
+   //! Application level settings can be initialized or retrieved from the object store before the initial View is created. 
+   //! This method must be overridden to handle your own app initialization.
+   function onStart(state as Dictionary?) as Void {
    }
 
-   // onStop() is called when your application is exiting
-   function onStop(state) {}
+   //! Override to handle application cleanup upon termination.
+   //!
+   //! If the application needs to save data to the object store it should be done in this function. 
+   //! Once the function is complete, the application will terminate.
+   function onStop(state as Dictionary?) as Void {
+   }
 
-   // Return the initial view of your application here
-   function getInitialView() {
+   //! Override to provide the initial View and Input Delegate of the application.
+   //! @note This method must be overridden in derived classes. If called, this function will cause the application to crash.
+   function getInitialView() as [Views] or [Views, InputDelegates] {
       updateCurrentDataFieldIds();
 
       _iqAirClientHelper = new IQAirClientHelper();
       _openWeatherClientHelper = new OpenWeatherHelper();
       _View = new HuwaiiView();
-      return [_View];
+
+      if( Toybox.WatchUi.WatchFace has :onPartialUpdate ) {
+         return [ _View, new HuwaiiViewDelegate()  ];
+      } else {
+         return [ _View ];
+      }
    }
 
-   function getView() {
-      return _View;
-   }
-
+   //! Called when the application settings have been changed by Garmin Connect Mobile (GCM) while while the app is running. 
+   //!
+   //! Override this method to change app behavior when settings change. 
+   //! @note This is typically used to call for an update to the WatchUi.requestUpdate()
    function onSettingsChanged() {
-      // triggered by settings change in GCM
       updateCurrentDataFieldIds();
 
       checkPendingWebRequests();
       
       _View.onSettingsChanged();
-      WatchUi.requestUpdate(); // update the view to reflect changes
+
+      // update the view to reflect changes
+      WatchUi.requestUpdate(); 
    }
 
    // Determine if any web requests are needed.
@@ -110,7 +125,7 @@ class HuwaiiApp extends Application.AppBase {
       updateLastLocation();
 
       // If watch device does not support background services
-      if (!(Sys has :ServiceDelegate)) {
+      if (!(System has :ServiceDelegate)) {
          return;
       }
 
@@ -246,10 +261,10 @@ class HuwaiiApp extends Application.AppBase {
                _iqAirClientHelper.onBackgroundData(data);
                break;
             case OpenWeatherClient.DATA_TYPE:
-               _openWeatherClientHelper.onBackgroundData(data);
+               _openWeatherClientHelper.onBackgroundData(data); // BUG: Unexpected Type Error sometimes (with BLE error?)
                break;
             default:
-               throw new InvalidValueException(type);
+               System.println("Unknown type:" + type);
                break;
          }  
          
@@ -257,7 +272,7 @@ class HuwaiiApp extends Application.AppBase {
 
       // Save list of any remaining background requests
       setProperty("PendingWebRequests", pendingWebRequests);
-      Ui.requestUpdate();
+      WatchUi.requestUpdate();
    }
 
    function getFormattedDate() {
