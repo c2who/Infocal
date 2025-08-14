@@ -211,6 +211,9 @@ class HuwaiiView extends WatchUi.WatchFace {
       var clockTime = System.getClockTime();
       var minute_changed = clockTime.min != last_draw_minute;
 
+      // Fixed (for simulator only?) clear clip
+      screenDc.clearClip();
+
       // force update layout if settings changed
       if (_layout_changed) {
          onLayout(screenDc);
