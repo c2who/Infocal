@@ -91,8 +91,9 @@ class GraphComplication extends Ui.Drawable {
          ) {
             return Toybox.SensorHistory.getStressHistory({});
          }
+      } else {
+         return null;
       }
-      return null;
    }
 
    function need_draw() {
@@ -152,7 +153,9 @@ class GraphComplication extends Ui.Drawable {
          var HistoryMin = HistoryIter.getMin();
          var HistoryMax = HistoryIter.getMax();
 
-         if (HistoryMin == null || HistoryMax == null) {
+         // Fixed: Prevent divide by zero if diff=0 (min==max)
+         if (   (HistoryMin == null || HistoryMax == null)
+             || (HistoryMin == HistoryMax) ) {
             dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
             dc.drawText(
                position_x,
@@ -180,6 +183,7 @@ class GraphComplication extends Ui.Drawable {
             HistoryPresent = latest_sample.data;
             if (HistoryPresent != null) {
                // draw diagram
+               // Fixed: Divide by zero checked above
                var historyDifPers = (HistoryPresent - HistoryMin) / minMaxDiff;
                var yStep = historyDifPers * height;
                yStep = yStep > height ? height : yStep;
