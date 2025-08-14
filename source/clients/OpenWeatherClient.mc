@@ -52,7 +52,10 @@ class OpenWeatherClient {
         );
     }
    
-    //! Callback handler for makeWebRequest. Decodes response and flatten (extract) data we need
+   //! Callback handler for makeWebRequest. Decodes response and flatten (extract) data we need.
+   //!
+   //! @param  responseCdoe   responseCode: The server response code or a BLE_* error type
+   //! @param  data           the content if the request was successful, or null
    function onReceiveOpenWeatherData(responseCode as Number, data as Dictionary?) {
         var result;
 
@@ -61,7 +64,7 @@ class OpenWeatherClient {
         // Reduces runtime memory spike in main app.
         if (responseCode == 200) {
             result = {
-                "code" => data["cod"],
+                "code" => responseCode,
                 "lat" => data["coord"]["lat"],
                 "lon" => data["coord"]["lon"],
                 "dt" => data["dt"],

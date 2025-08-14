@@ -11,6 +11,9 @@ import Toybox.Lang;
 //! bloating the background service memory usage.
 (:background)
 class BaseClient {
+    //! Make HTTP request (over phone bluetooth connection)
+    //! 
+    //! @see https://developer.garmin.com/connect-iq/api-docs/Toybox/Communications.html#makeWebRequest-instance_function
     static function makeWebRequest(url, params, callback) as Void {
       var options = {
          :method => Communications.HTTP_REQUEST_METHOD_GET,
@@ -95,17 +98,20 @@ class BaseClientHelper {
         }
     }
 
-    static function getHttpErrorCodeText(code as String) as String {
+    //! Decode the makeWebRequest callback responseCode.
+    //! @param  responseCode The server response code or a BLE_* error type
+    //! 
+    //! @see https://developer.garmin.com/connect-iq/api-docs/Toybox/Communications.html
+    static function getCommunicationsErrorCodeText(responseCode as Number) as String {
         try {
-            // FIXED: Handle negative numbers from server
-            switch (code.toNumber().abs()) {
+            switch (responseCode) {
                 case 401: // Unauthorized
                 case 403: // Forbidden
                 case 429: // Too Many Requests (often due to api key quota)
                     return "API KEY";
                     break;
                 default:
-                    return Lang.format("ERR $1$", code);
+                    return Lang.format("ERR $1$", responseCode);
             }   
     
         } catch (ex) {

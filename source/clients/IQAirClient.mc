@@ -59,7 +59,8 @@ class IQAirClient {
 
    //! onReceiveAirQualityData
    //!
-   //! Callback handler for makeWebRequest. Decodes response and flatten (extract) data we need
+   //! @param  responseCdoe   responseCode: The server response code or a BLE_* error type
+   //! @param  data           the content if the request was successful, or null
    function onReceiveAirQualityData(responseCode as Number, data as Dictionary?) {
       var result;
 
