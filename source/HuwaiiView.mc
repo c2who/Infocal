@@ -1,11 +1,9 @@
 using Toybox.Application as App;
-using Toybox.ActivityMonitor as Mon;
-using Toybox.Graphics;
-using Toybox.System;
-using Toybox.Time.Gregorian as Date;
-using Toybox.WatchUi;
 
+import Toybox.Graphics;
 import Toybox.Lang;
+import Toybox.System;
+import Toybox.WatchUi;
 
 var small_digi_font = null;
 var second_digi_font = null;
@@ -53,7 +51,8 @@ class HuwaiiView extends WatchUi.WatchFace {
    private var face_radius;
 
    private var did_clear = false;
-   private var _is_power_budget_exceeded as Boolean = false;
+   private var _isAwake as Boolean?;
+   private var _partialUpdatesAllowed as Boolean;
 
    //! Screen buffer stores a copy of the bitmap rendered to the screen.
    //! This avoids having to fully redraw the screen each update, improving battery life
@@ -63,6 +62,8 @@ class HuwaiiView extends WatchUi.WatchFace {
 
    function initialize() {
       WatchFace.initialize();
+
+      _partialUpdatesAllowed = (WatchUi.WatchFace has :onPartialUpdate);
    }
 
    // Load your resources here
@@ -211,9 +212,6 @@ class HuwaiiView extends WatchUi.WatchFace {
       var clockTime = System.getClockTime();
       var minute_changed = clockTime.min != last_draw_minute;
 
-      // Fixed (for simulator only?) clear clip
-      screenDc.clearClip();
-
       // force update layout if settings changed
       if (_layout_changed) {
          onLayout(screenDc);
@@ -231,11 +229,13 @@ class HuwaiiView extends WatchUi.WatchFace {
       // (do not need to perform full redraw on every update as screen is not cleared)
       var power_save_mode = Application.getApp().getProperty("power_save_mode");
       if ((power_save_mode == false) || minute_changed || _layout_changed || restore_from_resume) {
+         // Clear screen clip region (may be set after onPartialUpdate/onPowerBudgetExceeded on some devices)
+         screenDc.clearClip();
+
          // Use screen_buffer if available
          var dc = (_screen_buffer != null) ? _screen_buffer.getDc() : screenDc;
 
-         //! @note because we can use screen buffering, call mainDrawComponents() instead of View.onUpdate() to draw drawables
-         // XXX: Can we just call View.onUpdate(d) here?
+         //! @note because we can use screen buffering, call mainDrawComponents() instead of View.onUpdate() to update drawables and draw screen
          mainDrawComponents(dc);
 
          // Copy screen buffer to screen
@@ -250,7 +250,7 @@ class HuwaiiView extends WatchUi.WatchFace {
       minute_changed = false;
 
       // Update seconds and hr fields in high power mode
-      if (!_is_power_budget_exceeded) {
+      if (_partialUpdatesAllowed) {
          onPartialUpdate(screenDc);
       }
    }
@@ -312,8 +312,7 @@ class HuwaiiView extends WatchUi.WatchFace {
    //!           Graphics.Dc object using the setClip() method. 
    //! @internal Calls to System.println() and System.print() will not execute on devices when this function is being 
    //!           invoked, but can be used in the device *simulator*.
-   (:partial_update)
-   function onPartialUpdate(dc) {
+   public function onPartialUpdate(dc as Dc) as Void {
 
       if (Application.getApp().getProperty("use_analog")) {
          // not supported
@@ -369,14 +368,11 @@ class HuwaiiView extends WatchUi.WatchFace {
       }
    }
 
-   //! Handle a partial update exceeding the power budget.
-   //! 
-   //! If the onPartialUpdate() callback of the associated WatchFace exceeds the power budget of the device, 
-   //! this method will be called with information about the limits that were exceeded.
-   function onPowerBudgetExceeded(powerInfo as WatchUi.WatchFacePowerInfo) as Void {
-      // Watch has shut down partial updates
-      System.println("Power budget exceeded:" + power.executionTimeAverage.toString());
-      _is_power_budget_exceeded = true;
+   //! Callback from Watch Face events delegate
+   public function onPowerBudgetExceeded() as Void {
+      _partialUpdatesAllowed = false;
+
+      WatchUi.requestUpdate();
    }
 
    // Called when this View is removed from the screen. Save the
@@ -506,4 +502,26 @@ class HuwaiiView extends WatchUi.WatchFace {
       View.findDrawableById("analog").removeFont();
       View.findDrawableById("digital").removeFont();
    }
+}
+
+//! Receive events on a Watch Face.
+class HuwaiiViewDelegate extends WatchUi.WatchFaceDelegate
+{
+   private var _view as HuwaiiView;
+
+	function initialize(view as HuwaiiView) {
+		WatchFaceDelegate.initialize();	
+      _view = view;
+	}
+
+    //! Handle a partial update exceeding the power budget.
+   //! 
+   //! If the onPartialUpdate() callback of the associated WatchFace exceeds the power budget of the device, 
+   //! this method will be called with information about the limits that were exceeded.
+   function onPowerBudgetExceeded(powerInfo as WatchFacePowerInfo) as Void {
+        System.println( "Average execution time: " + powerInfo.executionTimeAverage );
+        System.println( "Allowed execution time: " + powerInfo.executionTimeLimit );
+
+        _view.onPowerBudgetExceeded();
+    }
 }

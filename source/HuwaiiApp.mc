@@ -95,7 +95,7 @@ class HuwaiiApp extends Application.AppBase {
       _View = new HuwaiiView();
 
       if( Toybox.WatchUi.WatchFace has :onPartialUpdate ) {
-         return [ _View, new HuwaiiViewDelegate()  ];
+         return [ _View, new HuwaiiViewDelegate(_View) ];
       } else {
          return [ _View ];
       }
