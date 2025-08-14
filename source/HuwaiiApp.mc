@@ -234,7 +234,7 @@ class HuwaiiApp extends Application.AppBase {
       var keys = service_data.keys();
       for(var i=0; i< keys.size(); i++) {
          var type = keys[i];
-         var data = service_data[type];
+         var data = service_data.get(type);
 
          // New data received: clear pendingWebRequests flag and process data.
          pendingWebRequests.remove(type);
@@ -243,15 +243,15 @@ class HuwaiiApp extends Application.AppBase {
          // Pass to correct client 
          switch (type) {
             case IQAirClient.DATA_TYPE:
-               _iqAirClientHelper.onBackgroundData(type, data);
+               _iqAirClientHelper.onBackgroundData(data);
                break;
             case OpenWeatherClient.DATA_TYPE:
-               _openWeatherClientHelper.onBackgroundData(type, data);
+               _openWeatherClientHelper.onBackgroundData(data);
                break;
             default:
                throw new InvalidValueException(type);
                break;
-         }
+         }  
          
       }
 

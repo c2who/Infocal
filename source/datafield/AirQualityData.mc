@@ -24,7 +24,7 @@ class AirQualityField extends BaseDataField {
          var error = App.getApp().getProperty(IQAirClient.DATA_TYPE + Constants.DATA_TYPE_ERROR_SUFFIX);
          if (error != null) {
             // Error
-            return BaseClientHelper.getHttpErrorCodeText(error["code"]);
+            return BaseClientHelper.getCommunicationsErrorCodeText(error["code"]);
          } else {
             // No Data
             if (need_minimal) {

@@ -40,22 +40,20 @@ class BaseClientHelper {
     // Defaults
     protected var _max_retries = 3;
     protected var _retry_backoff_minutes = 30;
-    protected var _max_age_seconds = 30 * SECONDS_PER_MINUTE;
+    protected var _update_interval_secs = 30 * SECONDS_PER_MINUTE;
 
     function initialize(type as String) {
-        _type = type;
+        self._type = type;
     }
 
     //! Determines if the current data needs to be updated
     //! @internal This method _must_ be called every minute to avoid missing the retry remain=0 roll-over 
     function needsDataUpdate() as Boolean {
-        var type = _type;
-
         // Check data valid and recent (within last 30 minutes)
         // Note: We use clientTs as we do not *know* how often weather data is updated (typically hourly)
         var app = Application.getApp();
-        var data = app.getProperty(type);
-        var retries = app.getProperty(type + Constants.DATA_TYPE_RETRIES_SUFFIX);
+        var data = app.getProperty(_type);
+        var retries = app.getProperty(_type + Constants.DATA_TYPE_RETRIES_SUFFIX);
 
         if ( (data == null) || (data["clientTs"] == null) ) {
             // new system, no data is valid
@@ -67,8 +65,8 @@ class BaseClientHelper {
             var remain = ((Time.now().value() - data["clientTs"]) / SECONDS_PER_MINUTE) % _retry_backoff_minutes;
             return (remain == 0);
 
-        } else if (data["clientTs"] < (Time.now().value() - _max_age_seconds)) {
-            // Data is > 30mins old
+        } else if (data["clientTs"] < (Time.now().value() - _update_interval_secs)) {
+            // Data age is > update interval
             return true;
         } else {
             // Data still valid
@@ -76,25 +74,21 @@ class BaseClientHelper {
         }
     }
 
-    function onBackgroundData(type as String, data as Dictionary<String, Lang.Any>) {
-        if (!_type.equals(type)) {
-            throw new InvalidValueException(type);
-        }
-        
+    function onBackgroundData(data as Dictionary<String, Lang.Any>) {
         // Store data
         var app = App.getApp();
         if ((data != null) && (data["code"] == 200)) {
             // Valid data
-            app.setProperty(type, data);
-            app.setProperty(type + Constants.DATA_TYPE_ERROR_SUFFIX, null);
-            app.setProperty(type + Constants.DATA_TYPE_RETRIES_SUFFIX, null);
+            app.setProperty(_type, data);
+            app.setProperty(_type + Constants.DATA_TYPE_ERROR_SUFFIX, null);
+            app.setProperty(_type + Constants.DATA_TYPE_RETRIES_SUFFIX, null);
         } else {
             // return error to the caller, and update retries count
-            var retries = app.getProperty(type + Constants.DATA_TYPE_RETRIES_SUFFIX);
+            var retries = app.getProperty(_type + Constants.DATA_TYPE_RETRIES_SUFFIX);
             retries = (retries == null) ? 1 : (retries+1);
 
-            app.setProperty(type + Constants.DATA_TYPE_ERROR_SUFFIX, data);
-            app.setProperty(type + Constants.DATA_TYPE_RETRIES_SUFFIX, retries);
+            app.setProperty(_type + Constants.DATA_TYPE_ERROR_SUFFIX, data);
+            app.setProperty(_type + Constants.DATA_TYPE_RETRIES_SUFFIX, retries);
         }
     }
 

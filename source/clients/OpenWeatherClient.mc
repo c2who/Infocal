@@ -104,7 +104,7 @@ public class OpenWeatherHelper extends BaseClientHelper {
         BaseClientHelper.initialize(OpenWeatherClient.DATA_TYPE);
 
         // Update weather every 15 minutes
-        _max_age_seconds = 15 * SECONDS_PER_MINUTE;
+        _update_interval_secs = 15 * SECONDS_PER_MINUTE;
    }
 
    function needsDataUpdate() as Boolean {
