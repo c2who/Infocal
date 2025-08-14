@@ -280,8 +280,8 @@ class DigitalDial extends Ui.Drawable {
          var y_offset = height * 0.75;
          var hourW = dc.getTextWidthInPixels(hourText, boldF);
          var minuW = dc.getTextWidthInPixels(minuText, normF);
-         var width = hourW + minuW + 6;
-         var left = center_x - width/2;
+         var time_width = hourW + minuW + 6;
+         var left = center_x - time_width/2;
          
          // Draw time
          dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
@@ -300,9 +300,11 @@ class DigitalDial extends Ui.Drawable {
             Graphics.TEXT_JUSTIFY_LEFT
          );
 
-         // Save globals - Calculate Layout of seconds and heart rate 
-         second_x = center_x + width/2 + 1;
-         heart_x = center_x - width/2 - 1;
+         // Fix: Use fixed seconds/hr layout - to avoid screen paint issues as time width changes
+         // Save globals - Calculate Layout of seconds and heart rate (with widest digits)
+         var mask_width = dc.getTextWidthInPixels("24", boldF) + dc.getTextWidthInPixels("44", normF) + 6;
+         second_x = center_x + mask_width/2 + 1;
+         heart_x = center_x - mask_width/2 - 1;
          second_y = center_y - second_font_height_half; // centre-justified
       }
 
