@@ -117,6 +117,15 @@ public class IQAirClientHelper extends BaseClientHelper {
       var default_key = Keys.getIQAirDefaultKey();
       Application.AppBase.setProperty("iqair_api_2", default_key);
 
+      // Update rate: default = 6 hours (360 minutes); user api key = 30 minutes
+      var user_key = Application.AppBase.getProperty(("iqair_api"));
+      if ((user_key == null) || (user_key.length() == 0)) {
+          _update_interval_secs = 360 * SECONDS_PER_MINUTE;
+      } else {
+          _update_interval_secs = 30 * SECONDS_PER_MINUTE;
+      }
+      
+
       return BaseClientHelper.needsDataUpdate();
    }
 }
