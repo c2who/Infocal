@@ -38,7 +38,7 @@ class HuwaiiView extends WatchUi.WatchFace {
    //! Additional memory margin (in bytes) to safely create screen BufferedBitmap
    // Minimum memory = (screen buffer size) + (runtime margin)
    private static const RUNTIME_MEM_MARGIN_MIN = 5000;   //bytes
-   
+
    private const _screenShape as ScreenShape = System.getDeviceSettings().screenShape;;
 
    private var _layout_changed as Lang.Boolean = false;
@@ -55,7 +55,7 @@ class HuwaiiView extends WatchUi.WatchFace {
    private var did_clear = false;
    private var _isAwake as Boolean = true;
    private var _partialUpdatesAllowed as Boolean;
-   
+
    //! Screen buffer stores a copy of the bitmap rendered to the screen.
    //! This avoids having to fully redraw the screen each update, improving battery life
    //! @note Screen bufferring can only be used on (newer) devices with larger memory,
@@ -121,14 +121,14 @@ class HuwaiiView extends WatchUi.WatchFace {
       // FIXED: Permanently disable memory-intensive operation if previously caused OOM crash
       // FIXED: Do not create screen buffer if insufficient memory (based on screen size)
       if (   (enable_buffering)
-          && (_screen_buffer == null) 
+          && (_screen_buffer == null)
           && (err_runtime_oom != true)
           && (free_mem >= buffer_size + RUNTIME_MEM_MARGIN_MIN) ) {
-         
+
          try {
             // Safety: Store semaphore to detect if operation causes runtime OOM fatal
             Application.Storage.setValue("err_runtime_oom", true);
-            
+
             // Allow buffer (requires 65KB+ free memory)
             // TODO: Specify the color palette required, to reduce buffer memory size
             var params = {
@@ -143,7 +143,7 @@ class HuwaiiView extends WatchUi.WatchFace {
                // Not supported
                _screen_buffer = null;
             }
-             
+
             // OK (not run during fatal oom; or catchable exceptions)
             Application.Storage.deleteValue("err_runtime_oom");
          } catch (ex) {
@@ -202,13 +202,13 @@ class HuwaiiView extends WatchUi.WatchFace {
    }
 
    //! Update the View.
-   //! This is called when a View is brought to the foreground, after the call to onShow(). 
+   //! This is called when a View is brought to the foreground, after the call to onShow().
    //! There are also some special cases when it will be invoked:
    //! - On WatchUi.requestUpdate() calls within Widgets and Watch Apps
    //! - Once per minute in Watch Faces when in low power mode
    //! - Once per second in Watch Faces when in high power mode
    //! - Once per second in Data Fields
-   //! 
+   //!
    //! @note More than one call to onUpdate() may occur during View transitions
    function onUpdate(screenDc) {
       var clockTime = System.getClockTime();
@@ -218,11 +218,11 @@ class HuwaiiView extends WatchUi.WatchFace {
       if (_layout_changed) {
          onLayout(screenDc);
       }
-      
+
       if (minute_changed) {
          calculateBatteryConsumption();
       }
-      
+
       if (restore_from_resume || minute_changed) {
          App.getApp().checkPendingWebRequests();
       }
@@ -254,7 +254,7 @@ class HuwaiiView extends WatchUi.WatchFace {
       // Update seconds and hr fields in high power mode (or at top of minute during sleep partial updates)
       if (_isAwake || _partialUpdatesAllowed) {
          onPartialUpdate(screenDc);
-      } 
+      }
    }
 
    //! Draw Drawables using our own device context (potentially a screen buffer)
@@ -306,13 +306,13 @@ class HuwaiiView extends WatchUi.WatchFace {
 
    //! Update a portion of the screen.
    //! Partial updates can be used to update a small part of the screen to allow for Always On Watch Faces.
-   //! This method is called each second as long as the device power budget is not exceeded. 
+   //! This method is called each second as long as the device power budget is not exceeded.
    //! @note     If the call to this method exceeds the power budget of the device, the partial update will not draw and
    //!           a call to onPowerBudgetExceeded() is made to report the limits that were exceeded.
-   //! @internal It is important to update as small of a portion of the display as possible in this method to avoid 
-   //!           exceeding the allowed power budget. To do this, the application must set the clipping region for the 
-   //!           Graphics.Dc object using the setClip() method. 
-   //! @internal Calls to System.println() and System.print() will not execute on devices when this function is being 
+   //! @internal It is important to update as small of a portion of the display as possible in this method to avoid
+   //!           exceeding the allowed power budget. To do this, the application must set the clipping region for the
+   //!           Graphics.Dc object using the setClip() method.
+   //! @internal Calls to System.println() and System.print() will not execute on devices when this function is being
    //!           invoked, but can be used in the device *simulator*.
    public function onPartialUpdate(dc as Dc) as Void {
 
@@ -357,7 +357,7 @@ class HuwaiiView extends WatchUi.WatchFace {
          var h = _retrieveHeartrate();
          if ((h != null) && (h > 0)) {
             var heart_text = h.format("%d");
-         
+
             dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
             dc.drawText(
                heart_x - 1,
@@ -522,13 +522,13 @@ class HuwaiiViewDelegate extends WatchUi.WatchFaceDelegate
 	}
 
     //! Handle a partial update exceeding the power budget.
-   //! 
-   //! If the onPartialUpdate() callback of the associated WatchFace exceeds the power budget of the device, 
+   //!
+   //! If the onPartialUpdate() callback of the associated WatchFace exceeds the power budget of the device,
    //! this method will be called with information about the limits that were exceeded.
    function onPowerBudgetExceeded(powerInfo as WatchFacePowerInfo) as Void {
         System.println( "Average execution time: " + powerInfo.executionTimeAverage );
         System.println( "Allowed execution time: " + powerInfo.executionTimeLimit );
-        
+
         _view.onPowerBudgetExceeded();
     }
 }
