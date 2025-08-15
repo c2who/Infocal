@@ -27,10 +27,10 @@ class BackgroundView extends Ui.Drawable {
       for (var i = 0; i < 6; i += 1) {
          var rad = (i.toFloat() / 6.0) * 2 * Math.PI;
          dc.drawLine(
-            convertCoorX(rad, radius - mark_length / 2),
-            convertCoorY(rad, radius - mark_length / 2),
-            convertCoorX(rad, radius + mark_length / 2),
-            convertCoorY(rad, radius + mark_length / 2)
+            Utility.convertCoorX(rad, radius - mark_length / 2),
+            Utility.convertCoorY(rad, radius - mark_length / 2),
+            Utility.convertCoorX(rad, radius + mark_length / 2),
+            Utility.convertCoorY(rad, radius + mark_length / 2)
          );
       }
 
@@ -96,10 +96,10 @@ class BackgroundView extends Ui.Drawable {
             }
 
             dc.drawLine(
-               convertCoorX(rad, radius - 20 - bonus),
-               convertCoorY(rad, radius - 20 - bonus),
-               convertCoorX(rad, radius - 13),
-               convertCoorY(rad, radius - 13)
+               Utility.convertCoorX(rad, radius - 20 - bonus),
+               Utility.convertCoorY(rad, radius - 20 - bonus),
+               Utility.convertCoorX(rad, radius - 13),
+               Utility.convertCoorY(rad, radius - 13)
             );
          }
       }

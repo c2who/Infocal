@@ -215,10 +215,10 @@ class AnalogDial extends Ui.Drawable {
       var radian =
          2 * (getSecondHandFragment() / 60.0) * Math.PI - 0.5 * Math.PI;
 
-      var startx = convertCoorX(radian, base_radius);
-      var starty = convertCoorY(radian, base_radius);
-      var endx = convertCoorX(radian, minu_radius);
-      var endy = convertCoorY(radian, minu_radius);
+      var startx = Utility.convertCoorX(radian, base_radius);
+      var starty = Utility.convertCoorY(radian, base_radius);
+      var endx = Utility.convertCoorX(radian, minu_radius);
+      var endy = Utility.convertCoorY(radian, minu_radius);
 
       dc.setColor(gsecondary_color, Graphics.COLOR_TRANSPARENT);
       dc.setPenWidth(base_thick);
@@ -228,14 +228,14 @@ class AnalogDial extends Ui.Drawable {
    //! Draw *image* font based on parameters packed in jsondata
    //!
    //! - The hour/minute/bar images are drawn from custom made fonts
-   //! - The JsonData files contain packed instructions on how to draw 
+   //! - The JsonData files contain packed instructions on how to draw
    //!   the full image from the font characters.
    //! - Each JsonData number represents an image part (tile) with byte encoding:
    //!   [ flags|char|xpos|ypos ]
    function drawTiles(packed_array, font, dc, index) {
       var radian = (index.toFloat() / 60.0) * (2 * 3.1415) - 0.5 * 3.1415;
-      var offset_rad_x = convertCoorX(radian, offset_rad) - center_x;
-      var offset_rad_y = convertCoorY(radian, offset_rad) - center_y;
+      var offset_rad_x = Utility.convertCoorX(radian, offset_rad) - center_x;
+      var offset_rad_y = Utility.convertCoorY(radian, offset_rad) - center_y;
       for (var i = 0; i < packed_array.size(); i++) {
          var val = packed_array[i];
          var flag = (val >> 24) & 255;

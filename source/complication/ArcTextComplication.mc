@@ -67,6 +67,16 @@ class ArcTextComplication extends Ui.Drawable {
    var angle;
    var kerning = 1.0;
 
+   static function degreesToRadians(degrees) {
+      return (degrees * Math.PI) / 180;
+   }
+
+   static function radiansToDegrees(radians) {
+      return (radians * 180) / Math.PI;
+   }
+
+
+
    function initialize(params) {
       Drawable.initialize(params);
       barRadius = center_x - ((13 * center_x) / 120).toNumber();
@@ -165,8 +175,8 @@ class ArcTextComplication extends Ui.Drawable {
             var targetRadian =
                baseRadian + (lastRad - ra / 2.0) * accumulation_sign;
 
-            var labelCurX = convertCoorX(targetRadian, barRadius);
-            var labelCurY = convertCoorY(targetRadian, barRadius);
+            var labelCurX = Utility.convertCoorX(targetRadian, barRadius);
+            var labelCurY = Utility.convertCoorY(targetRadian, barRadius);
 
             set_font(targetRadian);
             dc.drawText(labelCurX, labelCurY, font, charArray[i].toString(), alignment);

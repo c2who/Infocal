@@ -68,7 +68,7 @@ class ActiveVigorousField extends BaseDataField {
    function max_val() {
       var activityInfo = ActivityMonitor.getInfo();
       return activityInfo.activeMinutesWeekGoal.toFloat();
-  } 
+  }
 
    function cur_val() {
       var activityInfo = ActivityMonitor.getInfo();
@@ -107,7 +107,7 @@ class DistanceField extends BaseDataField {
    function max_label(value) {
       value = value / 1000.0;
       value = value / 100.0; // convert cm to km
-      var valKp = App.getApp().toKValue(value);
+      var valKp = toKValue(value);
       return Lang.format("$1$K", [valKp]);
    }
 
@@ -128,7 +128,7 @@ class DistanceField extends BaseDataField {
       if (need_minimal) {
          return Lang.format("$1$ $2$", [kilo.format("%0.1f"), unit]);
       } else {
-         var valKp = App.getApp().toKValue(kilo * 1000);
+         var valKp = toKValue(kilo * 1000);
          return Lang.format("DIS $1$$2$", [valKp, unit]);
       }
    }
@@ -154,7 +154,7 @@ class CaloField extends BaseDataField {
    }
 
    function max_label(value) {
-      var valKp = App.getApp().toKValue(value);
+      var valKp = toKValue(value);
       return Lang.format("$1$K", [valKp]);
    }
 
@@ -167,7 +167,7 @@ class CaloField extends BaseDataField {
             activeCalories.format("%d"),
          ]);
       } else {
-         var valKp = App.getApp().toKValue(value);
+         var valKp = toKValue(value);
          return Lang.format("$1$K-$2$", [valKp, activeCalories.format("%d")]);
       }
    }
@@ -248,7 +248,7 @@ class StepField extends BaseDataField {
    }
 
    function max_label(value) {
-      var valKp = App.getApp().toKValue(value);
+      var valKp = toKValue(value);
       return Lang.format("$1$K", [valKp]);
    }
 
@@ -262,7 +262,7 @@ class StepField extends BaseDataField {
             return Lang.format("STEP $1$", [currentStep.format("%d")]);
          }
       } else {
-         var valKp = App.getApp().toKValue(currentStep);
+         var valKp = toKValue(currentStep);
          return Lang.format("STEP $1$K", [valKp]);
       }
    }
@@ -323,7 +323,7 @@ class WeekDistanceField extends BaseDataField {
       if (need_minimal) {
          return Lang.format("$1$ $2$", [kilo.format("%0.1f"), unit]);
       } else {
-         var valKp = App.getApp().toKValue(kilo * 1000);
+         var valKp = toKValue(kilo * 1000);
          return Lang.format("DIS $1$$2$", [valKp, unit]);
       }
    }

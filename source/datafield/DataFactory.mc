@@ -188,6 +188,11 @@ class BaseDataField {
    function bar_data() {
       return false;
    }
+
+   static function toKValue(value) {
+      var valK = value / 1000.0;
+      return valK.format("%0.1f");
+   }
 }
 
 class EmptyDataField {

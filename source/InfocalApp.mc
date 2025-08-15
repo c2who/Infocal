@@ -16,22 +16,6 @@ import Toybox.WatchUi;
 var gLocationLat = null;
 var gLocationLon = null;
 
-function degreesToRadians(degrees) {
-   return (degrees * Math.PI) / 180;
-}
-
-function radiansToDegrees(radians) {
-   return (radians * 180) / Math.PI;
-}
-
-function convertCoorX(radians, radius) {
-   return center_x + radius * Math.cos(radians);
-}
-
-function convertCoorY(radians, radius) {
-   return center_y + radius * Math.sin(radians);
-}
-
 // FIXME: Move all code not required for (:background) runtime out of InfocalApp class
 //        - background runtime is *very* memory limited, so must avoid issues on smaller devices
 (:background)
@@ -113,6 +97,57 @@ class InfocalApp extends Application.AppBase {
       _View.onSettingsChanged();
 
       // update the view to reflect changes
+      WatchUi.requestUpdate();
+   }
+
+   //! Get a ServiceDelegate to run background tasks for this app.
+   //! When a ServiceDelegate is retrieved, the following will occur:
+   //! - The method triggered within the ServiceDelegate will be run
+   //! - The background task will exit using Background.exit() or System.exit()
+   //! @warn The background task will be automatically terminated after 30 seconds if it is not exited by these methods
+   function getServiceDelegate() {
+      return [new BackgroundService()];
+   }
+
+   //! Handle data passed from a ServiceDelegate to the application.
+   //! @param  service_data  Dictionary of data returned from service delegate
+   //!
+   //! When the Background process terminates, a data payload may be available.
+   //! - If the main application is active when this occurs, the data will be passed to the application's onBackgroundData() method.
+   //! - If the main application is not active, the data will be saved until the next time the application is launched and
+   //!   will be passed to the application after the onStart() method completes.
+   function onBackgroundData(service_data) {
+      var pendingWebRequests = getProperty("PendingWebRequests");
+      if (pendingWebRequests == null) {
+         pendingWebRequests = {};
+      }
+
+      var keys = service_data.keys();
+      for(var i=0; i< keys.size(); i++) {
+         var type = keys[i];
+         var data = service_data.get(type);
+
+         // New data received: clear pendingWebRequests flag and process data.
+         pendingWebRequests.remove(type);
+         setProperty("PendingWebRequests", pendingWebRequests);
+
+         // Pass to correct client
+         switch (type) {
+            case IQAirClient.DATA_TYPE:
+               _iqAirClientHelper.onBackgroundData(data);
+               break;
+            case OpenWeatherClient.DATA_TYPE:
+               _openWeatherClientHelper.onBackgroundData(data); // BUG: Unexpected Type Error sometimes (with BLE error?)
+               break;
+            default:
+               System.println("Unknown type:" + type);
+               break;
+         }
+
+      }
+
+      // Save list of any remaining background requests
+      setProperty("PendingWebRequests", pendingWebRequests);
       WatchUi.requestUpdate();
    }
 
@@ -223,58 +258,6 @@ class InfocalApp extends Application.AppBase {
       }
    }
 
-
-   //! Get a ServiceDelegate to run background tasks for this app.
-   //! When a ServiceDelegate is retrieved, the following will occur:
-   //! - The method triggered within the ServiceDelegate will be run
-   //! - The background task will exit using Background.exit() or System.exit()
-   //! @warn The background task will be automatically terminated after 30 seconds if it is not exited by these methods
-   function getServiceDelegate() {
-      return [new BackgroundService()];
-   }
-
-   //! Handle data passed from a ServiceDelegate to the application.
-   //! @param  service_data  Dictionary of data returned from service delegate
-   //!
-   //! When the Background process terminates, a data payload may be available.
-   //! - If the main application is active when this occurs, the data will be passed to the application's onBackgroundData() method.
-   //! - If the main application is not active, the data will be saved until the next time the application is launched and
-   //!   will be passed to the application after the onStart() method completes.
-   function onBackgroundData(service_data) {
-      var pendingWebRequests = getProperty("PendingWebRequests");
-      if (pendingWebRequests == null) {
-         pendingWebRequests = {};
-      }
-
-      var keys = service_data.keys();
-      for(var i=0; i< keys.size(); i++) {
-         var type = keys[i];
-         var data = service_data.get(type);
-
-         // New data received: clear pendingWebRequests flag and process data.
-         pendingWebRequests.remove(type);
-         setProperty("PendingWebRequests", pendingWebRequests);
-
-         // Pass to correct client
-         switch (type) {
-            case IQAirClient.DATA_TYPE:
-               _iqAirClientHelper.onBackgroundData(data);
-               break;
-            case OpenWeatherClient.DATA_TYPE:
-               _openWeatherClientHelper.onBackgroundData(data); // BUG: Unexpected Type Error sometimes (with BLE error?)
-               break;
-            default:
-               System.println("Unknown type:" + type);
-               break;
-         }
-
-      }
-
-      // Save list of any remaining background requests
-      setProperty("PendingWebRequests", pendingWebRequests);
-      WatchUi.requestUpdate();
-   }
-
    function getFormattedDate() {
       var now = Time.now();
       var date = Date.info(now, Time.FORMAT_SHORT);
@@ -346,8 +329,4 @@ class InfocalApp extends Application.AppBase {
       }
    }
 
-   function toKValue(value) {
-      var valK = value / 1000.0;
-      return valK.format("%0.1f");
-   }
 }
