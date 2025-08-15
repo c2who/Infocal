@@ -44,7 +44,6 @@ activity current location (Simulation > Activity Data).
 
 ### Simulator Limitations
 The Garmin Simulator does not implent all of the device behaviors, here are some of the known limitations:
-- Watch cannot enter/exit sleep mode - always in high-power mode
 - OnUpdate() does not clear the screen
   (all newer watches clear screen on update, so must perform a full screen refresh;
   older watches allowed incremental draw on update, allowing incredible power efficiency)
@@ -52,7 +51,52 @@ The Garmin Simulator does not implent all of the device behaviors, here are some
 # Fonts
 
 ## DigitalDial Fonts
-seconds and heart rate digit fonts are stored in:
+The seconds and heart rate digit fonts are stored in:
   - secodigi.fntc (Samll size)
   - xsecodigi.fntc (Medium size)
   The font files have been edited to fix the incorrect lineHeight
+
+## Arc Fonts
+The arc fonts are stored in 60 (sixty) seperate font files [e0..e60] representing the angles 0° to 180°,
+whereby the character set in each font file _eN__ is rotated by 3° * _N_.
+To display the text around the arc:
+For each character:
+  1. Calculate the font resource based on angle
+  2. load the font resource
+  3. write out the single character at corresponding [x,y] coordinates
+  4. Unload the font resource
+
+Depending on the number of characters displayed along the circumference, a single onUpdate()
+may require the loadResource() and free(null) of typically 40 (forty) different font resources for a single refresh!
+
+Note that all fonts must be written with anti-aliasing (a grayscale of intensities) to look smooth.
+
+# Arc Bar Data Fonts
+The 5-segment bar chart along an arc, with the arrow pointer is made up of
+different characters of a custom font:
+- arrow top     (arr_up, arr_up_sm, arr_up_big, arr_up_xbig)
+- arrow bottom  (arr_bo, arr_bo_sm, arr_bo_big, arr_bo_xbigs)
+- curve top     (cur_up, cur_up_sm, cur_up_big, cur_up_xbig)
+- curve bottom  (cur_bo, cur_bo_sm, cur_bo_big, cur_bo_xbig)
+
+## Screen Buffer
+The idea behind the screen buffer is that you can write (and cache) all your graphics and text in
+a local buffer, so that when a full screen refresh is required (onUpdate) you can simply copy
+the screen buffer to the device, saving a lot of execution time.
+
+(1) Note: the Screen Buffer today does not provide the full benefits - onUpdate() all components are fully
+redrawn into the screen buffer, before being copied to the screen.
+
+The following drawables are written to the screen buffer:
+ - Background             (dc.clear / fillRectangle)
+ - BackgroundView(Ticks)  [background] drawable
+ - ArcText Complication   [aBarDisplay ... fBarDisplay] drawables
+ - BarData Complication   [bUBarDisplay, tUBarDisplay] drawables
+ - Graph Complication     [bGraphDisplay, tGraphDisplay] drawables
+ - Analog Dial            [analog] drawable
+ - Digital Dial           [digital] drawable
+
+ The following items are not stored in the screen buffer, and are written
+ directly to the screen:
+ - Heart rate (Always on optional)
+ - Seconds (Alwyas on optional)
