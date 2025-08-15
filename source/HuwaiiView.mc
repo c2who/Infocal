@@ -51,7 +51,7 @@ class HuwaiiView extends WatchUi.WatchFace {
    private var face_radius;
 
    private var did_clear = false;
-   private var _isAwake as Boolean?;
+   private var _isAwake as Boolean = true;
    private var _partialUpdatesAllowed as Boolean;
 
    //! Screen buffer stores a copy of the bitmap rendered to the screen.
@@ -249,8 +249,8 @@ class HuwaiiView extends WatchUi.WatchFace {
       restore_from_resume = false;
       minute_changed = false;
 
-      // Update seconds and hr fields in high power mode
-      if (_partialUpdatesAllowed) {
+      // Update seconds and hr fields in high power mode (or at top of minute during sleep partial updates)
+      if (_isAwake || _partialUpdatesAllowed) {
          onPartialUpdate(screenDc);
       }
    }
@@ -385,6 +385,8 @@ class HuwaiiView extends WatchUi.WatchFace {
    //! Timers and animations may be started here in preparation for once-per-second updates.
    //! (the user has just looked at their watch)
    function onExitSleep() {
+      _isAwake = true;
+
       var dialDisplay = View.findDrawableById("analog");
       if (dialDisplay != null) {
          dialDisplay.enableSecondHand();
@@ -395,6 +397,8 @@ class HuwaiiView extends WatchUi.WatchFace {
    //! The device is entering low power mode.
    //! Terminate any active timers and prepare for once-per-minute updates.
    function onEnterSleep() {
+      _isAwake = false;
+
       // If the analog dial is used then disable the seconds hand.
       if (Application.getApp().getProperty("use_analog")) {
          var dialDisplay = View.findDrawableById("analog");
@@ -402,6 +406,7 @@ class HuwaiiView extends WatchUi.WatchFace {
             dialDisplay.disableSecondHand();
          }
       }
+      WatchUi.requestUpdate();
    }
 
    function updateLayoutColors() {

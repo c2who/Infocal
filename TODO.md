@@ -13,4 +13,7 @@
 
 [ ] FIXME: [Display] Fix the broken Digital and Analog complication layout on many watch sizes 
 
+[ ] FIXME: [Display] onPartialUpdate() measures Graphics Time as 5310000 µsec (5.3 seconds) - even with nothing diplayed!
+    This is causing onPowerBudgetExceeded() to trigger - on both Simulation and real hardware :/
+
 ## Wish List
