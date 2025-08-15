@@ -39,6 +39,8 @@ class HuwaiiView extends WatchUi.WatchFace {
    // Minimum memory = (screen buffer size) + (runtime margin)
    private static const RUNTIME_MEM_MARGIN_MIN = 5000;   //bytes
    
+   private const _screenShape as ScreenShape = System.getDeviceSettings().screenShape;;
+
    private var _layout_changed as Lang.Boolean = false;
    private var last_draw_minute = -1;
    private var last_resume_milli = 0;
@@ -53,7 +55,7 @@ class HuwaiiView extends WatchUi.WatchFace {
    private var did_clear = false;
    private var _isAwake as Boolean = true;
    private var _partialUpdatesAllowed as Boolean;
-
+   
    //! Screen buffer stores a copy of the bitmap rendered to the screen.
    //! This avoids having to fully redraw the screen each update, improving battery life
    //! @note Screen bufferring can only be used on (newer) devices with larger memory,
@@ -252,7 +254,7 @@ class HuwaiiView extends WatchUi.WatchFace {
       // Update seconds and hr fields in high power mode (or at top of minute during sleep partial updates)
       if (_isAwake || _partialUpdatesAllowed) {
          onPartialUpdate(screenDc);
-      }
+      } 
    }
 
    //! Draw Drawables using our own device context (potentially a screen buffer)
@@ -515,7 +517,7 @@ class HuwaiiViewDelegate extends WatchUi.WatchFaceDelegate
    private var _view as HuwaiiView;
 
 	function initialize(view as HuwaiiView) {
-		WatchFaceDelegate.initialize();	
+		WatchFaceDelegate.initialize();
       _view = view;
 	}
 
@@ -526,7 +528,7 @@ class HuwaiiViewDelegate extends WatchUi.WatchFaceDelegate
    function onPowerBudgetExceeded(powerInfo as WatchFacePowerInfo) as Void {
         System.println( "Average execution time: " + powerInfo.executionTimeAverage );
         System.println( "Allowed execution time: " + powerInfo.executionTimeLimit );
-
+        
         _view.onPowerBudgetExceeded();
     }
 }
