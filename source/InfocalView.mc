@@ -45,6 +45,7 @@ class InfocalView extends WatchUi.WatchFace {
    private var last_draw_minute = -1;
    private var last_resume_milli = 0;
    private var restore_from_resume = false;
+   private var restore_from_sleep = false;
 
    private var last_battery_hour = null;
 
@@ -133,14 +134,17 @@ class InfocalView extends WatchUi.WatchFace {
          calculateBatteryConsumption();
       }
 
-      if (restore_from_resume || minute_changed) {
+      if (restore_from_resume || minute_changed || _layout_changed) {
          App.getApp().checkPendingWebRequests();
       }
 
-      // On older watches, can get away with only performing full update every minute
-      // (do not need to perform full redraw on every update as screen is not cleared)
+      // On some older devices (e.g. vivoactive_hr):
+      //       - you can avoid performing a full screen draw every minute
+      //       - do not need to perform full redraw on every update as screen is not cleared
+      //       - you just need to do full redraw on: onLayout, onShow and onExitSleep
+      //         (and for this app minute_changed to print a new hh:mm time)
       var power_save_mode = Application.getApp().getProperty("power_save_mode");
-      if ((power_save_mode == false) || minute_changed || _layout_changed || restore_from_resume) {
+      if ((power_save_mode == false) || _layout_changed || restore_from_resume || restore_from_sleep || minute_changed) {
          // Clear screen clip region (may be set after onPartialUpdate/onPowerBudgetExceeded on some devices)
          screenDc.clearClip();
 
@@ -159,6 +163,7 @@ class InfocalView extends WatchUi.WatchFace {
       // Reset draw state flags
       last_draw_minute = clockTime.min;
       restore_from_resume = false;
+      restore_from_sleep = false;
       minute_changed = false;
 
       // Update seconds and hr fields in high power mode (or at top of minute during sleep partial updates)
@@ -244,6 +249,7 @@ class InfocalView extends WatchUi.WatchFace {
    //! Timers and animations may be started here in preparation for once-per-second updates.
    //! (the user has just looked at their watch)
    function onExitSleep() {
+      restore_from_sleep = true;
       _isAwake = true;
 
       var dialDisplay = View.findDrawableById("analog");
@@ -277,8 +283,10 @@ class InfocalView extends WatchUi.WatchFace {
       var enable_buffering = Application.getApp().getProperty("enable_buffering");
       var err_runtime_oom = Application.Storage.getValue("err_runtime_oom");
       var stats = System.getSystemStats();
-      var buffer_size = (dc.getWidth() * dc.getHeight()) + 1000 ; // Rough estimate of screen buffer size, in bytes (based on default 256 colors)
       var free_mem = stats.freeMemory;
+
+      // Rough estimate of screen buffer size, in bytes (based on default 256 colors)
+      var buffer_size = (dc.getWidth() * dc.getHeight()) + 1000 ;
 
       // FIXED: Permanently disable memory-intensive operation if previously caused OOM crash
       // FIXED: Do not create screen buffer if insufficient memory (based on screen size)
@@ -291,7 +299,6 @@ class InfocalView extends WatchUi.WatchFace {
             // Safety: Store semaphore to detect if operation causes runtime OOM fatal
             Application.Storage.setValue("err_runtime_oom", true);
 
-            // Allow buffer (requires 65KB+ free memory)
             // TODO: Specify the color palette required, to reduce buffer memory size
             var params = {
                :width => dc.getWidth(),
