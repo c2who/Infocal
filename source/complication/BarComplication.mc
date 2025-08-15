@@ -199,7 +199,7 @@ class BarComplication extends Ui.Drawable {
    //! Draw *image* font based on parameters packed in jsondata
    //!
    //! - The hour/minute/bar images are drawn from custom made fonts
-   //! - The JsonData files contain packed instructions on how to draw 
+   //! - The JsonData files contain packed instructions on how to draw
    //!   the full image from the font characters.
    //! - Each JsonData number represents an image part (tile) with byte encoding:
    //!   [ flags|char|xpos|ypos ]

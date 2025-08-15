@@ -102,7 +102,7 @@ class IQAirClient {
 
 }
 
-//! IQAir (Foreground) client support 
+//! IQAir (Foreground) client support
 //!
 //! @note Where possible, code is placed in the foreground client, to avoid
 //! bloating the background service memory usage.
@@ -124,7 +124,7 @@ public class IQAirClientHelper extends BaseClientHelper {
       } else {
           _update_interval_secs = 30 * SECONDS_PER_MINUTE;
       }
-      
+
 
       return BaseClientHelper.needsDataUpdate();
    }

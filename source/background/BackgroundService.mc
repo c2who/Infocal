@@ -17,7 +17,7 @@ class BackgroundService extends Sys.ServiceDelegate {
 
    // Cached results
    private var _results = {} as Dictionary<String, Dictionary<String, Lang.Any>>;
-   
+
    // List of result (types) still pending
    private var _pendingResults as Array<String> = [];
 
@@ -28,7 +28,7 @@ class BackgroundService extends Sys.ServiceDelegate {
    function initialize() {
       Sys.ServiceDelegate.initialize();
    }
-   
+
    //! Background Service Entry Point!
    //! Read pending web requests, and call appropriate web request function.
    function onTemporalEvent() {
@@ -41,7 +41,7 @@ class BackgroundService extends Sys.ServiceDelegate {
             }
             _weatherClient.requestData(method(:onReceiveClientData));
             _pendingResults.add(OpenWeatherClient.DATA_TYPE);
-         }         
+         }
 
          if (pendingWebRequests[IQAirClient.DATA_TYPE] != null) {
             if (_iqAirClient == null) {

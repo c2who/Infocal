@@ -13,8 +13,8 @@ jq --slurp '.' "${1}"*/compiler.json  > devices.json
 # Convert the json file to csv
 (echo "deviceFamily,deviceId,displayType,connectIQVersion(s),audioMemoryLimit,backgroundMemoryLimit,datafieldMemoryLimit,glanceMemoryLimit,watchAppMemoryLimit,watchFaceMemoryLimit,partNumber(s),displayName"; \
 jq -r '.[] | [
-    .deviceFamily, 
-    .deviceId, 
+    .deviceFamily,
+    .deviceId,
     .displayType,
     ([.partNumbers[]? | select(.connectIQVersion) | .connectIQVersion] | unique | join(" ") // "-"),
     (.appTypes[]? | select(.type=="audioContentProvider") | .memoryLimit) // "-",
@@ -25,5 +25,5 @@ jq -r '.[] | [
     (.appTypes[]? | select(.type=="watchFace") | .memoryLimit) // "-",
     ([.partNumbers[]? | .number] | unique | join(" ") // "-"),
     .displayName
-] | @csv' devices.json 
+] | @csv' devices.json
 ) > devices.csv

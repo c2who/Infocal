@@ -12,7 +12,7 @@ import Toybox.Lang;
 (:background)
 class BaseClient {
     //! Make HTTP request (over phone bluetooth connection)
-    //! 
+    //!
     //! @see https://developer.garmin.com/connect-iq/api-docs/Toybox/Communications.html#makeWebRequest-instance_function
     static function makeWebRequest(url, params, callback) as Void {
       var options = {
@@ -47,7 +47,7 @@ class BaseClientHelper {
     }
 
     //! Determines if the current data needs to be updated
-    //! @internal This method _must_ be called every minute to avoid missing the retry remain=0 roll-over 
+    //! @internal This method _must_ be called every minute to avoid missing the retry remain=0 roll-over
     function needsDataUpdate() as Boolean {
         // Check data valid and recent (within last 30 minutes)
         // Note: We use clientTs as we do not *know* how often weather data is updated (typically hourly)
@@ -94,7 +94,7 @@ class BaseClientHelper {
 
     //! Decode the makeWebRequest callback responseCode.
     //! @param  responseCode The server response code or a BLE_* error type
-    //! 
+    //!
     //! @see https://developer.garmin.com/connect-iq/api-docs/Toybox/Communications.html
     static function getCommunicationsErrorCodeText(responseCode as Number) as String {
         try {
@@ -106,8 +106,8 @@ class BaseClientHelper {
                     break;
                 default:
                     return Lang.format("ERR $1$", responseCode);
-            }   
-    
+            }
+
         } catch (ex) {
             System.println((ex.getErrorMessage()));
             return "ERR";

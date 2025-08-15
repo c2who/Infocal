@@ -51,7 +51,7 @@ class OpenWeatherClient {
             method(:onReceiveOpenWeatherData)
         );
     }
-   
+
    //! Callback handler for makeWebRequest. Decodes response and flatten (extract) data we need.
    //!
    //! @param  responseCdoe   responseCode: The server response code or a BLE_* error type
@@ -94,7 +94,7 @@ class OpenWeatherClient {
 }
 
 
-//! OpenWeather (Foreground) client support 
+//! OpenWeather (Foreground) client support
 //!
 //! @note Where possible, code is placed in the foreground client, to avoid
 //! bloating the background service memory usage.
@@ -115,7 +115,7 @@ public class OpenWeatherHelper extends BaseClientHelper {
             return false;
         }
 
-        // Get the default api key for new users    
+        // Get the default api key for new users
         var default_key = Keys.getOpenWeatherDefaultKey();
         Application.AppBase.setProperty("owm_api_2", default_key);
 

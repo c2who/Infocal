@@ -16,10 +16,10 @@ class AirQualityField extends BaseDataField {
       var data = App.getApp().getProperty(IQAirClient.DATA_TYPE);
 
       // Check if data is Invalid, or too old (> 360 minutes (6 hours))
-      if (  (data == null) 
+      if (  (data == null)
          || (data["clientTs"] == null)
          || (data["clientTs"] < (Time.now().value() - (360 * Time.SECONDS_PER_MINUTE)))) {
-         
+
          // Display error(if any) or no-computed-data
          var error = App.getApp().getProperty(IQAirClient.DATA_TYPE + Constants.DATA_TYPE_ERROR_SUFFIX);
          if (error != null) {

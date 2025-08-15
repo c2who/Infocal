@@ -204,18 +204,18 @@
         	<listEntry value="5592405">@Strings.gray_dark</listEntry>
         </settingConfig>
     </setting>
-    
+
 	<setting propertyKey="@Properties.power_save_mode" title="@Strings.power_save_mode">
         <settingConfig type="boolean" />
     </setting>
-    
+
     <setting propertyKey="@Properties.always_on_second" title="@Strings.always_on_second">
         <settingConfig type="boolean" />
     </setting>
     <setting propertyKey="@Properties.always_on_heart" title="@Strings.always_on_heart">
         <settingConfig type="boolean" />
     </setting>
-    
+
     <setting propertyKey="@Properties.use_analog" title="@Strings.use_analog">
         <settingConfig type="boolean" />
     </setting>
@@ -599,7 +599,7 @@
             <listEntry value="38">@Strings.airquality</listEntry>
         </settingConfig>
     </setting>
-    
+
     <setting propertyKey="@Properties.compgrapht" title="@Strings.compgrapht">
         <settingConfig type="list">
         	<listEntry value="0">@Strings.empty</listEntry>
