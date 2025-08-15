@@ -16,4 +16,7 @@
 [ ] FIXME: [Display] onPartialUpdate() measures Graphics Time as 5310000 µsec (5.3 seconds) - even with nothing diplayed!
     This is causing onPowerBudgetExceeded() to trigger - on both Simulation and real hardware :/
 
+[ ] TODO : Add AMOLED / Screen burn-in protection logic (<10%pixels (venu), <10%luminance (venu2+), 3 minutes max)
+    https://developer.garmin.com/connect-iq/connect-iq-faq/how-do-i-make-a-watch-face-for-amoled-products/
+
 ## Wish List
