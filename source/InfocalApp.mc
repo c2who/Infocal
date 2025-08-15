@@ -32,10 +32,10 @@ function convertCoorY(radians, radius) {
    return center_y + radius * Math.sin(radians);
 }
 
-// FIXME: Move all code not required for (:background) runtime out of HuwaiiApp class
+// FIXME: Move all code not required for (:background) runtime out of InfocalApp class
 //        - background runtime is *very* memory limited, so must avoid issues on smaller devices
 (:background)
-class HuwaiiApp extends Application.AppBase {
+class InfocalApp extends Application.AppBase {
    var _View;
    var _currentFieldIds as Array<Number> = {};
    var _iqAirClientHelper as IQAirClientHelper;
@@ -72,15 +72,15 @@ class HuwaiiApp extends Application.AppBase {
 
    //! Method called at startup to allow handling of app initialization.
    //!
-   //! Before the initial WatchUi.View is retrieved, onStart() is called. 
-   //! Application level settings can be initialized or retrieved from the object store before the initial View is created. 
+   //! Before the initial WatchUi.View is retrieved, onStart() is called.
+   //! Application level settings can be initialized or retrieved from the object store before the initial View is created.
    //! This method must be overridden to handle your own app initialization.
    function onStart(state as Dictionary?) as Void {
    }
 
    //! Override to handle application cleanup upon termination.
    //!
-   //! If the application needs to save data to the object store it should be done in this function. 
+   //! If the application needs to save data to the object store it should be done in this function.
    //! Once the function is complete, the application will terminate.
    function onStop(state as Dictionary?) as Void {
    }
@@ -92,28 +92,28 @@ class HuwaiiApp extends Application.AppBase {
 
       _iqAirClientHelper = new IQAirClientHelper();
       _openWeatherClientHelper = new OpenWeatherHelper();
-      _View = new HuwaiiView();
+      _View = new InfocalView();
 
       if( Toybox.WatchUi.WatchFace has :onPartialUpdate ) {
-         return [ _View, new HuwaiiViewDelegate(_View) ];
+         return [ _View, new InfocalViewDelegate(_View) ];
       } else {
          return [ _View ];
       }
    }
 
-   //! Called when the application settings have been changed by Garmin Connect Mobile (GCM) while while the app is running. 
+   //! Called when the application settings have been changed by Garmin Connect Mobile (GCM) while while the app is running.
    //!
-   //! Override this method to change app behavior when settings change. 
+   //! Override this method to change app behavior when settings change.
    //! @note This is typically used to call for an update to the WatchUi.requestUpdate()
    function onSettingsChanged() {
       updateCurrentDataFieldIds();
 
       checkPendingWebRequests();
-      
+
       _View.onSettingsChanged();
 
       // update the view to reflect changes
-      WatchUi.requestUpdate(); 
+      WatchUi.requestUpdate();
    }
 
    // Determine if any web requests are needed.
@@ -136,7 +136,7 @@ class HuwaiiApp extends Application.AppBase {
       }
 
       var pendingWebRequests = {};
-      
+
       // If AirQuality data fields in use
       if (isAnyDataFieldsInUse( [FIELD_TYPE_AIR_QUALITY] )) {
          if (_iqAirClientHelper.needsDataUpdate()) {
@@ -145,9 +145,9 @@ class HuwaiiApp extends Application.AppBase {
       }
 
       // If Weather data fields in use
-      if (isAnyDataFieldsInUse( [FIELD_TYPE_TEMPERATURE_OUT, 
-                                 FIELD_TYPE_TEMPERATURE_HL, 
-                                 FIELD_TYPE_WEATHER, 
+      if (isAnyDataFieldsInUse( [FIELD_TYPE_TEMPERATURE_OUT,
+                                 FIELD_TYPE_TEMPERATURE_HL,
+                                 FIELD_TYPE_WEATHER,
                                  FIELD_TYPE_WIND ] )) {
          if (_openWeatherClientHelper.needsDataUpdate()) {
             pendingWebRequests[OpenWeatherClient.DATA_TYPE] = true;
@@ -160,7 +160,7 @@ class HuwaiiApp extends Application.AppBase {
       if (pendingWebRequests.keys().size() > 0) {
          // Register for background temporal event as soon as possible.
          var lastTime = Background.getLastTemporalEventTime();
-         
+
          if (lastTime) {
             // Events scheduled for a time in the past trigger immediately.
             var nextTime = lastTime.add(new Time.Duration(5 * 60));
@@ -223,7 +223,7 @@ class HuwaiiApp extends Application.AppBase {
       }
    }
 
-   
+
    //! Get a ServiceDelegate to run background tasks for this app.
    //! When a ServiceDelegate is retrieved, the following will occur:
    //! - The method triggered within the ServiceDelegate will be run
@@ -236,9 +236,9 @@ class HuwaiiApp extends Application.AppBase {
    //! Handle data passed from a ServiceDelegate to the application.
    //! @param  service_data  Dictionary of data returned from service delegate
    //!
-   //! When the Background process terminates, a data payload may be available. 
-   //! - If the main application is active when this occurs, the data will be passed to the application's onBackgroundData() method. 
-   //! - If the main application is not active, the data will be saved until the next time the application is launched and  
+   //! When the Background process terminates, a data payload may be available.
+   //! - If the main application is active when this occurs, the data will be passed to the application's onBackgroundData() method.
+   //! - If the main application is not active, the data will be saved until the next time the application is launched and
    //!   will be passed to the application after the onStart() method completes.
    function onBackgroundData(service_data) {
       var pendingWebRequests = getProperty("PendingWebRequests");
@@ -255,7 +255,7 @@ class HuwaiiApp extends Application.AppBase {
          pendingWebRequests.remove(type);
          setProperty("PendingWebRequests", pendingWebRequests);
 
-         // Pass to correct client 
+         // Pass to correct client
          switch (type) {
             case IQAirClient.DATA_TYPE:
                _iqAirClientHelper.onBackgroundData(data);
@@ -266,8 +266,8 @@ class HuwaiiApp extends Application.AppBase {
             default:
                System.println("Unknown type:" + type);
                break;
-         }  
-         
+         }
+
       }
 
       // Save list of any remaining background requests

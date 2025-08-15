@@ -33,7 +33,7 @@ var gtheme = -1;
 var last_battery_percent = -1;
 var last_hour_consumption = -1;
 
-class HuwaiiView extends WatchUi.WatchFace {
+class InfocalView extends WatchUi.WatchFace {
 
    //! Additional memory margin (in bytes) to safely create screen BufferedBitmap
    // Minimum memory = (screen buffer size) + (runtime margin)
@@ -512,11 +512,11 @@ class HuwaiiView extends WatchUi.WatchFace {
 }
 
 //! Receive events on a Watch Face.
-class HuwaiiViewDelegate extends WatchUi.WatchFaceDelegate
+class InfocalViewDelegate extends WatchUi.WatchFaceDelegate
 {
-   private var _view as HuwaiiView;
+   private var _view as InfocalView;
 
-	function initialize(view as HuwaiiView) {
+	function initialize(view as InfocalView) {
 		WatchFaceDelegate.initialize();
       _view = view;
 	}
