@@ -74,7 +74,7 @@ class BaseClientHelper {
         }
     }
 
-    function onBackgroundData(data as Dictionary<String, Lang.Any>) {
+    function onBackgroundData(data as Dictionary?) {
         // Store data
         var app = App.getApp();
         if ((data != null) && (data["code"] == 200)) {

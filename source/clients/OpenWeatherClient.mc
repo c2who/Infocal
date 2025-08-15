@@ -82,7 +82,7 @@ class OpenWeatherClient {
         } else {
             // Error
             result = {
-                "code" => responseCode,
+                "code" => responseCode.toNumber(),
                 "client" =>  CLIENT_NAME,
                 "clientTs" => Time.now().value()
             };

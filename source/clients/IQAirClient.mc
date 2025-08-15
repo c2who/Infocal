@@ -71,7 +71,7 @@ class IQAirClient {
          // Error
          var hasData = ((data!=null) && (data.hasKey("status")) && data.hasKey("data") && data["data"].hasKey("message"));
          result = {
-            "code" =>    responseCode,
+            "code" =>    responseCode.toNumber(),
             "status" =>  hasData ? data["status"] : responseCode.toString(),
             "message" => hasData ? data["data"]["message"] : "HTTP Error " + responseCode.toString(),
             "client" =>  CLIENT_NAME,
