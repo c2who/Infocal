@@ -1,7 +1,8 @@
 using Toybox.Application;
 using Toybox.Background;
-using Toybox.System;
 using Toybox.Communications;
+using Toybox.System;
+using Toybox.Time.Gregorian as Time;
 
 import Toybox.Lang;
 
@@ -94,20 +95,13 @@ class OpenWeatherClient {
 }
 
 
-//! OpenWeather (Foreground) client support
+//! OpenWeather (Foreground) client helper
 //!
 //! @note Where possible, code is placed in the foreground client, to avoid
 //! bloating the background service memory usage.
-public class OpenWeatherHelper extends BaseClientHelper {
+public class OpenWeatherClientHelper {
 
-   function initialize() {
-        BaseClientHelper.initialize(OpenWeatherClient.DATA_TYPE);
-
-        // Update weather every 15 minutes
-        _update_interval_secs = 15 * SECONDS_PER_MINUTE;
-   }
-
-   function needsDataUpdate() as Boolean {
+    public static function needsDataUpdate() as Boolean {
         // Location must be available
         var lat = Application.getApp().getProperty("LastLocationLat");
         var lon = Application.getApp().getProperty("LastLocationLon");
@@ -115,11 +109,14 @@ public class OpenWeatherHelper extends BaseClientHelper {
             return false;
         }
 
-        // Get the default api key for new users
+        // Set the default api key for new users
         var default_key = Keys.getOpenWeatherDefaultKey();
         Application.AppBase.setProperty("owm_api_2", default_key);
 
+        // Update rate
+        var update_interval_secs = 30 * Time.SECONDS_PER_MINUTE;   // 30 minutes
+
         // Check based on default behavior with retries
-        return BaseClientHelper.needsDataUpdate();
+        return BaseClientHelper.calcNeedsDataUpdate(OpenWeatherClient.DATA_TYPE, update_interval_secs);
     }
 }

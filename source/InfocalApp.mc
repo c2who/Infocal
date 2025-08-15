@@ -22,8 +22,6 @@ var gLocationLon = null;
 class InfocalApp extends Application.AppBase {
    var _View;
    var _currentFieldIds as Array<Number> = {};
-   var _iqAirClientHelper as IQAirClientHelper;
-   var _openWeatherClientHelper as OpenWeatherHelper;
 
    static const days = {
          Date.DAY_MONDAY => "MON",
@@ -74,8 +72,6 @@ class InfocalApp extends Application.AppBase {
    function getInitialView() as [Views] or [Views, InputDelegates] {
       updateCurrentDataFieldIds();
 
-      _iqAirClientHelper = new IQAirClientHelper();
-      _openWeatherClientHelper = new OpenWeatherHelper();
       _View = new InfocalView();
 
       if( Toybox.WatchUi.WatchFace has :onPartialUpdate ) {
@@ -91,8 +87,6 @@ class InfocalApp extends Application.AppBase {
    //! @note This is typically used to call for an update to the WatchUi.requestUpdate()
    function onSettingsChanged() {
       updateCurrentDataFieldIds();
-
-      checkPendingWebRequests();
 
       _View.onSettingsChanged();
 
@@ -116,6 +110,8 @@ class InfocalApp extends Application.AppBase {
    //! - If the main application is active when this occurs, the data will be passed to the application's onBackgroundData() method.
    //! - If the main application is not active, the data will be saved until the next time the application is launched and
    //!   will be passed to the application after the onStart() method completes.
+   //!
+   //! @note This callback can be called from onStart() -- before the view is created!
    function onBackgroundData(service_data) {
       var pendingWebRequests = getProperty("PendingWebRequests");
       if (pendingWebRequests == null) {
@@ -131,19 +127,8 @@ class InfocalApp extends Application.AppBase {
          pendingWebRequests.remove(type);
          setProperty("PendingWebRequests", pendingWebRequests);
 
-         // Pass to correct client
-         switch (type) {
-            case IQAirClient.DATA_TYPE:
-               _iqAirClientHelper.onBackgroundData(data);
-               break;
-            case OpenWeatherClient.DATA_TYPE:
-               _openWeatherClientHelper.onBackgroundData(data); // BUG: Unexpected Type Error sometimes (with BLE error?)
-               break;
-            default:
-               System.println("Unknown type:" + type);
-               break;
-         }
-
+         // Store data
+         BaseClientHelper.storeData(type, data);
       }
 
       // Save list of any remaining background requests
@@ -174,7 +159,7 @@ class InfocalApp extends Application.AppBase {
 
       // If AirQuality data fields in use
       if (isAnyDataFieldsInUse( [FIELD_TYPE_AIR_QUALITY] )) {
-         if (_iqAirClientHelper.needsDataUpdate()) {
+         if (IQAirClientHelper.needsDataUpdate()) {
             pendingWebRequests[IQAirClient.DATA_TYPE] = true;
          }
       }
@@ -184,7 +169,7 @@ class InfocalApp extends Application.AppBase {
                                  FIELD_TYPE_TEMPERATURE_HL,
                                  FIELD_TYPE_WEATHER,
                                  FIELD_TYPE_WIND ] )) {
-         if (_openWeatherClientHelper.needsDataUpdate()) {
+         if (OpenWeatherClientHelper.needsDataUpdate()) {
             pendingWebRequests[OpenWeatherClient.DATA_TYPE] = true;
          }
       }

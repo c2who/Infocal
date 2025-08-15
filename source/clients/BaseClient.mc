@@ -1,7 +1,8 @@
-using Toybox.Application as App;
+using Toybox.Application;
 using Toybox.Background;
 using Toybox.Communications;
 using Toybox.System;
+using Toybox.Time.Gregorian as Time;
 
 import Toybox.Lang;
 
@@ -33,40 +34,36 @@ class BaseClient {
 //!         "clientTs"    client response time
 //!         "code"        HTTP response code
 class BaseClientHelper {
-    const SECONDS_PER_MINUTE = 60;
-
-    protected var _type;
 
     // Defaults
-    protected var _max_retries = 3;
-    protected var _retry_backoff_minutes = 30;
-    protected var _update_interval_secs = 30 * SECONDS_PER_MINUTE;
-
-    function initialize(type as String) {
-        self._type = type;
-    }
+    private static var _max_retries = 3;
+    private static var _retry_backoff_minutes = 30;
 
     //! Determines if the current data needs to be updated
     //! @internal This method _must_ be called every minute to avoid missing the retry remain=0 roll-over
-    function needsDataUpdate() as Boolean {
+    public static function calcNeedsDataUpdate(type as String, update_interval_secs as Number) as Boolean {
         // Check data valid and recent (within last 30 minutes)
         // Note: We use clientTs as we do not *know* how often weather data is updated (typically hourly)
         var app = Application.getApp();
-        var data = app.getProperty(_type);
-        var retries = app.getProperty(_type + Constants.DATA_TYPE_RETRIES_SUFFIX);
+        var data = app.getProperty(type);
+        var error = app.getProperty(type + Constants.DATA_TYPE_ERROR_SUFFIX);
+        var retries = app.getProperty(type + Constants.DATA_TYPE_RETRIES_SUFFIX);
 
-        if ( (data == null) || (data["clientTs"] == null) ) {
+        // Find the last data response time (valid or error)
+        var lastTime = (data != null) ? data["clientTs"] : (error != null) ? error["clientTs"] : null;
+
+        if  (lastTime == null) {
             // new system, no data is valid
             return true;
 
         } else if ((retries != null) && (retries > _max_retries)) {
             // FIXED: If API is not responding after retries, back off (retry every 30 minutes)
             // Note: Calculation must be performed in minutes (not seconds) as we only evaluate this every minute
-            var remain = ((Time.now().value() - data["clientTs"]) / SECONDS_PER_MINUTE) % _retry_backoff_minutes;
+            var remain = ((Time.now().value() - lastTime) / Time.SECONDS_PER_MINUTE) % _retry_backoff_minutes;
             return (remain == 0);
 
-        } else if (data["clientTs"] < (Time.now().value() - _update_interval_secs)) {
-            // Data age is > update interval
+        } else if (data["clientTs"] < (Time.now().value() - update_interval_secs)) {
+            // Valid Data age is > update interval
             return true;
         } else {
             // Data still valid
@@ -74,21 +71,22 @@ class BaseClientHelper {
         }
     }
 
-    function onBackgroundData(data as Dictionary?) {
+    //! Persist (store) the data received from a client
+    public static function storeData(type as String, data as Dictionary?) {
         // Store data
-        var app = App.getApp();
+        var app = Application.getApp();
         if ((data != null) && (data["code"] == 200)) {
             // Valid data
-            app.setProperty(_type, data);
-            app.setProperty(_type + Constants.DATA_TYPE_ERROR_SUFFIX, null);
-            app.setProperty(_type + Constants.DATA_TYPE_RETRIES_SUFFIX, null);
+            app.setProperty(type, data);
+            app.setProperty(type + Constants.DATA_TYPE_ERROR_SUFFIX, null);
+            app.setProperty(type + Constants.DATA_TYPE_RETRIES_SUFFIX, null);
         } else {
             // return error to the caller, and update retries count
-            var retries = app.getProperty(_type + Constants.DATA_TYPE_RETRIES_SUFFIX);
+            var retries = app.getProperty(type + Constants.DATA_TYPE_RETRIES_SUFFIX);
             retries = (retries == null) ? 1 : (retries+1);
 
-            app.setProperty(_type + Constants.DATA_TYPE_ERROR_SUFFIX, data);
-            app.setProperty(_type + Constants.DATA_TYPE_RETRIES_SUFFIX, retries);
+            app.setProperty(type + Constants.DATA_TYPE_ERROR_SUFFIX, data);
+            app.setProperty(type + Constants.DATA_TYPE_RETRIES_SUFFIX, retries);
         }
     }
 
@@ -96,7 +94,7 @@ class BaseClientHelper {
     //! @param  responseCode The server response code or a BLE_* error type
     //!
     //! @see https://developer.garmin.com/connect-iq/api-docs/Toybox/Communications.html
-    static function getCommunicationsErrorCodeText(responseCode as Number) as String {
+    public static function getCommunicationsErrorCodeText(responseCode as Number) as String {
         try {
             switch (responseCode) {
                 case 401: // Unauthorized

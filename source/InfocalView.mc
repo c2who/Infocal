@@ -97,7 +97,6 @@ class InfocalView extends WatchUi.WatchFace {
    function onShow() {
       last_draw_minute = -1;
       restore_from_resume = true;
-      App.getApp().checkPendingWebRequests();
    }
 
    // Called when this View is removed from the screen. Save the
@@ -251,7 +250,6 @@ class InfocalView extends WatchUi.WatchFace {
       if (dialDisplay != null) {
          dialDisplay.enableSecondHand();
       }
-      App.getApp().checkPendingWebRequests();
    }
 
    //! The device is entering low power mode.

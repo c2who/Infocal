@@ -1,7 +1,8 @@
 using Toybox.Application;
 using Toybox.Background;
-using Toybox.System;
 using Toybox.Communications;
+using Toybox.System;
+using Toybox.Time.Gregorian as Time;
 
 import Toybox.Lang;
 
@@ -102,30 +103,26 @@ class IQAirClient {
 
 }
 
-//! IQAir (Foreground) client support
+//! IQAir (Foreground) client helper
 //!
 //! @note Where possible, code is placed in the foreground client, to avoid
 //! bloating the background service memory usage.
-public class IQAirClientHelper extends BaseClientHelper {
+public class IQAirClientHelper {
 
-   function initialize() {
-        BaseClientHelper.initialize(IQAirClient.DATA_TYPE);
-   }
-
-   function needsDataUpdate() as Boolean {
-      // Get the default api key for new users
+   public static function needsDataUpdate() as Boolean {
+      // Set the default api key for new users
       var default_key = Keys.getIQAirDefaultKey();
       Application.AppBase.setProperty("iqair_api_2", default_key);
 
-      // Update rate: default = 6 hours (360 minutes); user api key = 30 minutes
+      // Set the update interval based on if user has their own api key (more quota)
+      var update_interval_secs;
       var user_key = Application.AppBase.getProperty(("iqair_api"));
       if ((user_key == null) || (user_key.length() == 0)) {
-          _update_interval_secs = 360 * SECONDS_PER_MINUTE;
+          update_interval_secs = 6 * Time.SECONDS_PER_HOUR;       // 6 hours
       } else {
-          _update_interval_secs = 30 * SECONDS_PER_MINUTE;
+          update_interval_secs = 30 * Time.SECONDS_PER_MINUTE;    // 30 minutes
       }
 
-
-      return BaseClientHelper.needsDataUpdate();
+      return BaseClientHelper.calcNeedsDataUpdate(IQAirClient.DATA_TYPE, update_interval_secs);
    }
 }
