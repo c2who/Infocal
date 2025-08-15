@@ -62,8 +62,8 @@ class BaseClientHelper {
             var remain = ((Time.now().value() - lastTime) / Time.SECONDS_PER_MINUTE) % _retry_backoff_minutes;
             return (remain == 0);
 
-        } else if (data["clientTs"] < (Time.now().value() - update_interval_secs)) {
-            // Valid Data age is > update interval
+        } else if ((data == null) || (data["clientTs"] < (Time.now().value() - update_interval_secs))) {
+            // (No Valid data) or (Valid Data age is > update interval)
             return true;
         } else {
             // Data still valid
