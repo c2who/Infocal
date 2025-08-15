@@ -100,108 +100,19 @@ class InfocalView extends WatchUi.WatchFace {
       App.getApp().checkPendingWebRequests();
    }
 
+   // Called when this View is removed from the screen. Save the
+   // state of this View here. This includes freeing resources from
+   // memory.
+   function onHide() {
+   }
+
+   //! Handle view updates from settings changed
    function onSettingsChanged() {
       last_draw_minute = -1;
       _layout_changed = true;
    }
 
-   //! Create screen buffer, if enabled and memory available.
-   //! Use screen buffer (to speed up onDraw; requires extra memory)
-   //!
-   //! @note Includes a runtime check to permanently disable memory-intensive
-   //!       operations that have previously caused an application crash!
-   //!       (out-of-memory errors are fatal so cannot be handled)
-   function setupScreenBuffer(dc) as Void {
-      var enable_buffering = Application.getApp().getProperty("enable_buffering");
-      var err_runtime_oom = Application.Storage.getValue("err_runtime_oom");
-      var stats = System.getSystemStats();
-      var buffer_size = (dc.getWidth() * dc.getHeight()) + 1000 ; // Rough estimate of screen buffer size, in bytes (based on default 256 colors)
-      var free_mem = stats.freeMemory;
-
-      // FIXED: Permanently disable memory-intensive operation if previously caused OOM crash
-      // FIXED: Do not create screen buffer if insufficient memory (based on screen size)
-      if (   (enable_buffering)
-          && (_screen_buffer == null)
-          && (err_runtime_oom != true)
-          && (free_mem >= buffer_size + RUNTIME_MEM_MARGIN_MIN) ) {
-
-         try {
-            // Safety: Store semaphore to detect if operation causes runtime OOM fatal
-            Application.Storage.setValue("err_runtime_oom", true);
-
-            // Allow buffer (requires 65KB+ free memory)
-            // TODO: Specify the color palette required, to reduce buffer memory size
-            var params = {
-               :width => dc.getWidth(),
-               :height => dc.getHeight(),
-            };
-            if (Toybox.Graphics has :createBufferedBitmap) {
-               _screen_buffer = Graphics.createBufferedBitmap(params).get();
-            } else if (Toybox.Graphics has :BufferedBitmap) {
-               _screen_buffer = new Graphics.BufferedBitmap(params);
-            } else {
-               // Not supported
-               _screen_buffer = null;
-            }
-
-            // OK (not run during fatal oom; or catchable exceptions)
-            Application.Storage.deleteValue("err_runtime_oom");
-         } catch (ex) {
-            // API 5.0.0 supports catching insufficient memory error
-            // Do nothing - leave semaphore set
-         }
-      } else {
-         // Unload
-         _screen_buffer = null;
-      }
-   }
-
-   function calculateBatteryConsumption() {
-      // Calculate battery consumption in days
-      var time_now = Time.now();
-      if (last_battery_hour == null) {
-         last_battery_hour = time_now;
-         last_battery_percent = System.getSystemStats().battery;
-         last_hour_consumption = -1;
-      } else if (time_now.compare(last_battery_hour) >= 60 * 60) {
-         // 60 min
-         last_battery_hour = time_now;
-         var current_battery = System.getSystemStats().battery;
-         var temp_last_battery_percent = last_battery_percent;
-         var temp_last_hour_consumption = temp_last_battery_percent - current_battery;
-         if (temp_last_hour_consumption < 0) {
-            temp_last_hour_consumption = -1;
-         }
-         if (temp_last_hour_consumption > 0) {
-            App.getApp().setProperty(
-               "last_hour_consumption",
-               temp_last_hour_consumption
-            );
-
-            var consumption_history =
-               App.getApp().getProperty("consumption_history");
-            if (consumption_history == null) {
-               App.getApp().setProperty("consumption_history", [
-                  temp_last_hour_consumption,
-               ]);
-            } else {
-               consumption_history.add(temp_last_hour_consumption);
-               if (consumption_history.size() > 24) {
-                  var object0 = consumption_history[0];
-                  consumption_history.remove(object0);
-               }
-               App.getApp().setProperty(
-                  "consumption_history",
-                  consumption_history
-               );
-            }
-         }
-         last_battery_percent = current_battery;
-         last_hour_consumption = temp_last_hour_consumption;
-      }
-   }
-
-   //! Update the View.
+  //! Update the View.
    //! This is called when a View is brought to the foreground, after the call to onShow().
    //! There are also some special cases when it will be invoked:
    //! - On WatchUi.requestUpdate() calls within Widgets and Watch Apps
@@ -254,53 +165,6 @@ class InfocalView extends WatchUi.WatchFace {
       // Update seconds and hr fields in high power mode (or at top of minute during sleep partial updates)
       if (_isAwake || _partialUpdatesAllowed) {
          onPartialUpdate(screenDc);
-      }
-   }
-
-   //! Draw Drawables using our own device context (potentially a screen buffer)
-   //! Used instead of View.onUpdate() to draw drawables
-   function mainDrawComponents(dc) {
-      // XXX: Why is this clearing the background twice?
-      // XXX: Can we move this to the BackgroundView class?
-      dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
-      dc.clear();
-      dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
-      dc.fillRectangle(0, 0, center_x * 2, center_y * 2);
-
-      var backgroundView = View.findDrawableById("background");
-      var bar1 = View.findDrawableById("aBarDisplay");
-      var bar2 = View.findDrawableById("bBarDisplay");
-      var bar3 = View.findDrawableById("cBarDisplay");
-      var bar4 = View.findDrawableById("dBarDisplay");
-      var bar5 = View.findDrawableById("eBarDisplay");
-      var bar6 = View.findDrawableById("fBarDisplay");
-      var bbar1 = View.findDrawableById("bUBarDisplay");
-      var bbar2 = View.findDrawableById("tUBarDisplay");
-
-      bar1.draw(dc);
-      bar2.draw(dc);
-      bar3.draw(dc);
-      bar4.draw(dc);
-      bar5.draw(dc);
-      bar6.draw(dc);
-
-      dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
-      dc.fillCircle(center_x, center_y, face_radius);
-      // XXX: Move to call backgroundView first
-      backgroundView.draw(dc);
-      bbar1.draw(dc);
-      bbar2.draw(dc);
-
-      var bgraph1 = View.findDrawableById("tGraphDisplay");
-      var bgraph2 = View.findDrawableById("bGraphDisplay");
-      bgraph1.draw(dc);
-      bgraph2.draw(dc);
-
-      // XXX: Set/Use View.isVisible instead
-      if (Application.getApp().getProperty("use_analog")) {
-         View.findDrawableById("analog").draw(dc);
-      } else {
-         View.findDrawableById("digital").draw(dc);
       }
    }
 
@@ -377,12 +241,6 @@ class InfocalView extends WatchUi.WatchFace {
       WatchUi.requestUpdate();
    }
 
-   // Called when this View is removed from the screen. Save the
-   // state of this View here. This includes freeing resources from
-   // memory.
-   function onHide() {
-   }
-
    //! The device is exiting low power mode.
    //! Timers and animations may be started here in preparation for once-per-second updates.
    //! (the user has just looked at their watch)
@@ -409,6 +267,151 @@ class InfocalView extends WatchUi.WatchFace {
          }
       }
       WatchUi.requestUpdate();
+   }
+
+   //! Create screen buffer, if enabled and memory available.
+   //! Use screen buffer (to speed up onDraw; requires extra memory)
+   //!
+   //! @note Includes a runtime check to permanently disable memory-intensive
+   //!       operations that have previously caused an application crash!
+   //!       (out-of-memory errors are fatal so cannot be handled)
+   function setupScreenBuffer(dc) as Void {
+      var enable_buffering = Application.getApp().getProperty("enable_buffering");
+      var err_runtime_oom = Application.Storage.getValue("err_runtime_oom");
+      var stats = System.getSystemStats();
+      var buffer_size = (dc.getWidth() * dc.getHeight()) + 1000 ; // Rough estimate of screen buffer size, in bytes (based on default 256 colors)
+      var free_mem = stats.freeMemory;
+
+      // FIXED: Permanently disable memory-intensive operation if previously caused OOM crash
+      // FIXED: Do not create screen buffer if insufficient memory (based on screen size)
+      if (   (enable_buffering)
+          && (_screen_buffer == null)
+          && (err_runtime_oom != true)
+          && (free_mem >= buffer_size + RUNTIME_MEM_MARGIN_MIN) ) {
+
+         try {
+            // Safety: Store semaphore to detect if operation causes runtime OOM fatal
+            Application.Storage.setValue("err_runtime_oom", true);
+
+            // Allow buffer (requires 65KB+ free memory)
+            // TODO: Specify the color palette required, to reduce buffer memory size
+            var params = {
+               :width => dc.getWidth(),
+               :height => dc.getHeight(),
+            };
+            if (Toybox.Graphics has :createBufferedBitmap) {
+               _screen_buffer = Graphics.createBufferedBitmap(params).get();
+            } else if (Toybox.Graphics has :BufferedBitmap) {
+               _screen_buffer = new Graphics.BufferedBitmap(params);
+            } else {
+               // Not supported
+               _screen_buffer = null;
+            }
+
+            // OK (not run during fatal oom; or catchable exceptions)
+            Application.Storage.deleteValue("err_runtime_oom");
+
+         } catch (ex) {
+            // API 5.0.0 supports catching insufficient memory error
+            // Do nothing - leave semaphore set
+            _screen_buffer = null;
+         }
+      } else {
+         // Unload
+         _screen_buffer = null;
+      }
+   }
+
+   function calculateBatteryConsumption() {
+      // Calculate battery consumption in days
+      var time_now = Time.now();
+      if (last_battery_hour == null) {
+         last_battery_hour = time_now;
+         last_battery_percent = System.getSystemStats().battery;
+         last_hour_consumption = -1;
+      } else if (time_now.compare(last_battery_hour) >= 60 * 60) {
+         // 60 min
+         last_battery_hour = time_now;
+         var current_battery = System.getSystemStats().battery;
+         var temp_last_battery_percent = last_battery_percent;
+         var temp_last_hour_consumption = temp_last_battery_percent - current_battery;
+         if (temp_last_hour_consumption < 0) {
+            temp_last_hour_consumption = -1;
+         }
+         if (temp_last_hour_consumption > 0) {
+            App.getApp().setProperty(
+               "last_hour_consumption",
+               temp_last_hour_consumption
+            );
+
+            var consumption_history =
+               App.getApp().getProperty("consumption_history");
+            if (consumption_history == null) {
+               App.getApp().setProperty("consumption_history", [
+                  temp_last_hour_consumption,
+               ]);
+            } else {
+               consumption_history.add(temp_last_hour_consumption);
+               if (consumption_history.size() > 24) {
+                  var object0 = consumption_history[0];
+                  consumption_history.remove(object0);
+               }
+               App.getApp().setProperty(
+                  "consumption_history",
+                  consumption_history
+               );
+            }
+         }
+         last_battery_percent = current_battery;
+         last_hour_consumption = temp_last_hour_consumption;
+      }
+   }
+
+   //! Draw Drawables using our own device context (potentially a screen buffer)
+   //! Used instead of View.onUpdate() to draw drawables
+   function mainDrawComponents(dc) {
+      // XXX: Why is this clearing the background twice?
+      // XXX: Can we move this to the BackgroundView class?
+      dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
+      dc.clear();
+      dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
+      dc.fillRectangle(0, 0, center_x * 2, center_y * 2);
+
+      var backgroundView = View.findDrawableById("background");
+      var bar1 = View.findDrawableById("aBarDisplay");
+      var bar2 = View.findDrawableById("bBarDisplay");
+      var bar3 = View.findDrawableById("cBarDisplay");
+      var bar4 = View.findDrawableById("dBarDisplay");
+      var bar5 = View.findDrawableById("eBarDisplay");
+      var bar6 = View.findDrawableById("fBarDisplay");
+      var bbar1 = View.findDrawableById("bUBarDisplay");
+      var bbar2 = View.findDrawableById("tUBarDisplay");
+
+      bar1.draw(dc);
+      bar2.draw(dc);
+      bar3.draw(dc);
+      bar4.draw(dc);
+      bar5.draw(dc);
+      bar6.draw(dc);
+
+      dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
+      dc.fillCircle(center_x, center_y, face_radius);
+      // XXX: Move to call backgroundView first
+      backgroundView.draw(dc);
+      bbar1.draw(dc);
+      bbar2.draw(dc);
+
+      var bgraph1 = View.findDrawableById("tGraphDisplay");
+      var bgraph2 = View.findDrawableById("bGraphDisplay");
+      bgraph1.draw(dc);
+      bgraph2.draw(dc);
+
+      // XXX: Set/Use View.isVisible instead
+      if (Application.getApp().getProperty("use_analog")) {
+         View.findDrawableById("analog").draw(dc);
+      } else {
+         View.findDrawableById("digital").draw(dc);
+      }
    }
 
    function updateLayoutColors() {
