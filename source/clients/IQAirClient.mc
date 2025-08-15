@@ -13,7 +13,7 @@ import Toybox.Lang;
 //! @see https://www.iqair.com/ca/air-pollution-data-api
 //! @see https://api-docs.iqair.com/?version=latest#5ea0dcc1-78c3-4939-aa80-6d4929646b82
 (:background)
-class IQAirClient {
+class IQAirClient extends BaseClient {
 
    const CLIENT_NAME = "IQAir";
    static const DATA_TYPE = "AirQuality";
@@ -23,18 +23,15 @@ class IQAirClient {
    //! (GPS coordinates) http://api.airvisual.com/v2/nearest_city?lat={{LATITUDE}}&lon={{LONGITUDE}}&key={{YOUR_API_KEY}}
    const API_NEAREST_CITY_URL = "https://api.airvisual.com/v2/nearest_city";
 
-   //! Consumer callback for returning formatted data
-   private var _callback as Method(type as String, responseCode as Number, data as Dictionary<String, Lang.Any>) as Void;
-
    //! Public entry method to make background request to get data from remote service
+   //! @param callback     Consumer callback for returning formatted data
    function requestData(callback as Method(type as String, responseCode as Number, data as Dictionary<String, Lang.Any>) as Void) as Void {
+      BaseClient.requestData(callback);
+
       var app = Application.getApp();
       var api_key = app.getProperty("iqair_api");
       var lat = app.getProperty("LastLocationLat");
       var lon = app.getProperty("LastLocationLon");
-
-      // Save callback method
-      self._callback = callback;
 
       // Use default api key if first-time user has not added their owm api key yet
       if ((api_key == null) || (api_key.length() == 0)) {
@@ -62,6 +59,12 @@ class IQAirClient {
    //!
    //! @param  responseCdoe   responseCode: The server response code or a BLE_* error type
    //! @param  data           the content if the request was successful, or null
+   //!
+   //! @note Large API payload can cause out-of-memory errors when processing network response
+   //!       on devices with lower available memory (NETWORK_RESPONSE_OUT_OF_MEMORY = -403).
+   //!       It is imperative that the code/data size of background task is kept
+   //!       as small as possible!
+   //! @see  https://developer.garmin.com/connect-iq/api-docs/Toybox/Communications.html
    function onReceiveAirQualityData(responseCode as Number, data as Dictionary?) {
       var result;
 

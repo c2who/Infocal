@@ -14,7 +14,7 @@ import Toybox.Lang;
 //! @note Where possible, code is placed in the foreground client, to avoid
 //! bloating the background service memory usage.
 (:background)
-class OpenWeatherClient {
+class OpenWeatherClient extends BaseClient {
     static const DATA_TYPE = "Weather";
     const CLIENT_NAME = "OWM";
 
@@ -22,18 +22,15 @@ class OpenWeatherClient {
     //! https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
     const API_CURRENT_WEATHER = "https://api.openweathermap.org/data/2.5/weather";
 
-    //! Consumer callback for returning formatted data
-    private var _callback as Method(type as String, responseCode as Number, data as Dictionary<String, Lang.Any>) as Void;
-
     //! Public entry method to make background request to get data from remote service
+    //! @param callback     Consumer callback for returning formatted data
     function requestData(callback as Method(type as String, responseCode as Number, data as Dictionary<String, Lang.Any>) as Void) as Void {
+        BaseClient.requestData(callback);
+
         var app = Application.getApp();
         var api_key = app.getProperty("openweather_api");
         var lat = app.getProperty("LastLocationLat");
         var lon = app.getProperty("LastLocationLon");
-
-        // Save callback method
-        self._callback = callback;
 
         if ((api_key == null) || (api_key.length() == 0)) {
             api_key = app.getProperty("owm_api_2");;
@@ -57,6 +54,12 @@ class OpenWeatherClient {
    //!
    //! @param  responseCdoe   responseCode: The server response code or a BLE_* error type
    //! @param  data           the content if the request was successful, or null
+   //!
+   //! @note Large API payload can cause out-of-memory errors when processing network response
+   //!       on devices with lower available memory (NETWORK_RESPONSE_OUT_OF_MEMORY = -403).
+   //!       It is imperative that the code/data size of background task is kept
+   //!       as small as possible!
+   //! @see  https://developer.garmin.com/connect-iq/api-docs/Toybox/Communications.html
    function onReceiveOpenWeatherData(responseCode as Number, data as Dictionary?) {
         var result;
 

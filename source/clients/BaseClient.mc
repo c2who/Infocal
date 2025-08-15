@@ -12,10 +12,22 @@ import Toybox.Lang;
 //! bloating the background service memory usage.
 (:background)
 class BaseClient {
+
+    //! Consumer callback for returning formatted data
+    protected var _callback as Method(type as String, responseCode as Number, data as Dictionary<String, Lang.Any>) as Void;
+
+    //! Public entry method to make background request to get data from remote service
+    //! @param  callback    Consumer callback for returning formatted data
+    //! @note   Override in concrete class to build web request(s)
+    public function requestData(callback as Method(type as String, responseCode as Number, data as Dictionary<String, Lang.Any>) as Void) as Void {
+        // Save callback method
+        self._callback = callback;
+    }
+
     //! Make HTTP request (over phone bluetooth connection)
     //!
     //! @see https://developer.garmin.com/connect-iq/api-docs/Toybox/Communications.html#makeWebRequest-instance_function
-    static function makeWebRequest(url, params, callback) as Void {
+    protected function makeWebRequest(url, params, callback) as Void {
       var options = {
          :method => Communications.HTTP_REQUEST_METHOD_GET,
          :headers => {
