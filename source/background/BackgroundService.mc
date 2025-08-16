@@ -21,6 +21,7 @@ import Toybox.Lang;
 //! @see  https://developer.garmin.com/connect-iq/core-topics/backgrounding/
 //! @see  https://developer.garmin.com/connect-iq/connect-iq-faq/how-do-i-create-a-connect-iq-background-service/
 //! @see  https://forums.garmin.com/developer/connect-iq/f/discussion/7550/data-too-large-for-background-process
+//! @see  https://developer.garmin.com/connect-iq/api-docs/Toybox/Background.html#exit-instance_function
 //!
 //! @seealso  https://forums.garmin.com/developer/connect-iq/b/news-announcements/posts/optimal-monkey-c
 (:background)
@@ -75,7 +76,11 @@ class BackgroundService extends System.ServiceDelegate {
 
          } else {
             System.println("Unknown request: " + pendingWebRequests);
+            Background.exit(null);
          }
+      } else {
+         System.println("No pending requests: " + pendingWebRequests);
+         Background.exit(null);
       }
    }
 
