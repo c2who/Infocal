@@ -111,14 +111,21 @@ class BaseClientHelper {
     //!
     //! @see https://developer.garmin.com/connect-iq/api-docs/Toybox/Communications.html
     public static function getCommunicationsErrorCodeText(responseCode as Number) as String {
-        switch (responseCode) {
-            case 401: // Unauthorized
-            case 403: // Forbidden
-            case 429: // Too Many Requests (often due to api key quota)
-                return "API KEY";
+        // Fixed: Enduro throws unhandled exception (Enduro 28.02, Venu 2 19.05)
+        try {
+            switch (responseCode.toNumber()) {
+                case 401: // Unauthorized
+                case 403: // Forbidden
+                case 429: // Too Many Requests (often due to api key quota)
+                    return "API KEY";
 
-            default:
-                return Lang.format("ERR $1$", responseCode);
+                default:
+                    return Lang.format("ERR $1$", responseCode);
+            }
+
+        } catch (ex) {
+            System.println(ex.getErrorMessage());
+            return "ERR";
         }
     }
 }

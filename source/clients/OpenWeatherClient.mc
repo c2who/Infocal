@@ -88,7 +88,7 @@ class OpenWeatherClient extends BaseClient {
             // Error
             result = {
                 "type" =>     DATA_TYPE,
-                "code" =>     responseCode,
+                "code" =>     responseCode.toNumber(),
                 //"client" =>   CLIENT_NAME,
                 //"clientTs" => Time.now().value()
             };
