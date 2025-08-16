@@ -52,7 +52,7 @@ class OpenWeatherClient extends BaseClient {
 
    //! Callback handler for makeWebRequest. Decodes response and flatten (extract) data we need.
    //!
-   //! @param  responseCdoe   responseCode: The server response code or a BLE_* error type
+   //! @param  responseCode   the server response code or a BLE_* error type
    //! @param  data           the content if the request was successful, or null
    //!
    //! @note Large API payload can cause out-of-memory errors when processing network response
@@ -62,7 +62,7 @@ class OpenWeatherClient extends BaseClient {
    //! @see  https://developer.garmin.com/connect-iq/api-docs/Toybox/Communications.html
    function onReceiveOpenWeatherData(responseCode as Number, data as Dictionary?) {
         var result;
-        
+
         // Useful data only available if result was successful.
         // Filter and flatten data response for data that we actually need.
         // Reduces runtime memory spike in main app.
@@ -70,11 +70,11 @@ class OpenWeatherClient extends BaseClient {
             result = {
                 "type" =>     DATA_TYPE,
                 "code" =>     responseCode,
-                "client" =>   CLIENT_NAME,
-                "clientTs" => Time.now().value(),
-                "lat" => data["coord"]["lat"],
-                "lon" => data["coord"]["lon"],
-                "dt" => data["dt"],
+                //"client" =>   CLIENT_NAME,
+                //"clientTs" => Time.now().value(),
+                //"lat" => data["coord"]["lat"],
+                //"lon" => data["coord"]["lon"],
+                //"dt" => data["dt"],
                 "temp" => data["main"]["temp"],
                 "temp_min" => data["main"]["temp_min"],
                 "temp_max" => data["main"]["temp_max"],
@@ -89,8 +89,8 @@ class OpenWeatherClient extends BaseClient {
             result = {
                 "type" =>     DATA_TYPE,
                 "code" =>     responseCode,
-                "client" =>   CLIENT_NAME,
-                "clientTs" => Time.now().value()
+                //"client" =>   CLIENT_NAME,
+                //"clientTs" => Time.now().value()
             };
         }
 

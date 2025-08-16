@@ -57,7 +57,7 @@ class IQAirClient extends BaseClient {
 
    //! onReceiveAirQualityData
    //!
-   //! @param  responseCdoe   responseCode: The server response code or a BLE_* error type
+   //! @param  responseCode   the server response code or a BLE_* error type
    //! @param  data           the content if the request was successful, or null
    //!
    //! @note Large API payload can cause out-of-memory errors when processing network response
@@ -75,29 +75,29 @@ class IQAirClient extends BaseClient {
          result = {
             "type" =>     DATA_TYPE,
             "code" =>     responseCode,
-            "client" =>   CLIENT_NAME,
-            "clientTs" => Time.now().value(),
-            "status" => data["status"],
-            "city" =>   data["data"]["city"],
-            "country" =>data["data"]["country"],
-            "lat" =>    data["data"]["location"]["coordinates"][1],
-            "lon" =>    data["data"]["location"]["coordinates"][0],
-            "ts" =>     data["data"]["current"]["pollution"]["ts"],
+            //"client" =>   CLIENT_NAME,
+            //"clientTs" => Time.now().value(),
+            //"status" => data["status"],
+            //"city" =>   data["data"]["city"],
+            //"country" =>data["data"]["country"],
+            //"lat" =>    data["data"]["location"]["coordinates"][1],
+            //"lon" =>    data["data"]["location"]["coordinates"][0],
+            //"ts2" =>     data["data"]["current"]["pollution"]["ts"],
             "aqius" =>  data["data"]["current"]["pollution"]["aqius"],
-            "mainus" => data["data"]["current"]["pollution"]["mainus"],
-            "aqicn" =>  data["data"]["current"]["pollution"]["aqicn"],
-            "maincn" => data["data"]["current"]["pollution"]["maincn"]
+            //"mainus" => data["data"]["current"]["pollution"]["mainus"],
+            //"aqicn" =>  data["data"]["current"]["pollution"]["aqicn"],
+            //"maincn" => data["data"]["current"]["pollution"]["maincn"]
          };
       } else {
          // Error
-         var hasData = ((data!=null) && (data.hasKey("status")) && data.hasKey("data") && data["data"].hasKey("message"));
+         //var hasData = ((data!=null) && (data.hasKey("status")) && data.hasKey("data") && data["data"].hasKey("message"));
          result = {
             "type" =>     DATA_TYPE,
             "code" =>     responseCode.toNumber(),
-            "client" =>   CLIENT_NAME,
-            "clientTs" => Time.now().value(),
-            "status" =>  hasData ? data["status"] : responseCode.toString(),
-            "message" => hasData ? data["data"]["message"] : "HTTP Error " + responseCode.toString()
+            //"client" =>   CLIENT_NAME,
+            //"clientTs" => Time.now().value(),
+            //"status" =>  hasData ? data["status"] : responseCode.toString(),
+            //"message" => hasData ? data["data"]["message"] : "HTTP Error " + responseCode.toString()
          };
       }
 
