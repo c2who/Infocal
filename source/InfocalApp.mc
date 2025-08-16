@@ -128,10 +128,15 @@ class InfocalApp extends Application.AppBase {
       if (pendingWebRequests == null) {
          pendingWebRequests = {};
       }
-      pendingWebRequests.remove(type);
-      setProperty("PendingWebRequests", pendingWebRequests);
 
-      BaseClientHelper.storeData(data);
+      // Fixed: Unexpected type error (due to app update, schema change)
+      if (type != null) {
+         pendingWebRequests.remove(type);
+
+         setProperty("PendingWebRequests", pendingWebRequests);
+
+         BaseClientHelper.storeData(data);
+      }
 
       WatchUi.requestUpdate();
    }
@@ -228,9 +233,9 @@ class InfocalApp extends Application.AppBase {
       var location = Activity.getActivityInfo().currentLocation;
       if (location) {
          // Save current location to globals
-         location = location.toDegrees(); // Array of Doubles.
-         gLocationLat = location[0].toFloat();
-         gLocationLon = location[1].toFloat();
+         var degrees = location.toDegrees(); // Array of Doubles.
+         gLocationLat = degrees[0].toFloat();
+         gLocationLon = degrees[1].toFloat();
 
          Application.getApp().setProperty("LastLocationLat", gLocationLat);
          Application.getApp().setProperty("LastLocationLon", gLocationLon);
