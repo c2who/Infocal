@@ -1,6 +1,7 @@
+using Toybox.Application;
 using Toybox.Background;
 using Toybox.System;
-using Toybox.Application;
+using Toybox.Math;
 
 import Toybox.Lang;
 
@@ -17,23 +18,13 @@ import Toybox.Lang;
 //!       "Data provided to Background.exit() is too large", and
 //!       App.onBackgroundData() is never called!
 //!
-//! @see https://developer.garmin.com/connect-iq/core-topics/backgrounding/
+//! @see  https://developer.garmin.com/connect-iq/core-topics/backgrounding/
 //! @see  https://developer.garmin.com/connect-iq/connect-iq-faq/how-do-i-create-a-connect-iq-background-service/
 //! @see  https://forums.garmin.com/developer/connect-iq/f/discussion/7550/data-too-large-for-background-process
+//!
+//! @seealso  https://forums.garmin.com/developer/connect-iq/b/news-announcements/posts/optimal-monkey-c
 (:background)
 class BackgroundService extends System.ServiceDelegate {
-
-   //! Minimum amount of free memory needed per background request
-   //! @note newer devices (e.g. Vivoactive4) can handle multiple web requests in background,
-   //!       but older devices (e.g. Fenix 6X) throw too large exception if memory gets too low / payload on exit too big.
-   //! @see  https://forums.garmin.com/developer/connect-iq/f/discussion/7550/data-too-large-for-background-process
-   private const BACKGROUND_REQUEST_MEM_MIN = 4000; // FIXME: Tune to allow max # of requests based on your payload
-
-   // Cached results
-   private var _results = {} as Dictionary<String, Dictionary<String, Lang.Any>>;
-
-   // List of result (types) still pending
-   private var _pendingResults as Array<String> = [];
 
    // Clients
    private var _iqAirClient as IQAirClient?;
@@ -45,58 +36,47 @@ class BackgroundService extends System.ServiceDelegate {
 
    //! Background Service Entry Point!
    //! Read pending web requests, and call appropriate web request function.
+   //!
+   //! @note   Due to the very small available background memory on many devices:
+   //!         - make only one web request
    function onTemporalEvent() {
-      var pendingWebRequests = Application.getApp().getProperty("PendingWebRequests") as Dictionary?;
-      var err_background_oom = Application.getApp().getProperty("err_background_oom");
+
       var stats = System.getSystemStats();
-      var free_mem = stats.freeMemory;
-      System.println("Total memory: " + stats.totalMemory);
-      System.println("Free memory:  " + stats.freeMemory);
+      System.println("Total: " + stats.totalMemory);
+      System.println("Free:  " + stats.freeMemory);
 
-      // Defensive coding: ensure pending results queue is empty
-      _pendingResults = [];
+      // If there are any undelivered background events, deliver them
+      var data = Background.getBackgroundData();
+      if (data != null) {
+         System.println("Undelivered: " + data);
+         Background.exit(data);
+      }
 
-       if (pendingWebRequests != null) {
-         var keys = pendingWebRequests.keys();
-         for (var r=0; r < keys.size(); r++) {
-            var type = keys[r];
+      // Else, Process one pending request
+      var pendingWebRequests = Application.getApp().getProperty("PendingWebRequests") as Dictionary<String, Lang.Any>?;
+      if ((pendingWebRequests != null) && (pendingWebRequests.size() > 0)) {
 
-            // Check enough memory to handle additional payload
-            if (r > 0) {
-               if (  (err_background_oom != null)
-                  || (BACKGROUND_REQUEST_MEM_MIN * r+1 > free_mem) ) {
-                  System.println("Deferring type: " + type);
-                  break; // exit for
-               }
+         // Use random pending client selection, to avoid starving others
+         var random = Math.rand();
+         var i = random % pendingWebRequests.size();
+         var type = pendingWebRequests.keys()[i];
+
+         if (OpenWeatherClient.DATA_TYPE.equals(type)) {
+            if (_weatherClient == null) {
+               _weatherClient = new OpenWeatherClient();
             }
+            _weatherClient.requestData(method(:onReceiveClientData));
 
-            if (OpenWeatherClient.DATA_TYPE.equals( type )) {
-               requestOpenWeatherData();
-               _pendingResults.add(type);
-
-            } else if (IQAirClient.DATA_TYPE.equals( type )) {
-               requestIQAirData();
-               _pendingResults.add(type);
-
-            } else {
-               System.println("Unknown type: " + type);
+         } else if (IQAirClient.DATA_TYPE.equals(type)) {
+            if (_iqAirClient == null) {
+               _iqAirClient = new IQAirClient();
             }
+            _iqAirClient.requestData(method(:onReceiveClientData));
+
+         } else {
+            System.println("Unknown request: " + pendingWebRequests);
          }
       }
-   }
-
-   function requestOpenWeatherData() as Void {
-      if (_weatherClient == null) {
-         _weatherClient = new OpenWeatherClient();
-      }
-      _weatherClient.requestData(method(:onReceiveClientData));
-   }
-
-   function requestIQAirData() as Void {
-      if (_iqAirClient == null) {
-         _iqAirClient = new IQAirClient();
-      }
-      _iqAirClient.requestData(method(:onReceiveClientData));
    }
 
    //! Receives client data and evaluate exiting background service
@@ -107,36 +87,12 @@ class BackgroundService extends System.ServiceDelegate {
    //!       App.onBackgroundData() is never called!
    //! @see  https://forums.garmin.com/developer/connect-iq/f/discussion/7550/data-too-large-for-background-process
    function onReceiveClientData(type as String, responseCode as Number, data as Dictionary<String, Lang.Any>) as Void {
-      // Save data
-      _results[type] = data;
+      // Avoid circular references
+      _weatherClient = null;
+      _iqAirClient = null;
 
-      var stats = System.getSystemStats();
-      var free_mem = stats.freeMemory;
-      System.println("Total memory: " + stats.totalMemory);
-      System.println("Free memory:  " + stats.freeMemory);
-
-      // Optimization: Free memory for other callbacks
-      if (OpenWeatherClient.DATA_TYPE.equals( type )) {
-         _weatherClient = null;
-      } else if (IQAirClient.DATA_TYPE.equals( type )) {
-         _iqAirClient = null;
-      } else {
-         System.println("Unknown type: " + type);
-      }
-
-      // Exit background service and return results when all requests complete
-      _pendingResults.remove(type);
-      if (_pendingResults.size() == 0) {
-         try {
-            System.println(_results);
-            Background.exit(_results);
-         } catch (ex) {
-            //Doh! Device has limited memory/payload size - permanently disable multi-payload and return error
-            System.println("Exception: " + ex.getErrorMessage());
-            //Application.getApp().setProperty("err_background_oom", true); // FIXME: Only devices with API 3.2.0 Storage can write in background!
-            Background.exit( {} );
-         }
-      }
+      System.println(data);
+      Background.exit(data);
    }
 
 }

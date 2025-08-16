@@ -15,8 +15,8 @@ import Toybox.Lang;
 (:background)
 class IQAirClient extends BaseClient {
 
-   const CLIENT_NAME = "IQAir";
-   static const DATA_TYPE = "AirQuality";
+   private const CLIENT_NAME = "IQAir";
+   public static const DATA_TYPE = "AirQuality";
 
    //! Uses "Get nearest city data" API to read AQI data
    //! (IP geolocation) http://api.airvisual.com/v2/nearest_city?key={{YOUR_API_KEY}}
@@ -70,21 +70,13 @@ class IQAirClient extends BaseClient {
 
       // Useful data only available if result was successful.
       // Filter and flatten data response for data that we actually need.
-      // Reduces runtime memory spike in main app.
-      if (responseCode != 200) {
-         // Error
-         var hasData = ((data!=null) && (data.hasKey("status")) && data.hasKey("data") && data["data"].hasKey("message"));
+      // Avoid runtime memory issues in background.
+      if ((responseCode == 200) && (data != null)) {
          result = {
-            "code" =>    responseCode.toNumber(),
-            "status" =>  hasData ? data["status"] : responseCode.toString(),
-            "message" => hasData ? data["data"]["message"] : "HTTP Error " + responseCode.toString(),
-            "client" =>  CLIENT_NAME,
-            "clientTs" => Time.now().value()
-         };
-      } else {
-         // Success
-         result = {
-            "code" => responseCode,
+            "type" =>     DATA_TYPE,
+            "code" =>     responseCode,
+            "client" =>   CLIENT_NAME,
+            "clientTs" => Time.now().value(),
             "status" => data["status"],
             "city" =>   data["data"]["city"],
             "country" =>data["data"]["country"],
@@ -94,9 +86,18 @@ class IQAirClient extends BaseClient {
             "aqius" =>  data["data"]["current"]["pollution"]["aqius"],
             "mainus" => data["data"]["current"]["pollution"]["mainus"],
             "aqicn" =>  data["data"]["current"]["pollution"]["aqicn"],
-            "maincn" => data["data"]["current"]["pollution"]["maincn"],
-            "client" => CLIENT_NAME,
-            "clientTs" => Time.now().value()
+            "maincn" => data["data"]["current"]["pollution"]["maincn"]
+         };
+      } else {
+         // Error
+         var hasData = ((data!=null) && (data.hasKey("status")) && data.hasKey("data") && data["data"].hasKey("message"));
+         result = {
+            "type" =>     DATA_TYPE,
+            "code" =>     responseCode.toNumber(),
+            "client" =>   CLIENT_NAME,
+            "clientTs" => Time.now().value(),
+            "status" =>  hasData ? data["status"] : responseCode.toString(),
+            "message" => hasData ? data["data"]["message"] : "HTTP Error " + responseCode.toString()
          };
       }
 

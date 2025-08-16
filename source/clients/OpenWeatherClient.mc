@@ -15,8 +15,8 @@ import Toybox.Lang;
 //! bloating the background service memory usage.
 (:background)
 class OpenWeatherClient extends BaseClient {
-    static const DATA_TYPE = "Weather";
-    const CLIENT_NAME = "OWM";
+    public static const DATA_TYPE = "Weather";
+    private const CLIENT_NAME = "OWM";
 
     //! Uses OpenWeather Current Weather API
     //! https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
@@ -62,13 +62,16 @@ class OpenWeatherClient extends BaseClient {
    //! @see  https://developer.garmin.com/connect-iq/api-docs/Toybox/Communications.html
    function onReceiveOpenWeatherData(responseCode as Number, data as Dictionary?) {
         var result;
-
+        
         // Useful data only available if result was successful.
         // Filter and flatten data response for data that we actually need.
         // Reduces runtime memory spike in main app.
-        if (responseCode == 200) {
+        if ((responseCode == 200) && (data != null)) {
             result = {
-                "code" => responseCode,
+                "type" =>     DATA_TYPE,
+                "code" =>     responseCode,
+                "client" =>   CLIENT_NAME,
+                "clientTs" => Time.now().value(),
                 "lat" => data["coord"]["lat"],
                 "lon" => data["coord"]["lon"],
                 "dt" => data["dt"],
@@ -79,15 +82,14 @@ class OpenWeatherClient extends BaseClient {
                 "wind_speed" => data["wind"]["speed"],
                 "wind_direct" => data["wind"]["deg"],
                 "icon" => data["weather"][0]["icon"],
-                "des" => data["weather"][0]["main"],
-                "client" =>  CLIENT_NAME,
-                "clientTs" => Time.now().value()
+                "des" => data["weather"][0]["main"]
             };
         } else {
             // Error
             result = {
-                "code" => responseCode.toNumber(),
-                "client" =>  CLIENT_NAME,
+                "type" =>     DATA_TYPE,
+                "code" =>     responseCode,
+                "client" =>   CLIENT_NAME,
                 "clientTs" => Time.now().value()
             };
         }

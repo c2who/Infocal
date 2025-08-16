@@ -99,6 +99,9 @@ class InfocalApp extends Application.AppBase {
    //! - The method triggered within the ServiceDelegate will be run
    //! - The background task will exit using Background.exit() or System.exit()
    //! @warn The background task will be automatically terminated after 30 seconds if it is not exited by these methods
+   //!
+   //! @see  https://developer.garmin.com/connect-iq/core-topics/backgrounding/
+   //! @see  https://developer.garmin.com/connect-iq/connect-iq-faq/how-do-i-create-a-connect-iq-background-service/
    function getServiceDelegate() {
       return [new BackgroundService()];
    }
@@ -112,34 +115,34 @@ class InfocalApp extends Application.AppBase {
    //!   will be passed to the application after the onStart() method completes.
    //!
    //! @note This callback can be called from onStart() -- before the view is created!
-   function onBackgroundData(service_data) {
-      var pendingWebRequests = getProperty("PendingWebRequests");
+   //!
+   //! @see  https://developer.garmin.com/connect-iq/core-topics/backgrounding/
+   //! @see  https://developer.garmin.com/connect-iq/connect-iq-faq/how-do-i-create-a-connect-iq-background-service/
+   function onBackgroundData(data as Dictionary<String, Lang.Any>) {
+      System.println("Foreground: " + data);
+
+      // New data received: clear pendingWebRequests flag for the received data type
+      // Save list of any remaining background requests
+      var type = data["type"];
+      var pendingWebRequests = getProperty("PendingWebRequests") as Dictionary<String, Lang.Any>?;
       if (pendingWebRequests == null) {
          pendingWebRequests = {};
       }
-
-      var keys = service_data.keys();
-      for(var i=0; i< keys.size(); i++) {
-         var type = keys[i];
-         var data = service_data.get(type);
-
-         // New data received: clear pendingWebRequests flag and process data.
-         pendingWebRequests.remove(type);
-         setProperty("PendingWebRequests", pendingWebRequests);
-
-         // Store data
-         BaseClientHelper.storeData(type, data);
-      }
-
-      // Save list of any remaining background requests
+      pendingWebRequests.remove(type);
       setProperty("PendingWebRequests", pendingWebRequests);
+
+      BaseClientHelper.storeData(data);
+
       WatchUi.requestUpdate();
    }
 
-   // Determine if any web requests are needed.
-   // If so, set approrpiate pendingWebRequests flag for use by BackgroundService, then register for
-   // temporal event.
-   // Currently called on layout initialisation, when settings change, and on exiting sleep.
+   //! Determine if any web requests are needed.
+   //! If so, set approrpiate pendingWebRequests flag for use by BackgroundService,
+   //! then register for temporal event.
+   //! - Called by onUpdate(): on show; on settings changed; and every minute
+   //!
+   //! @note "pendingWebRequests" are stored as Dictionary keys to prevent duplicate-entries
+   //!       that may be introduced due to multi-threaded nature of updates to pendingWebRequests
    function checkPendingWebRequests() {
       // Update last known location
       updateLastLocation();

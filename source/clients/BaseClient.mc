@@ -43,7 +43,7 @@ class BaseClient {
 //! Base Client (Foreground) Helper
 //!
 //! @note Standard data filed names should be as follows:
-//!         "clientTs"    client response time
+//!         "clientTs"    Client response time
 //!         "code"        HTTP response code
 class BaseClientHelper {
 
@@ -84,10 +84,14 @@ class BaseClientHelper {
     }
 
     //! Persist (store) the data received from a client
-    public static function storeData(type as String, data as Dictionary?) {
-        // Store data
+    public static function storeData(data as Dictionary<String, Lang.Any>) as Void {
         var app = Application.getApp();
-        if ((data != null) && (data["code"] == 200)) {
+
+        var responseCdoe = data["code"];
+        var type = data["type"];
+        data["clientTs"] = Time.now().value();
+
+        if (responseCdoe == 200) {
             // Valid data
             app.setProperty(type, data);
             app.setProperty(type + Constants.DATA_TYPE_ERROR_SUFFIX, null);
@@ -107,20 +111,14 @@ class BaseClientHelper {
     //!
     //! @see https://developer.garmin.com/connect-iq/api-docs/Toybox/Communications.html
     public static function getCommunicationsErrorCodeText(responseCode as Number) as String {
-        try {
-            switch (responseCode) {
-                case 401: // Unauthorized
-                case 403: // Forbidden
-                case 429: // Too Many Requests (often due to api key quota)
-                    return "API KEY";
-                    break;
-                default:
-                    return Lang.format("ERR $1$", responseCode);
-            }
+        switch (responseCode) {
+            case 401: // Unauthorized
+            case 403: // Forbidden
+            case 429: // Too Many Requests (often due to api key quota)
+                return "API KEY";
 
-        } catch (ex) {
-            System.println((ex.getErrorMessage()));
-            return "ERR";
+            default:
+                return Lang.format("ERR $1$", responseCode);
         }
     }
 }
