@@ -86,19 +86,20 @@ class InfocalApp extends Application.AppBase {
    function onBackgroundData(data as Dictionary<String, Lang.Any>) {
       System.println("Foreground: " + data);
 
-      // New data received: clear pendingWebRequests flag for the received data type
-      // Save list of any remaining background requests
       var type = data["type"];
-      var pendingWebRequests = getProperty("PendingWebRequests") as Dictionary<String, Lang.Any>?;
-      if (pendingWebRequests == null) {
-         pendingWebRequests = {};
-      }
 
       // DEFECT 2025.8.11: Background Data from previous version (schema) is nested dictionary
       // (This is a one-off error for delayed background data delivery after upgrade, and can be discarded)
       if (type != null) {
+         // New data received: clear pendingWebRequests flag for the received data type
+         // Save list of any remaining background requests
+         var pendingWebRequests = getProperty("PendingWebRequests") as Dictionary<String, Lang.Any>?;
+         if (pendingWebRequests == null) {
+            pendingWebRequests = {};
+         }
          pendingWebRequests.remove(type);
          setProperty("PendingWebRequests", pendingWebRequests);
+
          BaseClientHelper.storeData(data);
       }
       WatchUi.requestUpdate();
