@@ -5,8 +5,10 @@ import Toybox.Lang;
 import Toybox.System;
 import Toybox.WatchUi;
 
-var small_digi_font = null;
-var second_digi_font = null;
+// Font resources
+var small_digi_font as WatchUi.Resource?;
+var always_on_digi_font as WatchUi.Resource?;
+
 var second_x = 160;
 var second_y = 140;
 var heart_x = 80;
@@ -75,7 +77,7 @@ class InfocalView extends WatchUi.WatchFace {
    //! The entry point for the View.
    //! onLayout() is called before the View is shown to load resources and set up the layout of the View.
    //! @note Watch Faces: onLayout() → onShow() → onUpdate()
-   function onLayout(dc) {
+   function onLayout(dc as Dc) {
       // Set globals
       center_x = dc.getWidth() / 2;
       center_y = dc.getHeight() / 2;
@@ -91,7 +93,9 @@ class InfocalView extends WatchUi.WatchFace {
 
       updateColorsInUse();
       updateCurrentFieldIdsInUse();
-      updateAlwaysOnFonts(dc);
+      loadAlwaysOnFonts(dc);
+      calcAlwaysOnLayout(dc);
+
       setupScreenBuffer(dc);
    }
 
@@ -120,6 +124,9 @@ class InfocalView extends WatchUi.WatchFace {
    // state of this View here. This includes freeing resources from
    // memory.
    function onHide() {
+      // Unload fonts
+      small_digi_font = null;
+      always_on_digi_font = null;
    }
 
    //! Update the View.
@@ -196,12 +203,13 @@ class InfocalView extends WatchUi.WatchFace {
    //!           invoked, but can be used in the device *simulator*.
    public function onPartialUpdate(dc as Dc) as Void {
 
+      // FIXME: Support seconds on Analog by painting circular mask in centre of dial
       if (Application.getApp().getProperty("use_analog")) {
          // not supported
          return;
       }
 
-      if (Application.getApp().getProperty("always_on_second")) {
+      if ((always_on_digi_font != null) && (Application.getApp().getProperty("always_on_second"))) {
          var clockTime = System.getClockTime();
          var second_text = clockTime.sec.format("%02d");
 
@@ -217,13 +225,13 @@ class InfocalView extends WatchUi.WatchFace {
          dc.drawText(
             second_x,
             second_y,
-            second_digi_font,
+            always_on_digi_font,
             second_text,
             Graphics.TEXT_JUSTIFY_LEFT
          );
       }
 
-      if (Application.getApp().getProperty("always_on_heart")) {
+      if ((always_on_digi_font != null) && (Application.getApp().getProperty("always_on_heart"))) {
          var width = second_clip_size[0];
          dc.setClip(
             heart_x - width - 1,
@@ -242,7 +250,7 @@ class InfocalView extends WatchUi.WatchFace {
             dc.drawText(
                heart_x - 1,
                second_y,
-               second_digi_font,
+               always_on_digi_font,
                heart_text,
                Graphics.TEXT_JUSTIFY_RIGHT
             );
@@ -510,20 +518,44 @@ class InfocalView extends WatchUi.WatchFace {
       }
    }
 
-   function updateAlwaysOnFonts(dc as Graphics.Dc) {
-      var always_on_style = Application.getApp().getProperty("always_on_style");
-      if (always_on_style == 0) {
-         second_digi_font = WatchUi.loadResource(Rez.Fonts.secodigi);
-      } else {
-         second_digi_font = WatchUi.loadResource(Rez.Fonts.xsecodigi);
-      }
+   function loadAlwaysOnFonts(dc as Graphics.Dc) {
+      var always_on_second = Application.getApp().getProperty("always_on_second") as Lang.Boolean;
+      var always_on_heart = Application.getApp().getProperty("always_on_heart") as Lang.Boolean;
+      var always_on_style = Application.getApp().getProperty("always_on_style") as Lang.Boolean;
 
-      // Measure clipping area for seconds and heart rate AOD
-      var width  = dc.getTextWidthInPixels("200", second_digi_font) + 2;
-      var height = Graphics.getFontHeight(second_digi_font);
-      second_font_height_half = height/2;
-      second_clip_size = [width, height];
+      if (always_on_second || always_on_heart) {
+         // Loads always on (seconds/hr) Font
+         if (always_on_style == 0) {
+            always_on_digi_font = WatchUi.loadResource(Rez.Fonts.secodigi);
+         } else {
+            always_on_digi_font = WatchUi.loadResource(Rez.Fonts.xsecodigi);
+         }
+      } else {
+         // Unload
+         always_on_digi_font = null;
+      }
    }
+
+   function calcAlwaysOnLayout(dc as Dc) as Void {
+
+      // Measure clipping area for seconds and heart rate, range [XX..2XX]
+      if (always_on_digi_font != null) {
+         var width  = dc.getTextWidthInPixels("200", always_on_digi_font) + 2;
+         var height = Graphics.getFontHeight(always_on_digi_font);
+         second_font_height_half = height/2;
+         second_clip_size = [width, height];
+
+         if (Application.getApp().getProperty("use_analog")) {
+            // Analog Watchface
+            second_x = center_x;
+            second_y = center_y - second_font_height_half * 2;
+         } else {
+            // Digital Watchface
+            // FIXME: Position of seconds / hr digits layout is done in DigitalDial!
+         }
+      }
+   }
+
 
    //! Determine if any web requests are needed.
    //! If so, set approrpiate pendingWebRequests flag for use by BackgroundService,
@@ -656,11 +688,6 @@ class InfocalView extends WatchUi.WatchFace {
             gLocationLon = lon;
          }
       }
-   }
-
-   function removeAllFonts() {
-      View.findDrawableById("analog").removeFont();
-      View.findDrawableById("digital").removeFont();
    }
 }
 
