@@ -32,7 +32,7 @@ class DigitalDial extends Ui.Drawable {
 
       bonusy_smallsize = 0;
       if (center_x == 195) { // 390x390 screen
-         bonusy_smallsize = -35; 
+         bonusy_smallsize = -35;
       }
    }
 
@@ -242,7 +242,7 @@ class DigitalDial extends Ui.Drawable {
          }
 
          // Draw date
-         var dateText = Application.getApp().getFormattedDate();
+         var dateText = Globals.getFormattedDate();
          dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
          var h3 = dc.getFontHeight(small_digi_font);
          dc.drawText(
@@ -277,7 +277,6 @@ class DigitalDial extends Ui.Drawable {
          var boldF = digital_style == 3 ? xmidBoldFont : midBoldFont;
          var normF = digital_style == 3 ? xmidSemiFont : midSemiFont;
 
-         
          // BUG: Digital font is bottom-aligned at 2x character height (font bounds are incorrect)
          var height = dc.getFontHeight(boldF);
          var y_offset = height * 0.75;
@@ -285,7 +284,7 @@ class DigitalDial extends Ui.Drawable {
          var minuW = dc.getTextWidthInPixels(minuText, normF);
          var width = hourW + minuW + 6;
          var left = center_x - width/2;
-         
+
          // Draw time
          dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
          dc.drawText(

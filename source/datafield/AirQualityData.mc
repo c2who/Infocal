@@ -20,7 +20,7 @@ class AirQualityField extends BaseDataField {
          || (data["clientTs"] < (Time.now().value() - (360 * Time.SECONDS_PER_MINUTE)))) {
 
          // Display error(if any) or no-computed-data
-         var error = App.getApp().getProperty(IQAirClient.DATA_TYPE + Constants.DATA_TYPE_ERROR_SUFFIX);
+         var error = App.getApp().getProperty(IQAirClient.DATA_TYPE + Globals.DATA_TYPE_ERROR_SUFFIX);
          if (error != null) {
             // Error
             return BaseClientHelper.getCommunicationsErrorCodeText(error["code"]);

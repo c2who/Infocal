@@ -55,7 +55,7 @@ class DateField extends BaseDataField {
    }
 
    function cur_label(value) {
-      return Application.getApp().getFormattedDate();
+      return Globals.getFormattedDate();
    }
 }
 

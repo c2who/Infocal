@@ -6,53 +6,6 @@ using Toybox.Application;
 
 import Toybox.Lang;
 
-var kerning_ratios = {
-   ' ' => 0.4,
-   '%' => 0.92,
-   '+' => 0.7,
-   '-' => 0.38,
-   '.' => 0.25,
-   ',' => 0.25,   // TODO: international numbers use comma delimeters
-   '0' => 0.66,
-   '1' => 0.41,
-   '2' => 0.6,
-   '3' => 0.63,
-   '4' => 0.67,
-   '5' => 0.63,
-   '6' => 0.64,
-   '7' => 0.53,
-   '8' => 0.67,
-   '9' => 0.64,
-   ':' => 0.25,
-   'A' => 0.68,
-   'B' => 0.68,
-   'C' => 0.66,
-   'D' => 0.68,
-   'E' => 0.59,
-   'F' => 0.56,
-   'G' => 0.67,
-   'H' => 0.71,
-   'I' => 0.33,
-   'J' => 0.64,
-   'K' => 0.68,
-   'L' => 0.55,
-   'M' => 0.89,
-   'N' => 0.73,
-   'O' => 0.68,
-   'P' => 0.66,
-   'Q' => 0.80, // TODO : Add letter Q to all arc text fonts
-   'R' => 0.67,
-   'S' => 0.67,
-   'T' => 0.55,
-   'U' => 0.68,
-   'V' => 0.64,
-   'W' => 1.0,
-   'X' => 0.64, // TODO : Add letter X to all arc text fonts
-   'Y' => 0.64,
-   'Z' => 0.64, // TODO : Add letter Z to all arc text fonts
-   '°' => 0.47,
-};
-
 class ArcTextComplication extends Ui.Drawable {
    hidden var barRadius;
    hidden var baseRadian;
@@ -66,6 +19,53 @@ class ArcTextComplication extends Ui.Drawable {
    var accumulation_sign;
    var angle;
    var kerning = 1.0;
+
+   static var kerning_ratios = {
+      ' ' => 0.4,
+      '%' => 0.92,
+      '+' => 0.7,
+      '-' => 0.38,
+      '.' => 0.25,
+      ',' => 0.25,   // TODO: international numbers use comma delimeters
+      '0' => 0.66,
+      '1' => 0.41,
+      '2' => 0.6,
+      '3' => 0.63,
+      '4' => 0.67,
+      '5' => 0.63,
+      '6' => 0.64,
+      '7' => 0.53,
+      '8' => 0.67,
+      '9' => 0.64,
+      ':' => 0.25,
+      'A' => 0.68,
+      'B' => 0.68,
+      'C' => 0.66,
+      'D' => 0.68,
+      'E' => 0.59,
+      'F' => 0.56,
+      'G' => 0.67,
+      'H' => 0.71,
+      'I' => 0.33,
+      'J' => 0.64,
+      'K' => 0.68,
+      'L' => 0.55,
+      'M' => 0.89,
+      'N' => 0.73,
+      'O' => 0.68,
+      'P' => 0.66,
+      'Q' => 0.80, // TODO : Add letter Q to all arc text fonts
+      'R' => 0.67,
+      'S' => 0.67,
+      'T' => 0.55,
+      'U' => 0.68,
+      'V' => 0.64,
+      'W' => 1.0,
+      'X' => 0.64, // TODO : Add letter X to all arc text fonts
+      'Y' => 0.64,
+      'Z' => 0.64, // TODO : Add letter Z to all arc text fonts
+      '°' => 0.47,
+   };
 
    static function degreesToRadians(degrees) {
       return (degrees * Math.PI) / 180;
@@ -175,8 +175,8 @@ class ArcTextComplication extends Ui.Drawable {
             var targetRadian =
                baseRadian + (lastRad - ra / 2.0) * accumulation_sign;
 
-            var labelCurX = Utility.convertCoorX(targetRadian, barRadius);
-            var labelCurY = Utility.convertCoorY(targetRadian, barRadius);
+            var labelCurX = Globals.convertCoorX(targetRadian, barRadius);
+            var labelCurY = Globals.convertCoorY(targetRadian, barRadius);
 
             set_font(targetRadian);
             dc.drawText(labelCurX, labelCurY, font, charArray[i].toString(), alignment);

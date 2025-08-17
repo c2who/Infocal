@@ -4,7 +4,6 @@ using Toybox.Activity;
 using Toybox.System;
 using Toybox.Time;
 using Toybox.Math;
-using Toybox.Time.Gregorian as Date;
 
 import Toybox.Lang;
 import Toybox.WatchUi;
@@ -21,33 +20,6 @@ var gLocationLon = null;
 (:background)
 class InfocalApp extends Application.AppBase {
    var _View;
-   var _currentFieldIds as Array<Number> = {};
-
-   static const days = {
-         Date.DAY_MONDAY => "MON",
-         Date.DAY_TUESDAY => "TUE",
-         Date.DAY_WEDNESDAY => "WED",
-         Date.DAY_THURSDAY => "THU",
-         Date.DAY_FRIDAY => "FRI",
-         Date.DAY_SATURDAY => "SAT",
-         Date.DAY_SUNDAY => "SUN",
-      };
-   static const months = {
-         Date.MONTH_JANUARY => "JAN",
-         Date.MONTH_FEBRUARY => "FEB",
-         Date.MONTH_MARCH => "MAR",
-         Date.MONTH_APRIL => "APR",
-         Date.MONTH_MAY => "MAY",
-         Date.MONTH_JUNE => "JUN",
-         Date.MONTH_JULY => "JUL",
-         Date.MONTH_AUGUST => "AUG",
-         Date.MONTH_SEPTEMBER => "SEP",
-         Date.MONTH_OCTOBER => "OCT",
-         Date.MONTH_NOVEMBER => "NOV",
-         Date.MONTH_DECEMBER => "DEC",
-      };
-
-
    function initialize() {
       AppBase.initialize();
    }
@@ -70,8 +42,6 @@ class InfocalApp extends Application.AppBase {
    //! Override to provide the initial View and Input Delegate of the application.
    //! @note This method must be overridden in derived classes. If called, this function will cause the application to crash.
    function getInitialView() as [Views] or [Views, InputDelegates] {
-      updateCurrentDataFieldIds();
-
       _View = new InfocalView();
 
       if( Toybox.WatchUi.WatchFace has :onPartialUpdate ) {
@@ -81,17 +51,12 @@ class InfocalApp extends Application.AppBase {
       }
    }
 
-   //! Called when the application settings have been changed by Garmin Connect Mobile (GCM) while while the app is running.
+   //! Called when the application settings have been changed by Garmin Connect Mobile (GCM) *while while the app is running*.
    //!
    //! Override this method to change app behavior when settings change.
    //! @note This is typically used to call for an update to the WatchUi.requestUpdate()
    function onSettingsChanged() {
-      updateCurrentDataFieldIds();
-
       _View.onSettingsChanged();
-
-      // update the view to reflect changes
-      WatchUi.requestUpdate();
    }
 
    //! Get a ServiceDelegate to run background tasks for this app.
@@ -129,197 +94,13 @@ class InfocalApp extends Application.AppBase {
          pendingWebRequests = {};
       }
 
-      // Fixed: Unexpected type error (due to app update, schema change)
+      // DEFECT 2025.8.11: Background Data from previous version (schema) is nested dictionary
+      // (This is a one-off error for delayed background data delivery after upgrade, and can be discarded)
       if (type != null) {
          pendingWebRequests.remove(type);
-
          setProperty("PendingWebRequests", pendingWebRequests);
-
          BaseClientHelper.storeData(data);
       }
-
       WatchUi.requestUpdate();
    }
-
-   //! Determine if any web requests are needed.
-   //! If so, set approrpiate pendingWebRequests flag for use by BackgroundService,
-   //! then register for temporal event.
-   //! - Called by onUpdate(): on show; on settings changed; and every minute
-   //!
-   //! @note "pendingWebRequests" are stored as Dictionary keys to prevent duplicate-entries
-   //!       that may be introduced due to multi-threaded nature of updates to pendingWebRequests
-   function checkPendingWebRequests() {
-      // Update last known location
-      updateLastLocation();
-
-      // If watch device does not support background services
-      if (!(System has :ServiceDelegate)) {
-         return;
-      }
-
-      // Check for need data / retry policy only if have data connection
-      var settings = System.getDeviceSettings();
-      if (!settings.phoneConnected) {
-         return;
-      }
-
-      var pendingWebRequests = {};
-
-      // If AirQuality data fields in use
-      if (isAnyDataFieldsInUse( [FIELD_TYPE_AIR_QUALITY] )) {
-         if (IQAirClientHelper.needsDataUpdate()) {
-            pendingWebRequests[IQAirClient.DATA_TYPE] = true;
-         }
-      }
-
-      // If Weather data fields in use
-      if (isAnyDataFieldsInUse( [FIELD_TYPE_TEMPERATURE_OUT,
-                                 FIELD_TYPE_TEMPERATURE_HL,
-                                 FIELD_TYPE_WEATHER,
-                                 FIELD_TYPE_WIND ] )) {
-         if (OpenWeatherClientHelper.needsDataUpdate()) {
-            pendingWebRequests[OpenWeatherClient.DATA_TYPE] = true;
-         }
-      }
-
-      setProperty("PendingWebRequests", pendingWebRequests);
-
-      // If there are any pending data requests (and phone is connected)
-      if (pendingWebRequests.keys().size() > 0) {
-         // Register for background temporal event as soon as possible.
-         var lastTime = Background.getLastTemporalEventTime();
-
-         if (lastTime) {
-            // Events scheduled for a time in the past trigger immediately.
-            var nextTime = lastTime.add(new Time.Duration(5 * 60));
-            Background.registerForTemporalEvent(nextTime);
-         } else {
-            Background.registerForTemporalEvent(Time.now());
-         }
-      }
-   }
-
-   //! Populates a list of all the data field ids in use
-   function updateCurrentDataFieldIds() as Void {
-      var fieldIds = [
-         getComplicationSettingDataKey(12),
-         getComplicationSettingDataKey(10),
-         getComplicationSettingDataKey(2),
-         getComplicationSettingDataKey(4),
-         getComplicationSettingDataKey(6),
-         getComplicationSettingDataKey(8),
-         getBarDataComplicationSettingDataKey(0),
-         getBarDataComplicationSettingDataKey(1),
-         $.getGraphComplicationDataKey(0),
-         $.getGraphComplicationDataKey(1)
-      ];
-
-      _currentFieldIds = fieldIds;
-   }
-
-   function isAnyDataFieldsInUse(fieldIds as Array<Number>) {
-      for (var i =0; i < fieldIds.size(); i++) {
-         var id = fieldIds[i];
-         if (_currentFieldIds.indexOf(id) != -1) {
-            return true;
-         }
-      }
-      return false;
-   }
-
-   function updateLastLocation() as Void {
-      // Attempt to update current location, to be used by Sunrise/Sunset, Weather, Air Quality.
-      // If current location available from current activity, save it in case it goes "stale" and can not longer be retrieved.
-      var location = Activity.getActivityInfo().currentLocation;
-      if (location) {
-         // Save current location to globals
-         var degrees = location.toDegrees(); // Array of Doubles.
-         gLocationLat = degrees[0].toFloat();
-         gLocationLon = degrees[1].toFloat();
-
-         Application.getApp().setProperty("LastLocationLat", gLocationLat);
-         Application.getApp().setProperty("LastLocationLon", gLocationLon);
-      } else {
-         // current location is not available, read stored value from Object Store, being careful not to overwrite a valid
-         // in-memory value with an invalid stored one.
-         var lat = Application.getApp().getProperty("LastLocationLat");
-         var lon = Application.getApp().getProperty("LastLocationLon");
-         if ((lat != null) && (lon != null)) {
-            gLocationLat = lat;
-            gLocationLon = lon;
-         }
-      }
-   }
-
-   function getFormattedDate() {
-      var now = Time.now();
-      var date = Date.info(now, Time.FORMAT_SHORT);
-      var date_formatter = Application.getApp().getProperty("date_format");
-      if (date_formatter == 0) {
-         if (Application.getApp().getProperty("force_date_english")) {
-            var day_of_week = date.day_of_week;
-            return Lang.format("$1$ $2$", [
-               days[day_of_week],
-               date.day.format("%d"),
-            ]);
-         } else {
-            var long_date = Date.info(now, Time.FORMAT_LONG);
-            var day_of_week = long_date.day_of_week;
-            return Lang.format("$1$ $2$", [
-               day_of_week.toUpper(),
-               date.day.format("%d"),
-            ]);
-         }
-      } else if (date_formatter == 1) {
-         // dd/mm
-         return Lang.format("$1$.$2$", [
-            date.day.format("%d"),
-            date.month.format("%d"),
-         ]);
-      } else if (date_formatter == 2) {
-         // mm/dd
-         return Lang.format("$1$.$2$", [
-            date.month.format("%d"),
-            date.day.format("%d"),
-         ]);
-      } else if (date_formatter == 3) {
-         // dd/mm/yyyy
-         var year = date.year;
-         var yy = year / 100.0;
-         yy = Math.round((yy - yy.toNumber()) * 100.0);
-         return Lang.format("$1$.$2$.$3$", [
-            date.day.format("%d"),
-            date.month.format("%d"),
-            yy.format("%d"),
-         ]);
-      } else if (date_formatter == 4) {
-         // mm/dd/yyyy
-         var year = date.year;
-         var yy = year / 100.0;
-         yy = Math.round((yy - yy.toNumber()) * 100.0);
-         return Lang.format("$1$.$2$.$3$", [
-            date.month.format("%d"),
-            date.day.format("%d"),
-            yy.format("%d"),
-         ]);
-      } else if (date_formatter == 5 || date_formatter == 6) {
-         // dd mmm
-         var day = null;
-         var month = null;
-         if (Application.getApp().getProperty("force_date_english")) {
-            day = date.day;
-            month = months[date.month];
-         } else {
-            var medium_date = Date.info(now, Time.FORMAT_MEDIUM);
-            day = medium_date.day;
-            month = months[medium_date.month];
-         }
-         if (date_formatter == 5) {
-            return Lang.format("$1$ $2$", [day.format("%d"), month]);
-         } else {
-            return Lang.format("$1$ $2$", [month, day.format("%d")]);
-         }
-      }
-   }
-
 }

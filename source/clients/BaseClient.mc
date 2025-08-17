@@ -58,8 +58,8 @@ class BaseClientHelper {
         // Note: We use clientTs as we do not *know* how often weather data is updated (typically hourly)
         var app = Application.getApp();
         var data = app.getProperty(type);
-        var error = app.getProperty(type + Constants.DATA_TYPE_ERROR_SUFFIX);
-        var retries = app.getProperty(type + Constants.DATA_TYPE_RETRIES_SUFFIX);
+        var error = app.getProperty(type + Globals.DATA_TYPE_ERROR_SUFFIX);
+        var retries = app.getProperty(type + Globals.DATA_TYPE_RETRIES_SUFFIX);
 
         // Find the last data response time (valid or error)
         var lastTime = (data != null) ? data["clientTs"] : (error != null) ? error["clientTs"] : null;
@@ -94,15 +94,15 @@ class BaseClientHelper {
         if (responseCdoe == 200) {
             // Valid data
             app.setProperty(type, data);
-            app.setProperty(type + Constants.DATA_TYPE_ERROR_SUFFIX, null);
-            app.setProperty(type + Constants.DATA_TYPE_RETRIES_SUFFIX, null);
+            app.setProperty(type + Globals.DATA_TYPE_ERROR_SUFFIX, null);
+            app.setProperty(type + Globals.DATA_TYPE_RETRIES_SUFFIX, null);
         } else {
             // return error to the caller, and update retries count
-            var retries = app.getProperty(type + Constants.DATA_TYPE_RETRIES_SUFFIX);
+            var retries = app.getProperty(type + Globals.DATA_TYPE_RETRIES_SUFFIX);
             retries = (retries == null) ? 1 : (retries+1);
 
-            app.setProperty(type + Constants.DATA_TYPE_ERROR_SUFFIX, data);
-            app.setProperty(type + Constants.DATA_TYPE_RETRIES_SUFFIX, retries);
+            app.setProperty(type + Globals.DATA_TYPE_ERROR_SUFFIX, data);
+            app.setProperty(type + Globals.DATA_TYPE_RETRIES_SUFFIX, retries);
         }
     }
 

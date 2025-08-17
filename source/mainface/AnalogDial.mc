@@ -215,10 +215,10 @@ class AnalogDial extends Ui.Drawable {
       var radian =
          2 * (getSecondHandFragment() / 60.0) * Math.PI - 0.5 * Math.PI;
 
-      var startx = Utility.convertCoorX(radian, base_radius);
-      var starty = Utility.convertCoorY(radian, base_radius);
-      var endx = Utility.convertCoorX(radian, minu_radius);
-      var endy = Utility.convertCoorY(radian, minu_radius);
+      var startx = Globals.convertCoorX(radian, base_radius);
+      var starty = Globals.convertCoorY(radian, base_radius);
+      var endx = Globals.convertCoorX(radian, minu_radius);
+      var endy = Globals.convertCoorY(radian, minu_radius);
 
       dc.setColor(gsecondary_color, Graphics.COLOR_TRANSPARENT);
       dc.setPenWidth(base_thick);
@@ -234,8 +234,8 @@ class AnalogDial extends Ui.Drawable {
    //!   [ flags|char|xpos|ypos ]
    function drawTiles(packed_array, font, dc, index) {
       var radian = (index.toFloat() / 60.0) * (2 * 3.1415) - 0.5 * 3.1415;
-      var offset_rad_x = Utility.convertCoorX(radian, offset_rad) - center_x;
-      var offset_rad_y = Utility.convertCoorY(radian, offset_rad) - center_y;
+      var offset_rad_x = Globals.convertCoorX(radian, offset_rad) - center_x;
+      var offset_rad_y = Globals.convertCoorY(radian, offset_rad) - center_y;
       for (var i = 0; i < packed_array.size(); i++) {
          var val = packed_array[i];
          var flag = (val >> 24) & 255;
