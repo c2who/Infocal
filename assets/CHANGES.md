@@ -9,6 +9,10 @@
 
 ⭐️ I am currently adding new features and squashing bugs! - please check back regularly for updates - and use the "Contact Developer" button to report any issues, so I can fix them for you ⭐️
 
+2025.8.12 -- Memory optimization
+• increased background free memory by 7KB
+• improved performance on devices with low background memory
+
 2025.8.11 -- Bug Fixes
 • fixed communication error caused unhandled exception
 • fixed schema change handling
