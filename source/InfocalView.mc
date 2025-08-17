@@ -116,6 +116,11 @@ class InfocalView extends WatchUi.WatchFace {
    // the state of this View and prepare it to be shown. This includes
    // loading resources into memory.
    function onShow() {
+      // Load global fonts
+      if (small_digi_font == null) {
+         small_digi_font = WatchUi.loadResource(Rez.Fonts.smadigi);
+      }
+
       last_draw_minute = -1;
       restore_from_resume = true;
    }
