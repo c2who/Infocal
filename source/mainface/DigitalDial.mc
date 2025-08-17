@@ -1,9 +1,10 @@
 using Toybox.WatchUi as Ui;
 using Toybox.Math;
-using Toybox.Graphics;
 using Toybox.System;
 using Toybox.Application;
 using Toybox.Time.Gregorian as Date;
+
+import Toybox.Graphics;
 
 class DigitalDial extends Ui.Drawable {
    ////////////////////////
@@ -36,7 +37,7 @@ class DigitalDial extends Ui.Drawable {
       }
    }
 
-   function removeFont() {
+   private function unloadFonts() {
       midBoldFont = null;
       midSemiFont = null;
       xmidBoldFont = null;
@@ -47,52 +48,27 @@ class DigitalDial extends Ui.Drawable {
    }
 
    // TODO: Simplify font handling (remove duplicate vars)
-   function checkCurrentFont() {
+   private function loadFonts() {
       var digital_style = Application.getApp().getProperty("digital_style");
       if (digital_style == 0) {
          // big
-         midBoldFont = null;
-         midSemiFont = null;
-         xmidBoldFont = null;
-         xmidSemiFont = null;
-         xdigitalFont = null;
-         if (digitalFont == null) {
-            digitalFont = Ui.loadResource(Rez.Fonts.bigdigi);
-            midDigitalFont = Ui.loadResource(Rez.Fonts.middigi);
-         }
+         digitalFont = Ui.loadResource(Rez.Fonts.bigdigi);
+         midDigitalFont = Ui.loadResource(Rez.Fonts.middigi);
+
       } else if (digital_style == 1) {
          // small
-         xdigitalFont = null;
-         digitalFont = null;
-         xmidBoldFont = null;
-         xmidSemiFont = null;
-         midDigitalFont = null;
-         if (midBoldFont == null) {
-            midBoldFont = Ui.loadResource(Rez.Fonts.midbold);
-            midSemiFont = Ui.loadResource(Rez.Fonts.midsemi);
-         }
+         midBoldFont = Ui.loadResource(Rez.Fonts.midbold);
+         midSemiFont = Ui.loadResource(Rez.Fonts.midsemi);
+
       } else if (digital_style == 2) {
          // extra big
-         midBoldFont = null;
-         midSemiFont = null;
-         digitalFont = null;
-         xmidBoldFont = null;
-         xmidSemiFont = null;
-         if (xdigitalFont == null) {
-            xdigitalFont = Ui.loadResource(Rez.Fonts.xbigdigi);
-            midDigitalFont = Ui.loadResource(Rez.Fonts.middigi);
-         }
+         xdigitalFont = Ui.loadResource(Rez.Fonts.xbigdigi);
+         midDigitalFont = Ui.loadResource(Rez.Fonts.middigi);
+
       } else {
          // medium
-         xdigitalFont = null;
-         digitalFont = null;
-         midBoldFont = null;
-         midSemiFont = null;
-         midDigitalFont = null;
-         if (xmidBoldFont == null) {
-            xmidBoldFont = Ui.loadResource(Rez.Fonts.xmidbold);
-            xmidSemiFont = Ui.loadResource(Rez.Fonts.xmidsemi);
-         }
+         xmidBoldFont = Ui.loadResource(Rez.Fonts.xmidbold);
+         xmidSemiFont = Ui.loadResource(Rez.Fonts.xmidsemi);
       }
    }
 
@@ -100,15 +76,24 @@ class DigitalDial extends Ui.Drawable {
    //!
    //! This method assumes that the device context has already been configured to the proper options.
    //! Derived classes should check the isVisible property, if it exists, before trying to draw.
-   function draw(dc) {
+   function draw(dc as Dc) as Void {
       if (Application.getApp().getProperty("use_analog") == true) {
-         removeFont();
          return;
       }
-      checkCurrentFont();
 
+      try {
+         loadFonts();
+         var clockTime = System.getClockTime();
+         drawdigitalDial(dc, clockTime);
+
+      } finally {
+         unloadFonts();
+      }
+   }
+
+   function drawdigitalDial(dc as Dc, clockTime as System.ClockTime) as Void {
       var currentSettings = System.getDeviceSettings();
-      var clockTime = System.getClockTime();
+
       var hour = clockTime.hour;
       if (!currentSettings.is24Hour) {
          hour = hour % 12;
@@ -121,6 +106,7 @@ class DigitalDial extends Ui.Drawable {
 
       var digital_style = Application.getApp().getProperty("digital_style");
       var alwayon_style = Application.getApp().getProperty("always_on_style");
+
       if (digital_style == 0 || digital_style == 2) {
          // Big number in center_x style
          var big_number_type = Application.getApp().getProperty("big_number_type");
@@ -156,7 +142,7 @@ class DigitalDial extends Ui.Drawable {
             );
          }
 
-         // Calculate global offsets
+         // FIXME - Move to InfocalView: Calculate seconds/hr global offsets
          var f_align = digital_style == 0 ? 62 : 71;
          if (center_x == 195) {
             f_align = f_align + 40;
@@ -302,12 +288,10 @@ class DigitalDial extends Ui.Drawable {
             Graphics.TEXT_JUSTIFY_LEFT
          );
 
-         // Save globals - Calculate Layout of seconds and heart rate (with widest digits)
+         // FIXME - Move to InfocalView: Save globals - Calculate Layout of seconds and heart rate (with widest digits)
          second_x = center_x + width/2 + 1;
          heart_x = center_x - width/2 - 1;
          second_y = center_y - second_font_height_half; // centre-justified
       }
-
-      removeFont(); // XXX: Why removing font after draw?? - is this valid to save memory?
    }
 }

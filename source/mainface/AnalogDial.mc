@@ -1,12 +1,17 @@
-using Toybox.WatchUi as Ui;
 using Toybox.Math;
 using Toybox.Graphics;
-using Toybox.System;
 using Toybox.Application;
 using Toybox.Time.Gregorian as Date;
 
-class AnalogDial extends Ui.Drawable {
-   hidden var secondHandDisabled;
+import Toybox.Graphics;
+import Toybox.Lang;
+import Toybox.System;
+import Toybox.WatchUi;
+
+
+class AnalogDial extends Drawable {
+   private var _secondHandEnabled = false;
+
    hidden var hour_font_1,
       hour_font_2,
       hour_font_3,
@@ -30,22 +35,45 @@ class AnalogDial extends Ui.Drawable {
 
    function initialize(params) {
       Drawable.initialize(params);
-      secondHandDisabled = true;
 
       if (center_x == 195) {
          factor = 2;
       }
    }
 
-   function disableSecondHand() {
-      secondHandDisabled = true;
+   //! Draw an object to the device context (Dc).
+   //!
+   //! This method assumes that the device context has already been configured to the proper options.
+   //! Derived classes should check the isVisible property, if it exists, before trying to draw.
+   public function draw(dc as Dc) {
+      if (Application.getApp().getProperty("use_analog") == false) {
+         return;
+      }
+
+      dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
+
+      var clockTime = System.getClockTime();
+      drawHourHands(dc, clockTime);
+      drawMinuteHands(dc, clockTime);
+
+      // Draw seconds hand if enabled, and not in power save mode
+      if (  (_secondHandEnabled)
+         && (Application.getApp().getProperty("power_save_mode") == false)) {
+
+         dc.setColor(gsecondary_color, Graphics.COLOR_TRANSPARENT);
+         drawSecondHand(dc, clockTime);
+      }
    }
 
-   function enableSecondHand() {
-      secondHandDisabled = false;
+   public function disableSecondHand() {
+      _secondHandEnabled = false;
    }
 
-   function removeFontHour() {
+   public function enableSecondHand() {
+      _secondHandEnabled = true;
+   }
+
+   private function unloadFontsHour() {
       hour_font_1 = null;
       hour_1 = null;
       hour_font_2 = null;
@@ -60,7 +88,7 @@ class AnalogDial extends Ui.Drawable {
       hour_6 = null;
    }
 
-   function removeFontMinute() {
+   private function unloadFontsMinute() {
       minu_font_1 = null;
       minu_1 = null;
       minu_font_2 = null;
@@ -75,145 +103,105 @@ class AnalogDial extends Ui.Drawable {
       minu_6 = null;
    }
 
-   function removeFont() {
-      removeFontHour();
-      removeFontMinute();
-   }
-
-   function checkCurrentFont() {
-      if (Application.getApp().getProperty("use_analog") == false) {
-         removeFont();
-         return;
-      }
-
-      checkCurrentFontHour();
-      checkCurrentFontMinute();
-   }
-
-   function checkCurrentFontHour() {
-      removeFontHour();
-      var hour_i = getHourHandFragment() % 60;
+   private function loadFontsHour(hour_i as Number) as Void {
       if (hour_i >= 50) {
-         hour_font_6 = Ui.loadResource(Rez.Fonts.hour_6);
-         hour_6 = Ui.loadResource(Rez.JsonData.hour_6_data);
+         hour_font_6 = loadResource(Rez.Fonts.hour_6);
+         hour_6 = loadResource(Rez.JsonData.hour_6_data);
       } else if (hour_i >= 40) {
-         hour_font_5 = Ui.loadResource(Rez.Fonts.hour_5);
-         hour_5 = Ui.loadResource(Rez.JsonData.hour_5_data);
+         hour_font_5 = loadResource(Rez.Fonts.hour_5);
+         hour_5 = loadResource(Rez.JsonData.hour_5_data);
       } else if (hour_i >= 30) {
-         hour_font_4 = Ui.loadResource(Rez.Fonts.hour_4);
-         hour_4 = Ui.loadResource(Rez.JsonData.hour_4_data);
+         hour_font_4 = loadResource(Rez.Fonts.hour_4);
+         hour_4 = loadResource(Rez.JsonData.hour_4_data);
       } else if (hour_i >= 20) {
-         hour_font_3 = Ui.loadResource(Rez.Fonts.hour_3);
-         hour_3 = Ui.loadResource(Rez.JsonData.hour_3_data);
+         hour_font_3 = loadResource(Rez.Fonts.hour_3);
+         hour_3 = loadResource(Rez.JsonData.hour_3_data);
       } else if (hour_i >= 10) {
-         hour_font_2 = Ui.loadResource(Rez.Fonts.hour_2);
-         hour_2 = Ui.loadResource(Rez.JsonData.hour_2_data);
+         hour_font_2 = loadResource(Rez.Fonts.hour_2);
+         hour_2 = loadResource(Rez.JsonData.hour_2_data);
       } else {
-         hour_font_1 = Ui.loadResource(Rez.Fonts.hour_1);
-         hour_1 = Ui.loadResource(Rez.JsonData.hour_1_data);
+         hour_font_1 = loadResource(Rez.Fonts.hour_1);
+         hour_1 = loadResource(Rez.JsonData.hour_1_data);
       }
    }
 
-   function checkCurrentFontMinute() {
-      removeFontMinute();
-      var minu_i = getMinuteHandFragment() % 60;
+   private function loadFontsMinute(minu_i as Number) as Void {
       if (minu_i >= 50) {
-         minu_font_6 = Ui.loadResource(Rez.Fonts.minu_6);
-         minu_6 = Ui.loadResource(Rez.JsonData.minu_6_data);
+         minu_font_6 = loadResource(Rez.Fonts.minu_6);
+         minu_6 = loadResource(Rez.JsonData.minu_6_data);
       } else if (minu_i >= 40) {
-         minu_font_5 = Ui.loadResource(Rez.Fonts.minu_5);
-         minu_5 = Ui.loadResource(Rez.JsonData.minu_5_data);
+         minu_font_5 = loadResource(Rez.Fonts.minu_5);
+         minu_5 = loadResource(Rez.JsonData.minu_5_data);
       } else if (minu_i >= 30) {
-         minu_font_4 = Ui.loadResource(Rez.Fonts.minu_4);
-         minu_4 = Ui.loadResource(Rez.JsonData.minu_4_data);
+         minu_font_4 = loadResource(Rez.Fonts.minu_4);
+         minu_4 = loadResource(Rez.JsonData.minu_4_data);
       } else if (minu_i >= 20) {
-         minu_font_3 = Ui.loadResource(Rez.Fonts.minu_3);
-         minu_3 = Ui.loadResource(Rez.JsonData.minu_3_data);
+         minu_font_3 = loadResource(Rez.Fonts.minu_3);
+         minu_3 = loadResource(Rez.JsonData.minu_3_data);
       } else if (minu_i >= 10) {
-         minu_font_2 = Ui.loadResource(Rez.Fonts.minu_2);
-         minu_2 = Ui.loadResource(Rez.JsonData.minu_2_data);
+         minu_font_2 = loadResource(Rez.Fonts.minu_2);
+         minu_2 = loadResource(Rez.JsonData.minu_2_data);
       } else {
-         minu_font_1 = Ui.loadResource(Rez.Fonts.minu_1);
-         minu_1 = Ui.loadResource(Rez.JsonData.minu_1_data);
+         minu_font_1 = loadResource(Rez.Fonts.minu_1);
+         minu_1 = loadResource(Rez.JsonData.minu_1_data);
       }
-   }
-
-   function draw(dc) {
-      if (Application.getApp().getProperty("use_analog") == false) {
-         return;
-      }
-
-      draw_analog_hands(dc);
-
-      removeFont();
-   }
-
-   function draw_analog_hands(dc) {
-      dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-      drawHandAntiAlias(dc);
-      second_x = center_x;
-      second_y = center_y - second_font_height_half * 2;
-
-      if (secondHandDisabled) {
-         return;
-      }
-
-      // no second hand in power save mode
-      if (Application.getApp().getProperty("power_save_mode")) {
-         return;
-      }
-
-      dc.setColor(gsecondary_color, Graphics.COLOR_TRANSPARENT);
-      drawSecondHand(dc);
    }
 
    /////////////////////////
    /// antialias handler ///
    /////////////////////////
 
-   function drawHandAntiAlias(dc) {
-      removeFont();
-      checkCurrentFontHour();
-      var hour_i = getHourHandFragment() % 60;
-      if (hour_i >= 50) {
-         drawTiles(hour_6[(hour_i - 50).toNumber()], hour_font_6, dc, hour_i);
-      } else if (hour_i >= 40) {
-         drawTiles(hour_5[(hour_i - 40).toNumber()], hour_font_5, dc, hour_i);
-      } else if (hour_i >= 30) {
-         drawTiles(hour_4[(hour_i - 30).toNumber()], hour_font_4, dc, hour_i);
-      } else if (hour_i >= 20) {
-         drawTiles(hour_3[(hour_i - 20).toNumber()], hour_font_3, dc, hour_i);
-      } else if (hour_i >= 10) {
-         drawTiles(hour_2[(hour_i - 10).toNumber()], hour_font_2, dc, hour_i);
-      } else {
-         drawTiles(hour_1[hour_i.toNumber()], hour_font_1, dc, hour_i);
-      }
-      removeFont();
-      checkCurrentFontMinute();
-      var minu_i = getMinuteHandFragment() % 60;
+   private function drawHourHands(dc as Dc, clockTime as System.ClockTime) as Void {
+      var hour_i = getHourHandFragment(clockTime) % 60;
 
-      if (minu_i >= 50) {
-         drawTiles(minu_6[(minu_i - 50).toNumber()], minu_font_6, dc, minu_i);
-      } else if (minu_i >= 40) {
-         drawTiles(minu_5[(minu_i - 40).toNumber()], minu_font_5, dc, minu_i);
-      } else if (minu_i >= 30) {
-         drawTiles(minu_4[(minu_i - 30).toNumber()], minu_font_4, dc, minu_i);
-      } else if (minu_i >= 20) {
-         drawTiles(minu_3[(minu_i - 20).toNumber()], minu_font_3, dc, minu_i);
-      } else if (minu_i >= 10) {
-         drawTiles(minu_2[(minu_i - 10).toNumber()], minu_font_2, dc, minu_i);
-      } else {
-         drawTiles(minu_1[minu_i.toNumber()], minu_font_1, dc, minu_i);
+      try {
+         loadFontsHour(hour_i);
+         if (hour_i >= 50) {
+            drawTiles(hour_6[(hour_i - 50).toNumber()], hour_font_6, dc, hour_i);
+         } else if (hour_i >= 40) {
+            drawTiles(hour_5[(hour_i - 40).toNumber()], hour_font_5, dc, hour_i);
+         } else if (hour_i >= 30) {
+            drawTiles(hour_4[(hour_i - 30).toNumber()], hour_font_4, dc, hour_i);
+         } else if (hour_i >= 20) {
+            drawTiles(hour_3[(hour_i - 20).toNumber()], hour_font_3, dc, hour_i);
+         } else if (hour_i >= 10) {
+            drawTiles(hour_2[(hour_i - 10).toNumber()], hour_font_2, dc, hour_i);
+         } else {
+            drawTiles(hour_1[hour_i.toNumber()], hour_font_1, dc, hour_i);
+         }
+      } finally {
+         unloadFontsHour();
       }
-      removeFont();
    }
 
-   function drawSecondHand(dc) {
+   private function drawMinuteHands(dc as Dc, clockTime as System.ClockTime) as Void {
+      var minu_i = clockTime.min;
+      try {
+         loadFontsMinute(minu_i);
+
+         if (minu_i >= 50) {
+            drawTiles(minu_6[(minu_i - 50).toNumber()], minu_font_6, dc, minu_i);
+         } else if (minu_i >= 40) {
+            drawTiles(minu_5[(minu_i - 40).toNumber()], minu_font_5, dc, minu_i);
+         } else if (minu_i >= 30) {
+            drawTiles(minu_4[(minu_i - 30).toNumber()], minu_font_4, dc, minu_i);
+         } else if (minu_i >= 20) {
+            drawTiles(minu_3[(minu_i - 20).toNumber()], minu_font_3, dc, minu_i);
+         } else if (minu_i >= 10) {
+            drawTiles(minu_2[(minu_i - 10).toNumber()], minu_font_2, dc, minu_i);
+         } else {
+            drawTiles(minu_1[minu_i.toNumber()], minu_font_1, dc, minu_i);
+         }
+      } finally {
+         unloadFontsMinute();
+      }
+   }
+
+   private function drawSecondHand(dc as Dc, clockTime as System.ClockTime) as Void {
       var base_radius = center_x == 109 ? 0.0 : 11.0;
       var minu_radius = center_x - 23.0;
       var base_thick = 3.0;
-      var radian =
-         2 * (getSecondHandFragment() / 60.0) * Math.PI - 0.5 * Math.PI;
+      var radian = 2 * (clockTime.sec / 60.0) * Math.PI - 0.5 * Math.PI;
 
       var startx = Globals.convertCoorX(radian, base_radius);
       var starty = Globals.convertCoorY(radian, base_radius);
@@ -232,7 +220,7 @@ class AnalogDial extends Ui.Drawable {
    //!   the full image from the font characters.
    //! - Each JsonData number represents an image part (tile) with byte encoding:
    //!   [ flags|char|xpos|ypos ]
-   function drawTiles(packed_array, font, dc, index) {
+   private function drawTiles(packed_array, font, dc, index) {
       var radian = (index.toFloat() / 60.0) * (2 * 3.1415) - 0.5 * 3.1415;
       var offset_rad_x = Globals.convertCoorX(radian, offset_rad) - center_x;
       var offset_rad_y = Globals.convertCoorY(radian, offset_rad) - center_y;
@@ -254,20 +242,11 @@ class AnalogDial extends Ui.Drawable {
       }
    }
 
-   private function getHourHandFragment() {
-      var clockTime = System.getClockTime();
+   //! Returns the 24hr clock time (in increments of 1/5 hours) [0..120]
+   private function getHourHandFragment(clockTime as System.ClockTime) as Number {
       var hour = clockTime.hour;
       var minute = clockTime.min;
-      return (((hour * 60.0 + minute) / (12.0 * 60)) * 60.0).toLong();
+      return (((hour * 60.0 + minute) / (12.0 * 60)) * 60.0).toNumber();
    }
 
-   private function getMinuteHandFragment() {
-      var clockTime = System.getClockTime();
-      return clockTime.min.toLong();
-   }
-
-   private function getSecondHandFragment() {
-      var clockTime = System.getClockTime();
-      return clockTime.sec.toLong();
-   }
 }
