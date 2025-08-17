@@ -1,9 +1,9 @@
-using Toybox.Application;
 using Toybox.Background;
 using Toybox.Communications;
 using Toybox.System;
 using Toybox.Time.Gregorian as Time;
 
+import Toybox.Application;
 import Toybox.Lang;
 
 //! OpenWeather (Background) Client
@@ -24,7 +24,7 @@ class OpenWeatherClient extends BaseClient {
 
     //! Public entry method to make background request to get data from remote service
     //! @param callback     Consumer callback for returning formatted data
-    function requestData(callback as Method(type as String, responseCode as Number, data as Dictionary<String, Lang.Any>) as Void) as Void {
+    function requestData(callback as Method(type as String, responseCode as Number, data as Dictionary<String, PropertyValueType>) as Void) as Void {
         BaseClient.requestData(callback);
 
         var app = Application.getApp();
@@ -116,7 +116,7 @@ public class OpenWeatherClientHelper {
 
         // Set the default api key for new users
         var default_key = Keys.getOpenWeatherDefaultKey();
-        Application.AppBase.setProperty("owm_api_2", default_key);
+        Application.getApp().setProperty("owm_api_2", default_key);
 
         // Update rate
         var update_interval_secs = 30 * Time.SECONDS_PER_MINUTE;   // 30 minutes

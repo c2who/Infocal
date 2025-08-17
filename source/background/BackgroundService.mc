@@ -1,8 +1,9 @@
 using Toybox.Application;
 using Toybox.Background;
-using Toybox.System;
+import Toybox.System;
 using Toybox.Math;
 
+import Toybox.Application;
 import Toybox.Lang;
 
 //! Background Service
@@ -91,7 +92,7 @@ class BackgroundService extends System.ServiceDelegate {
    //!       "Data provided to Background.exit() is too large", and
    //!       App.onBackgroundData() is never called!
    //! @see  https://forums.garmin.com/developer/connect-iq/f/discussion/7550/data-too-large-for-background-process
-   function onReceiveClientData(type as String, responseCode as Number, data as Dictionary<String, Lang.Any>) as Void {
+   function onReceiveClientData(type as String, responseCode as Number, data as Dictionary<String, PropertyValueType>) as Void {
       // Avoid circular references
       _weatherClient = null;
       _iqAirClient = null;

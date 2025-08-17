@@ -1,8 +1,9 @@
 using Toybox.Application;
-using Toybox.Lang;
 using Toybox.Math;
 using Toybox.Time;
 using Toybox.Time.Gregorian as Date;
+
+import Toybox.Lang;
 
 //! Encapsulate (foreground) globas
 // TODO: Reduce number of Globals, Globals are bad!!!
@@ -35,11 +36,13 @@ public class Globals {
          Date.MONTH_DECEMBER => "DEC",
       };
 
-    static function getFormattedDate() {
+    static function getFormattedDate() as String {
       var now = Time.now();
       var date = Date.info(now, Time.FORMAT_SHORT);
       var date_formatter = Application.getApp().getProperty("date_format");
+
       if (date_formatter == 0) {
+         // ddd d
          if (Application.getApp().getProperty("force_date_english")) {
             var day_of_week = date.day_of_week;
             return Lang.format("$1$ $2$", [
@@ -55,19 +58,19 @@ public class Globals {
             ]);
          }
       } else if (date_formatter == 1) {
-         // dd/mm
+         // dd.mm
          return Lang.format("$1$.$2$", [
             date.day.format("%d"),
             date.month.format("%d"),
          ]);
       } else if (date_formatter == 2) {
-         // mm/dd
+         // mm.dd
          return Lang.format("$1$.$2$", [
             date.month.format("%d"),
             date.day.format("%d"),
          ]);
       } else if (date_formatter == 3) {
-         // dd/mm/yyyy
+         // dd.mm.yyyy
          var year = date.year;
          var yy = year / 100.0;
          yy = Math.round((yy - yy.toNumber()) * 100.0);
@@ -77,7 +80,7 @@ public class Globals {
             yy.format("%d"),
          ]);
       } else if (date_formatter == 4) {
-         // mm/dd/yyyy
+         // mm.dd.yyyy
          var year = date.year;
          var yy = year / 100.0;
          yy = Math.round((yy - yy.toNumber()) * 100.0);
@@ -103,6 +106,13 @@ public class Globals {
          } else {
             return Lang.format("$1$ $2$", [month, day.format("%d")]);
          }
+      } else {
+         // Invalid use format 0: "ddd d"
+         var day_of_week = date.day_of_week;
+            return Lang.format("$1$ $2$", [
+               DAYS_OF_THE_WEEK[day_of_week],
+               date.day.format("%d"),
+            ]);
       }
    }
 

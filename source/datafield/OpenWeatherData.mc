@@ -1,5 +1,8 @@
 using Toybox.Application as App;
-using Toybox.System as Sys;
+using Toybox.System;
+
+import Toybox.Application;
+import Toybox.Lang;
 
 /* TEMPERATURE HIGH/LOW */
 class TemparatureHLField extends BaseDataField {
@@ -10,9 +13,9 @@ class TemparatureHLField extends BaseDataField {
    function cur_label(value) {
       // WEATHER
       var need_minimal = App.getApp().getProperty("minimal_data");
-      var weather_data = App.getApp().getProperty("Weather");
+      var weather_data = App.getApp().getProperty("Weather") as Dictionary<String, PropertyValueType>;
       if (weather_data != null) {
-         var settings = Sys.getDeviceSettings();
+         var settings = System.getDeviceSettings();
          var temp_min = weather_data["temp_min"];
          var temp_max = weather_data["temp_max"];
          //var unit = "°C";
@@ -51,9 +54,9 @@ class TemparatureOutField extends BaseDataField {
    function cur_label(value) {
       // WEATHER
       var need_minimal = App.getApp().getProperty("minimal_data");
-      var weather_data = App.getApp().getProperty("Weather");
+      var weather_data = App.getApp().getProperty("Weather") as Dictionary<String, PropertyValueType>;
       if (weather_data != null) {
-         var settings = Sys.getDeviceSettings();
+         var settings = System.getDeviceSettings();
          var temp = weather_data["temp"];
          var unit = "°C";
          if (settings.temperatureUnits == System.UNIT_STATUTE) {
@@ -104,11 +107,11 @@ class WeatherField extends BaseDataField {
          "11n" => "",
          "13n" => "",
          "50n" => "",
-      };
+      } as Dictionary<String, String>;
    }
 
    function cur_icon() {
-      var weather_data = App.getApp().getProperty("Weather");
+      var weather_data = App.getApp().getProperty("Weather") as Dictionary<String, PropertyValueType>;
       if (weather_data != null) {
          return weather_icon_mapper[weather_data["icon"]];
       }
@@ -118,9 +121,9 @@ class WeatherField extends BaseDataField {
    function cur_label(value) {
       // WEATHER
       //var need_minimal = App.getApp().getProperty("minimal_data");
-      var weather_data = App.getApp().getProperty("Weather");
+      var weather_data = App.getApp().getProperty("Weather") as Dictionary<String, PropertyValueType>;
       if (weather_data != null) {
-         var settings = Sys.getDeviceSettings();
+         var settings = System.getDeviceSettings();
          var temp = weather_data["temp"];
          var unit = "°C";
          if (settings.temperatureUnits == System.UNIT_STATUTE) {
@@ -132,13 +135,14 @@ class WeatherField extends BaseDataField {
          var description = weather_data.get("des");
          if (description != null) {
             return description + " " + value;
+         } else {
+            return value;
          }
       } else if ((gLocationLat == null) || (gLocationLon == null)) {
          return "NO LOCN";
       } else {
          return "--";
       }
-
    }
 }
 
@@ -170,9 +174,9 @@ class WindField extends BaseDataField {
 
    function cur_label(value) {
       //var need_minimal = App.getApp().getProperty("minimal_data");
-      var weather_data = App.getApp().getProperty("Weather");
+      var weather_data = App.getApp().getProperty("Weather") as Dictionary<String, PropertyValueType>;
       if (weather_data != null) {
-         var settings = Sys.getDeviceSettings();
+         var settings = System.getDeviceSettings();
          var speed = weather_data["wind_speed"] * 3.6; // kph
          var direct = weather_data["wind_direct"];
 

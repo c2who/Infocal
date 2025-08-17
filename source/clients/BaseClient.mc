@@ -1,9 +1,10 @@
-using Toybox.Application;
 using Toybox.Background;
 using Toybox.Communications;
 using Toybox.System;
-using Toybox.Time.Gregorian as Time;
+using Toybox.Time;
+using Toybox.Time.Gregorian;
 
+import Toybox.Application;
 import Toybox.Lang;
 
 //! Base (Background) Client
@@ -14,14 +15,14 @@ import Toybox.Lang;
 class BaseClient {
 
     //! Consumer callback for returning formatted data
-    protected var _callback as Method(type as String, responseCode as Number, data as Dictionary<String, Lang.Any>) as Void;
+    protected var _callback as Method(type as String, responseCode as Number, data as Dictionary<String, PropertyValueType>) as Void?;
 
     //! Public entry method to make background request to get data from remote service
     //! @param  callback    Consumer callback for returning formatted data
     //! @note   Override in concrete class to build web request(s)
-    public function requestData(callback as Method(type as String, responseCode as Number, data as Dictionary<String, Lang.Any>) as Void) as Void {
+    public function requestData(cb as Method(type as String, responseCode as Number, data as Dictionary<String, PropertyValueType>) as Void) as Void {
         // Save callback method
-        self._callback = callback;
+        self._callback = cb;
     }
 
     //! Make HTTP request (over phone bluetooth connection)
@@ -57,7 +58,7 @@ class BaseClientHelper {
         // Check data valid and recent (within last 30 minutes)
         // Note: We use clientTs as we do not *know* how often weather data is updated (typically hourly)
         var app = Application.getApp();
-        var data = app.getProperty(type);
+        var data = app.getProperty(type) as Dictionary<String, Number>;
         var error = app.getProperty(type + Globals.DATA_TYPE_ERROR_SUFFIX);
         var retries = app.getProperty(type + Globals.DATA_TYPE_RETRIES_SUFFIX);
 
@@ -71,7 +72,7 @@ class BaseClientHelper {
         } else if ((retries != null) && (retries > _max_retries)) {
             // FIXED: If API is not responding after retries, back off (retry every 30 minutes)
             // Note: Calculation must be performed in minutes (not seconds) as we only evaluate this every minute
-            var remain = ((Time.now().value() - lastTime) / Time.SECONDS_PER_MINUTE) % _retry_backoff_minutes;
+            var remain = ((Time.now().value() - lastTime) / Gregorian.SECONDS_PER_MINUTE) % _retry_backoff_minutes;
             return (remain == 0);
 
         } else if ((data == null) || (data["clientTs"] < (Time.now().value() - update_interval_secs))) {
@@ -84,12 +85,12 @@ class BaseClientHelper {
     }
 
     //! Persist (store) the data received from a client
-    public static function storeData(data as Dictionary<String, Lang.Any>) as Void {
+    public static function storeData(data as Dictionary<String, Number>) as Void {
         var app = Application.getApp();
 
         var responseCdoe = data["code"];
         var type = data["type"];
-        data["clientTs"] = Time.now().value();
+        data.put("clientTs", Time.now().value());
 
         if (responseCdoe == 200) {
             // Valid data
@@ -120,7 +121,7 @@ class BaseClientHelper {
                     return "API KEY";
 
                 default:
-                    return Lang.format("ERR $1$", responseCode);
+                    return Lang.format("ERR $1$", [responseCode]);
             }
 
         } catch (ex) {

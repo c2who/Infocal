@@ -1,10 +1,10 @@
-using Toybox.Application;
 using Toybox.Background;
 using Toybox.Activity;
 using Toybox.System;
 using Toybox.Time;
 using Toybox.Math;
 
+import Toybox.Application;
 import Toybox.Lang;
 import Toybox.WatchUi;
 
@@ -18,7 +18,7 @@ var gLocationLon = null;
 // FIXME: Move all code not required for (:background) runtime out of InfocalApp class
 //        - background runtime is *very* memory limited, so must avoid issues on smaller devices
 (:background)
-class InfocalApp extends Application.AppBase {
+class InfocalApp extends AppBase {
    var _View;
    function initialize() {
       AppBase.initialize();
@@ -83,17 +83,17 @@ class InfocalApp extends Application.AppBase {
    //!
    //! @see  https://developer.garmin.com/connect-iq/core-topics/backgrounding/
    //! @see  https://developer.garmin.com/connect-iq/connect-iq-faq/how-do-i-create-a-connect-iq-background-service/
-   function onBackgroundData(data as Dictionary<String, Lang.Any>) {
+   function onBackgroundData(data as PersistableType) {
       System.println("Foreground: " + data);
 
-      var type = data["type"];
+      var type = (data as Dictionary<String, PropertyValueType>)["type"];
 
       // DEFECT 2025.8.11: Background Data from previous version (schema) is nested dictionary
       // (This is a one-off error for delayed background data delivery after upgrade, and can be discarded)
       if (type != null) {
          // New data received: clear pendingWebRequests flag for the received data type
          // Save list of any remaining background requests
-         var pendingWebRequests = getProperty("PendingWebRequests") as Dictionary<String, Lang.Any>?;
+         var pendingWebRequests = getProperty("PendingWebRequests") as Dictionary<String, PropertyValueType>?;
          if (pendingWebRequests == null) {
             pendingWebRequests = {};
          }

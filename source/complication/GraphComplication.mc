@@ -86,6 +86,7 @@ class GraphComplication extends Ui.Drawable {
       } else {
          return null;
       }
+      return null;
    }
 
    function need_draw() {

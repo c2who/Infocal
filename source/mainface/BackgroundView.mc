@@ -1,11 +1,12 @@
-using Toybox.WatchUi as Ui;
+using Toybox.Application;
 using Toybox.Graphics;
 using Toybox.System;
-using Toybox.Application;
 using Toybox.Time.Gregorian as Date;
+using Toybox.WatchUi;
+
 
 //! Background View draws the Tick Marks around the watch face
-class BackgroundView extends Ui.Drawable {
+class BackgroundView extends WatchUi.Drawable {
    hidden var bgcir_font, bgcir_info;
 
    var radius;
@@ -65,7 +66,7 @@ class BackgroundView extends Ui.Drawable {
                center_x,
                center_y,
                radius - 15,
-               dc.ARC_COUNTER_CLOCKWISE,
+               Graphics.ARC_COUNTER_CLOCKWISE,
                rad + 5,
                rad + 55
             );

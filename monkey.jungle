@@ -1,8 +1,6 @@
 # Welcome to Jungles, the build language for Connect IQ apps.
 # @see  https://developer.garmin.com/connect-iq/reference-guides/jungle-reference/
-
 project.manifest = manifest.xml
-project.typecheck = 0
 
 # Compiler Optimization
 # @see  https://developer.garmin.com/connect-iq/monkey-c/compiler-options/
@@ -12,3 +10,12 @@ project.optimization = 3z
 # @also https://www.garmin.com/en-US/blog/developer/improve-your-app-performance/
 # @also https://www.garmin.com/en-US/blog/developer/your-app-but-better/
 # @also https://www.garmin.com/en-US/blog/developer/app-speed-optimizations/
+
+# Compiler Type Checking
+# -l 0	Silent	No type checking; keep everything dynamically typed
+# -l 1	Gradual	Type check any statement where typing can be inferred, otherwise stay silent
+# -l 2	Informative	Type check only what has been typed, warn about ambiguity
+# -l 3	Strict
+# @see  https://developer.garmin.com/connect-iq/monkey-c/monkey-types/
+# @also https://forums.garmin.com/developer/connect-iq/b/news-announcements/posts/the-road-to-strict-typing-is-paved-with-good-intentions
+project.typecheck = 1

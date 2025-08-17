@@ -1,9 +1,9 @@
-using Toybox.Application;
 using Toybox.Background;
 using Toybox.Communications;
 using Toybox.System;
 using Toybox.Time.Gregorian as Time;
 
+import Toybox.Application;
 import Toybox.Lang;
 
 //! IQAir (Background) Client for Air Quality Index (AQI) Service
@@ -25,7 +25,7 @@ class IQAirClient extends BaseClient {
 
    //! Public entry method to make background request to get data from remote service
    //! @param callback     Consumer callback for returning formatted data
-   function requestData(callback as Method(type as String, responseCode as Number, data as Dictionary<String, Lang.Any>) as Void) as Void {
+   function requestData(callback as Method(type as String, responseCode as Number, data as Dictionary<String, PropertyValueType>) as Void) as Void {
       BaseClient.requestData(callback);
 
       var app = Application.getApp();
@@ -116,11 +116,11 @@ public class IQAirClientHelper {
    public static function needsDataUpdate() as Boolean {
       // Set the default api key for new users
       var default_key = Keys.getIQAirDefaultKey();
-      Application.AppBase.setProperty("iqair_api_2", default_key);
+      Application.getApp().setProperty("iqair_api_2", default_key);
 
       // Set the update interval based on if user has their own api key (more quota)
       var update_interval_secs;
-      var user_key = Application.AppBase.getProperty(("iqair_api"));
+      var user_key = Application.getApp().getProperty(("iqair_api"));
       if ((user_key == null) || (user_key.length() == 0)) {
           update_interval_secs = 6 * Time.SECONDS_PER_HOUR;       // 6 hours
       } else {

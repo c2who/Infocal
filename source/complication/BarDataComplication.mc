@@ -52,7 +52,7 @@ class BarDataComplication extends BarComplication {
       if (position == 0) {
          // upper
          return Application.getApp().getProperty("compbart");
-      } else if (position == 1) {
+      } else {
          // lower
          return Application.getApp().getProperty("compbarb");
       }

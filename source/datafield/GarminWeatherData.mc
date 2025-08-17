@@ -1,72 +1,84 @@
 using Toybox.Application as App;
-using Toybox.System as Sys;
+using Toybox.System;
+using Toybox.Weather;
 
-/* TEMPERATURE GARMIN */
+//! TEMPERATURE GARMIN
+//! @since API Level 3.2.0
 class TemparatureGarminField extends BaseDataField {
    function initialize(id) {
       BaseDataField.initialize(id);
    }
 
    function cur_label(value) {
-      var garmin_weather = App.getApp().Weather.getCurrentConditions();
-      var label = "TEMP --";
-      if (garmin_weather != null) {
-         var settings = Sys.getDeviceSettings();
-         var unit = "°C";
-         var temp = garmin_weather.temperature;
-         if (temp != null) {
-            if (settings.temperatureUnits == System.UNIT_STATUTE) {
-               temp = temp * (9.0 / 5) + 32; // Convert to Farenheit: ensure floating point division.
-               unit = "°F";
+      if (Toybox has :Weather) {
+         var label = "TEMP --";
+         var garmin_weather = Weather.getCurrentConditions();
+         if (garmin_weather != null) {
+            var settings = System.getDeviceSettings();
+            var unit = "°C";
+            var temp = garmin_weather.temperature;
+            if (temp != null) {
+               if (settings.temperatureUnits == System.UNIT_STATUTE) {
+                  temp = temp * (9.0 / 5) + 32; // Convert to Farenheit: ensure floating point division.
+                  unit = "°F";
+               }
+               label = "TEMP " + temp.format("%d") + unit;
             }
-            label = "TEMP " + temp.format("%d") + unit;
          }
+         return label;
+      }  else {
+         return "API 3.2.0";
       }
-      return label;
    }
 }
 
 /* TEMPERATURE HIGH/LOW GARMIN */
+//! @since API Level 3.2.0
 class TemperatureHLGarminField extends BaseDataField {
    function initialize(id) {
       BaseDataField.initialize(id);
    }
 
    function cur_label(value) {
-      var need_minimal = App.getApp().getProperty("minimal_data");
-      var garmin_weather = App.getApp().Weather.getCurrentConditions();
-      if (garmin_weather != null) {
-         var settings = Sys.getDeviceSettings();
-         var temp_min = garmin_weather.lowTemperature;
-         var temp_max = garmin_weather.highTemperature;
-         //var unit = "°C";
-         if (settings.temperatureUnits == System.UNIT_STATUTE) {
-            temp_min = temp_min * (9.0 / 5) + 32; // Convert to Farenheit: ensure floating point division.
-            temp_max = temp_max * (9.0 / 5) + 32; // Convert to Farenheit: ensure floating point division.
-            //unit = "°F";
-         }
-         if (need_minimal) {
-            return Lang.format("$1$ $2$", [
-               temp_max.format("%d"),
-               temp_min.format("%d"),
-            ]);
+      if (Toybox has :Weather) {
+         var need_minimal = App.getApp().getProperty("minimal_data");
+         var garmin_weather = Weather.getCurrentConditions();
+         if (garmin_weather != null) {
+            var settings = System.getDeviceSettings();
+            var temp_min = garmin_weather.lowTemperature;
+            var temp_max = garmin_weather.highTemperature;
+            //var unit = "°C";
+            if (settings.temperatureUnits == System.UNIT_STATUTE) {
+               temp_min = temp_min * (9.0 / 5) + 32; // Convert to Farenheit: ensure floating point division.
+               temp_max = temp_max * (9.0 / 5) + 32; // Convert to Farenheit: ensure floating point division.
+               //unit = "°F";
+            }
+            if (need_minimal) {
+               return Lang.format("$1$ $2$", [
+                  temp_max.format("%d"),
+                  temp_min.format("%d"),
+               ]);
+            } else {
+               return Lang.format("H $1$ L $2$", [
+                  temp_max.format("%d"),
+                  temp_min.format("%d"),
+               ]);
+            }
          } else {
-            return Lang.format("H $1$ L $2$", [
-               temp_max.format("%d"),
-               temp_min.format("%d"),
-            ]);
+            if (need_minimal) {
+               return "--";
+            } else {
+               return "H - L -";
+            }
          }
-      } else {
-         if (need_minimal) {
-            return "--";
-         } else {
-            return "H - L -";
-         }
+      }  else {
+         return "API 3.2.0";
       }
    }
 }
 
 /* WEATHER GARMIN */
+//! @since API Level 3.2.0
 class WeatherGarminField extends BaseDataField {
    var weather_condition_mapper;
    function initialize(id) {
@@ -130,40 +142,49 @@ class WeatherGarminField extends BaseDataField {
    }
 
    function cur_label(value) {
-      var garmin_weather = App.getApp().Weather.getCurrentConditions();
-      var label = "WTHR --";
-      if (garmin_weather != null) {
-         var settings = Sys.getDeviceSettings();
-         var unit = "°C";
-         var temp = garmin_weather.temperature;
-         var cond = garmin_weather.condition;
-         if (temp != null) {
-            if (settings.temperatureUnits == System.UNIT_STATUTE) {
-               temp = temp * (9.0 / 5) + 32; // Convert to Farenheit: ensure floating point division.
-               unit = "°F";
+      if (Toybox has :Weather) {
+         var garmin_weather = Weather.getCurrentConditions();
+         var label = "WTHR --";
+         if (garmin_weather != null) {
+            var settings = System.getDeviceSettings();
+            var unit = "°C";
+            var temp = garmin_weather.temperature;
+            var cond = garmin_weather.condition;
+            if (temp != null) {
+               if (settings.temperatureUnits == System.UNIT_STATUTE) {
+                  temp = temp * (9.0 / 5) + 32; // Convert to Farenheit: ensure floating point division.
+                  unit = "°F";
+               }
+               label = weather_condition_mapper[cond] + " " + temp.format("%d") + unit;
             }
-            label = weather_condition_mapper[cond] + " " + temp.format("%d") + unit;
          }
+         return label;
+      }  else {
+         return "API 3.2.0";
       }
-      return label;
    }
 }
 
 /* PRECIPITATION GARMIN */
+//! @since API Level 3.2.0
 class PrecipitationGarminField extends BaseDataField {
    function initialize(id) {
       BaseDataField.initialize(id);
    }
 
    function cur_label(value) {
-      var garmin_weather = App.getApp().Weather.getCurrentConditions();
-      var label = "RAIN --";
-      if (garmin_weather != null) {
-         var rain = garmin_weather.precipitationChance;
-         if (rain != null) {
-            label = "RAIN " + rain.format("%d") + "%";
+      if (Toybox has :Weather) {
+         var garmin_weather = Weather.getCurrentConditions();
+         var label = "RAIN --";
+         if (garmin_weather != null) {
+            var rain = garmin_weather.precipitationChance;
+            if (rain != null) {
+               label = "RAIN " + rain.format("%d") + "%";
+            }
          }
+         return label;
+      }  else {
+         return "API 3.2.0";
       }
-      return label;
    }
 }

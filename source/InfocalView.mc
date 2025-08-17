@@ -272,7 +272,7 @@ class InfocalView extends WatchUi.WatchFace {
       restore_from_sleep = true;
       _isAwake = true;
 
-      var dialDisplay = View.findDrawableById("analog");
+      var dialDisplay = View.findDrawableById("analog") as AnalogDial;
       if (dialDisplay != null) {
          dialDisplay.enableSecondHand();
       }
@@ -285,7 +285,7 @@ class InfocalView extends WatchUi.WatchFace {
 
       // If the analog dial is used then disable the seconds hand.
       if (Application.getApp().getProperty("use_analog")) {
-         var dialDisplay = View.findDrawableById("analog");
+         var dialDisplay = View.findDrawableById("analog") as AnalogDial;
          if (dialDisplay != null) {
             dialDisplay.disableSecondHand();
          }
@@ -521,7 +521,7 @@ class InfocalView extends WatchUi.WatchFace {
    function loadAlwaysOnFonts(dc as Graphics.Dc) {
       var always_on_second = Application.getApp().getProperty("always_on_second") as Lang.Boolean;
       var always_on_heart = Application.getApp().getProperty("always_on_heart") as Lang.Boolean;
-      var always_on_style = Application.getApp().getProperty("always_on_style") as Lang.Boolean;
+      var always_on_style = Application.getApp().getProperty("always_on_style") as Lang.Number;
 
       if (always_on_second || always_on_heart) {
          // Loads always on (seconds/hr) Font
@@ -623,7 +623,7 @@ class InfocalView extends WatchUi.WatchFace {
       if (position == 0) {
          // upper
          return Application.getApp().getProperty("compbart");
-      } else if (position == 1) {
+      } else {
          // lower
          return Application.getApp().getProperty("compbarb");
       }
