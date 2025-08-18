@@ -22,52 +22,54 @@ class ArcTextComplication extends Ui.Drawable {
    var dt_field;
    var field_type;
 
-   static var kerning_ratios = {
-      ' ' => 0.4,
-      '%' => 0.92,
-      '+' => 0.7,
-      '-' => 0.38,
-      '.' => 0.25,
-      ',' => 0.25,   // TODO: international numbers use comma delimeters
-      '0' => 0.66,
-      '1' => 0.41,
-      '2' => 0.6,
-      '3' => 0.63,
-      '4' => 0.67,
-      '5' => 0.63,
-      '6' => 0.64,
-      '7' => 0.53,
-      '8' => 0.67,
-      '9' => 0.64,
-      ':' => 0.25,
-      'A' => 0.68,
-      'B' => 0.68,
-      'C' => 0.66,
-      'D' => 0.68,
-      'E' => 0.59,
-      'F' => 0.56,
-      'G' => 0.67,
-      'H' => 0.71,
-      'I' => 0.33,
-      'J' => 0.64,
-      'K' => 0.68,
-      'L' => 0.55,
-      'M' => 0.89,
-      'N' => 0.73,
-      'O' => 0.68,
-      'P' => 0.66,
-      'Q' => 0.80, // TODO : Add letter Q to all arc text fonts
-      'R' => 0.67,
-      'S' => 0.67,
-      'T' => 0.55,
-      'U' => 0.68,
-      'V' => 0.64,
-      'W' => 1.0,
-      'X' => 0.64, // TODO : Add letter X to all arc text fonts
-      'Y' => 0.64,
-      'Z' => 0.64, // TODO : Add letter Z to all arc text fonts
-      '°' => 0.47,
-   };
+   // PERF: Could be stored smaller as a Byte (1/256 resolution)
+   static const kerning_ratios = [
+      0.40,  // ' ' [0]
+      0.92,  // '%' [1]
+      0.47,  // '°' [2]
+      0.70,  // '+' [3]
+      0.25,  // ','    // TODO: international numbers use comma delimeters
+      0.38,  // '-'
+      0.25,  // '.'
+      0.64,  // '/'    // Packing to simplify array indexing
+      0.66,  // '0'
+      0.41,  // '1'
+      0.60,  // '2'
+      0.63,  // '3'
+      0.67,  // '4'
+      0.63,  // '5'
+      0.64,  // '6'
+      0.53,  // '7'
+      0.67,  // '8'
+      0.64,  // '9'
+      0.25,  // ':'
+      0.68,  // 'A' [19]
+      0.68,  // 'B'
+      0.66,  // 'C'
+      0.68,  // 'D'
+      0.59,  // 'E'
+      0.56,  // 'F'
+      0.67,  // 'G'
+      0.71,  // 'H'
+      0.33,  // 'I'
+      0.64,  // 'J'
+      0.68,  // 'K'
+      0.55,  // 'L'
+      0.89,  // 'M'
+      0.73,  // 'N'
+      0.68,  // 'O'
+      0.66,  // 'P'
+      0.80,  // 'Q'  // TODO : Add letter Q to all arc text fonts
+      0.67,  // 'R'
+      0.67,  // 'S'
+      0.55,  // 'T'
+      0.68,  // 'U'
+      0.64,  // 'V'
+      1.00,  // 'W'
+      0.64,  // 'X'  // TODO : Add letter X to all arc text fonts
+      0.64,  // 'Y'
+      0.64,  // 'Z'  // TODO : Add letter Z to all arc text fonts
+   ] as Array<Float>;
 
    function initialize(params) {
       Drawable.initialize(params);
@@ -161,10 +163,23 @@ class ArcTextComplication extends Ui.Drawable {
 
    //! Prevent invalid characters from causing runtime exception
    private function get_kerning_ratio(c as Char) as Float {
-      var kr = kerning_ratios.get(c);
-
-      // return default kr if char unknown
-      return (kr != null) ? kr : 0.64;
+      // PERF: Lookup Kerning Ratios in Array
+      var kr;
+      if ((c >= '+') && (c <= ':')) {
+         kr = kerning_ratios[ c.toNumber() - '+'.toNumber() + 3 ];
+      } else if ((c >= 'A') && (c <= 'Z')) {
+         kr = kerning_ratios[ c.toNumber() - 'A'.toNumber() + 19 ];
+      } else if (c == ' ') {
+         kr = kerning_ratios[0];
+      } else if (c == '%') {
+         kr = kerning_ratios[1];
+      } else if (c == '°') {
+         kr = kerning_ratios[2];
+      } else {
+         // Unknown character (return avg kerning ratio)
+         kr = 0.64;
+      }
+      return kr;
    }
 
    private function drawArcText(dc, text) {
