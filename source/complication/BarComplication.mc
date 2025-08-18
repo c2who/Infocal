@@ -1,23 +1,27 @@
 using Toybox.WatchUi as Ui;
 using Toybox.Math;
-using Toybox.Graphics;
 using Toybox.System;
 using Toybox.Application;
 
+import Toybox.Graphics;
+
 class BarComplication extends Ui.Drawable {
-   hidden var position, position_y_draw, position_y_draw_bonus;
-   hidden var font, fontInfo, arrFont, arrInfo;
-   hidden var textFont;
-   hidden var weatherFont;
+   private var position, position_y_draw, position_y_draw_bonus;
+   private var font, fontInfo, arrFont, arrInfo;
+   private var weatherFont;
 
-   hidden var factor = 1;
+   private var factor = 1;
 
-   var field_type;
+   private var field_type;
+   private var dt_field;
 
    function initialize(params) {
       Drawable.initialize(params);
-      position = params.get(:position);
+
       field_type = params.get(:field_type);
+      dt_field = buildFieldObject(field_type);
+      position = params.get(:position);
+
       if (position == 0) {
          // up
          if (center_x == 120) {
@@ -59,7 +63,7 @@ class BarComplication extends Ui.Drawable {
       }
    }
 
-   function load_font() {
+   private function load_font() {
       if (position == 0) {
          // up
          font = Ui.loadResource(Rez.Fonts.cur_up);
@@ -76,34 +80,57 @@ class BarComplication extends Ui.Drawable {
    }
 
    function min_val() {
-      return 0.0;
+      return dt_field.min_val();
    }
 
    function max_val() {
-      return 5.0;
+      return dt_field.max_val();
    }
 
    function cur_val() {
-      return 3.0;
+      return dt_field.cur_val();
    }
 
    function get_title() {
-      return "Step ----";
-   }
-
-   function get_weather_icon() {
-      return null;
+      var curval = dt_field.cur_val();
+      return dt_field.cur_label(curval);
    }
 
    function need_draw() {
-      return true;
+      return dt_field.need_draw();
    }
 
    function bar_data() {
-      return false;
+      return dt_field.bar_data();
    }
 
-   function draw(dc) {
+   function get_weather_icon() {
+      return dt_field.cur_icon();
+   }
+
+   function getSettingDataKey() {
+      if (position == 0) {
+         // upper
+         return Application.getApp().getProperty("compbart");
+      } else {
+         // lower
+         return Application.getApp().getProperty("compbarb");
+      }
+   }
+
+   function draw(dc as Dc) {
+      field_type = getSettingDataKey();
+      if (field_type != dt_field.field_id()) {
+         dt_field = buildFieldObject(field_type);
+      }
+
+      if (need_draw()) {
+         draw_bar(dc);
+      }
+   }
+
+   function draw_bar(dc as Dc) as Void {
+
       var is_bar_data = bar_data();
       if (is_bar_data) {
          load_font();

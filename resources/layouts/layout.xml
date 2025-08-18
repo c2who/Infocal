@@ -38,11 +38,11 @@
         <param name="field_type">5</param>
     </drawable>
 
-    <drawable id="bUBarDisplay" class="BarDataComplication">
+    <drawable id="bUBarDisplay" class="BarComplication">
         <param name="position">1</param>
         <param name="field_type">6</param>
     </drawable>
-    <drawable id="tUBarDisplay" class="BarDataComplication">
+    <drawable id="tUBarDisplay" class="BarComplication">
         <param name="position">0</param>
         <param name="field_type">5</param>
     </drawable>
