@@ -45,17 +45,13 @@ class InfocalView extends WatchUi.WatchFace {
 
    private var _settings_changed as Boolean = false;
    private var last_draw_minute = -1;
-   private var last_resume_milli = 0;
    private var restore_from_resume = false;
    private var restore_from_sleep = false;
 
    private var last_battery_hour = null;
 
-   private var font_height_half = 7;
-
    private var face_radius;
 
-   private var did_clear = false;
    private var _isAwake as Boolean = true;
    private var _partialUpdatesAllowed as Boolean;
 
@@ -148,7 +144,6 @@ class InfocalView extends WatchUi.WatchFace {
       var minute_changed = clockTime.min != last_draw_minute;
 
       // force update layout if settings changed
-      // FIXME: This should be done in oonSettingsChanged
       if (_settings_changed) {
          onLayout(screenDc);
       }

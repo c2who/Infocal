@@ -11,14 +11,16 @@ class ArcTextComplication extends Ui.Drawable {
    hidden var baseRadian;
    hidden var baseDegree;
    hidden var alignment;
-   hidden var font;
    hidden var perCharRadius;
-   hidden var text;
+
    hidden var last_draw_text;
 
    var accumulation_sign;
    var angle;
    var kerning = 1.0;
+
+   var dt_field;
+   var field_type;
 
    static var kerning_ratios = {
       ' ' => 0.4,
@@ -67,18 +69,12 @@ class ArcTextComplication extends Ui.Drawable {
       '°' => 0.47,
    };
 
-   static function degreesToRadians(degrees) {
-      return (degrees * Math.PI) / 180;
-   }
-
-   static function radiansToDegrees(radians) {
-      return (radians * 180) / Math.PI;
-   }
-
-
-
    function initialize(params) {
       Drawable.initialize(params);
+
+      field_type = params.get(:field_type);
+      dt_field = buildFieldObject(field_type);
+
       barRadius = center_x - ((13 * center_x) / 120).toNumber();
       if (center_x == 109) {
          kerning = 1.1;
@@ -91,9 +87,8 @@ class ArcTextComplication extends Ui.Drawable {
       }
 
       baseDegree = params.get(:base);
-      baseRadian = degreesToRadians(baseDegree);
+      baseRadian = Math.toRadians(baseDegree);
 
-      text = params.get(:text);
       angle = params.get(:angle);
       perCharRadius = (kerning * 4.7 * Math.PI) / 100;
       barRadius += (((baseDegree < 180 ? 8 : -3) * center_x) / 120).toNumber();
@@ -104,39 +99,64 @@ class ArcTextComplication extends Ui.Drawable {
       last_draw_text = "";
    }
 
+   function getSettingDataKey() {
+      return Application.getApp().getProperty("comp" + angle + "h");
+   }
+
    function get_text() {
-      return text;
+      var curval = dt_field.cur_val();
+      var pre_label = dt_field.cur_label(curval);
+      return pre_label;
    }
 
    function need_draw() {
-      return true;
+      var digital_style = Application.getApp().getProperty("digital_style");
+      if (digital_style == 1 || digital_style == 3) {
+         // small digital
+         return dt_field.need_draw();
+      }
+      if (Application.getApp().getProperty("left_digital_info")) {
+         var can_draw = !(
+            angle == 10 && !Application.getApp().getProperty("use_analog")
+         );
+         return dt_field.need_draw() && can_draw;
+      } else {
+         var can_draw = !(
+            angle == 2 && !Application.getApp().getProperty("use_analog")
+         );
+         return dt_field.need_draw() && can_draw;
+      }
    }
 
    function draw(dc) {
-      dc.setPenWidth(1);
+      field_type = getSettingDataKey();
+      if (field_type != dt_field.field_id()) {
+         dt_field = buildFieldObject(field_type);
+      }
 
-      var text = get_text();
+      if (need_draw()) {
+         // Draw background arc
+         dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
+         dc.setPenWidth(20);
+         var target_r =
+            barRadius -
+            (((baseDegree < 180 ? 6 : -3) * center_x) / 120).toNumber();
+         dc.drawArc(
+            center_x,
+            center_y,
+            target_r,
+            Graphics.ARC_CLOCKWISE,
+            360.0 - (baseDegree - 30.0),
+            360.0 - (baseDegree + 30.0)
+         );
 
-      dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
-
-      dc.setPenWidth(20);
-      var target_r =
-         barRadius -
-         (((baseDegree < 180 ? 6 : -3) * center_x) / 120).toNumber();
-      dc.drawArc(
-         center_x,
-         center_y,
-         target_r,
-         Graphics.ARC_CLOCKWISE,
-         360.0 - (baseDegree - 30.0),
-         360.0 - (baseDegree + 30.0)
-      );
-
-      dc.setPenWidth(1);
-      dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-
-      drawArcText(dc, text);
-      last_draw_text = text;
+         // draw text
+         dc.setPenWidth(1);
+         dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
+         var text = get_text();
+         drawArcText(dc, text);
+         last_draw_text = text;
+      }
    }
 
    //! Prevent invalid characters from causing runtime exception
@@ -147,7 +167,7 @@ class ArcTextComplication extends Ui.Drawable {
       return (kr != null) ? kr : 0.64;
    }
 
-   hidden function drawArcText(dc, text) {
+   private function drawArcText(dc, text) {
       var totalChar = 0;
       if (text instanceof String) {
          totalChar = text.length();
@@ -177,144 +197,144 @@ class ArcTextComplication extends Ui.Drawable {
 
             var labelCurX = Globals.convertCoorX(targetRadian, barRadius);
             var labelCurY = Globals.convertCoorY(targetRadian, barRadius);
-
-            set_font(targetRadian);
-            dc.drawText(labelCurX, labelCurY, font, charArray[i].toString(), alignment);
-            font = null;
+            var font;
+            try {
+               font = load_arc_text_font(targetRadian);
+               dc.drawText(labelCurX, labelCurY, font, charArray[i].toString(), alignment);
+            } finally {
+               font = null;
+            }
          }
       }
    }
 
-   function set_font(current_rad) {
+   function load_arc_text_font(current_rad) as Ui.Resource {
       var converted = current_rad + Math.PI;
-      var degree = radiansToDegrees(converted).toNumber();
+      var degree = Math.toDegrees(converted).toNumber();
       var idx = ((degree % 180) / 3).toNumber();
-      get_font(idx);
-   }
 
-   function get_font(idx) {
       if (idx == 0) {
-         font = Ui.loadResource(Rez.Fonts.e0);
+         return Ui.loadResource(Rez.Fonts.e0);
       } else if (idx == 1) {
-         font = Ui.loadResource(Rez.Fonts.e1);
+         return Ui.loadResource(Rez.Fonts.e1);
       } else if (idx == 2) {
-         font = Ui.loadResource(Rez.Fonts.e2);
+         return Ui.loadResource(Rez.Fonts.e2);
       } else if (idx == 3) {
-         font = Ui.loadResource(Rez.Fonts.e3);
+         return Ui.loadResource(Rez.Fonts.e3);
       } else if (idx == 4) {
-         font = Ui.loadResource(Rez.Fonts.e4);
+         return Ui.loadResource(Rez.Fonts.e4);
       } else if (idx == 5) {
-         font = Ui.loadResource(Rez.Fonts.e5);
+         return Ui.loadResource(Rez.Fonts.e5);
       } else if (idx == 6) {
-         font = Ui.loadResource(Rez.Fonts.e6);
+         return Ui.loadResource(Rez.Fonts.e6);
       } else if (idx == 7) {
-         font = Ui.loadResource(Rez.Fonts.e7);
+         return Ui.loadResource(Rez.Fonts.e7);
       } else if (idx == 8) {
-         font = Ui.loadResource(Rez.Fonts.e8);
+         return Ui.loadResource(Rez.Fonts.e8);
       } else if (idx == 9) {
-         font = Ui.loadResource(Rez.Fonts.e9);
+         return Ui.loadResource(Rez.Fonts.e9);
       } else if (idx == 10) {
-         font = Ui.loadResource(Rez.Fonts.e10);
+         return Ui.loadResource(Rez.Fonts.e10);
       } else if (idx == 11) {
-         font = Ui.loadResource(Rez.Fonts.e11);
+         return Ui.loadResource(Rez.Fonts.e11);
       } else if (idx == 12) {
-         font = Ui.loadResource(Rez.Fonts.e12);
+         return Ui.loadResource(Rez.Fonts.e12);
       } else if (idx == 13) {
-         font = Ui.loadResource(Rez.Fonts.e13);
+         return Ui.loadResource(Rez.Fonts.e13);
       } else if (idx == 14) {
-         font = Ui.loadResource(Rez.Fonts.e14);
+         return Ui.loadResource(Rez.Fonts.e14);
       } else if (idx == 15) {
-         font = Ui.loadResource(Rez.Fonts.e15);
+         return Ui.loadResource(Rez.Fonts.e15);
       } else if (idx == 16) {
-         font = Ui.loadResource(Rez.Fonts.e16);
+         return Ui.loadResource(Rez.Fonts.e16);
       } else if (idx == 17) {
-         font = Ui.loadResource(Rez.Fonts.e17);
+         return Ui.loadResource(Rez.Fonts.e17);
       } else if (idx == 18) {
-         font = Ui.loadResource(Rez.Fonts.e18);
+         return Ui.loadResource(Rez.Fonts.e18);
       } else if (idx == 19) {
-         font = Ui.loadResource(Rez.Fonts.e19);
+         return Ui.loadResource(Rez.Fonts.e19);
       } else if (idx == 20) {
-         font = Ui.loadResource(Rez.Fonts.e20);
+         return Ui.loadResource(Rez.Fonts.e20);
       } else if (idx == 21) {
-         font = Ui.loadResource(Rez.Fonts.e21);
+         return Ui.loadResource(Rez.Fonts.e21);
       } else if (idx == 22) {
-         font = Ui.loadResource(Rez.Fonts.e22);
+         return Ui.loadResource(Rez.Fonts.e22);
       } else if (idx == 23) {
-         font = Ui.loadResource(Rez.Fonts.e23);
+         return Ui.loadResource(Rez.Fonts.e23);
       } else if (idx == 24) {
-         font = Ui.loadResource(Rez.Fonts.e24);
+         return Ui.loadResource(Rez.Fonts.e24);
       } else if (idx == 25) {
-         font = Ui.loadResource(Rez.Fonts.e25);
+         return Ui.loadResource(Rez.Fonts.e25);
       } else if (idx == 26) {
-         font = Ui.loadResource(Rez.Fonts.e26);
+         return Ui.loadResource(Rez.Fonts.e26);
       } else if (idx == 27) {
-         font = Ui.loadResource(Rez.Fonts.e27);
+         return Ui.loadResource(Rez.Fonts.e27);
       } else if (idx == 28) {
-         font = Ui.loadResource(Rez.Fonts.e28);
+         return Ui.loadResource(Rez.Fonts.e28);
       } else if (idx == 29) {
-         font = Ui.loadResource(Rez.Fonts.e29);
+         return Ui.loadResource(Rez.Fonts.e29);
       } else if (idx == 30) {
-         font = Ui.loadResource(Rez.Fonts.e30);
+         return Ui.loadResource(Rez.Fonts.e30);
       } else if (idx == 31) {
-         font = Ui.loadResource(Rez.Fonts.e31);
+         return Ui.loadResource(Rez.Fonts.e31);
       } else if (idx == 32) {
-         font = Ui.loadResource(Rez.Fonts.e32);
+         return Ui.loadResource(Rez.Fonts.e32);
       } else if (idx == 33) {
-         font = Ui.loadResource(Rez.Fonts.e33);
+         return Ui.loadResource(Rez.Fonts.e33);
       } else if (idx == 34) {
-         font = Ui.loadResource(Rez.Fonts.e34);
+         return Ui.loadResource(Rez.Fonts.e34);
       } else if (idx == 35) {
-         font = Ui.loadResource(Rez.Fonts.e35);
+         return Ui.loadResource(Rez.Fonts.e35);
       } else if (idx == 36) {
-         font = Ui.loadResource(Rez.Fonts.e36);
+         return Ui.loadResource(Rez.Fonts.e36);
       } else if (idx == 37) {
-         font = Ui.loadResource(Rez.Fonts.e37);
+         return Ui.loadResource(Rez.Fonts.e37);
       } else if (idx == 38) {
-         font = Ui.loadResource(Rez.Fonts.e38);
+         return Ui.loadResource(Rez.Fonts.e38);
       } else if (idx == 39) {
-         font = Ui.loadResource(Rez.Fonts.e39);
+         return Ui.loadResource(Rez.Fonts.e39);
       } else if (idx == 40) {
-         font = Ui.loadResource(Rez.Fonts.e40);
+         return Ui.loadResource(Rez.Fonts.e40);
       } else if (idx == 41) {
-         font = Ui.loadResource(Rez.Fonts.e41);
+         return Ui.loadResource(Rez.Fonts.e41);
       } else if (idx == 42) {
-         font = Ui.loadResource(Rez.Fonts.e42);
+         return Ui.loadResource(Rez.Fonts.e42);
       } else if (idx == 43) {
-         font = Ui.loadResource(Rez.Fonts.e43);
+         return Ui.loadResource(Rez.Fonts.e43);
       } else if (idx == 44) {
-         font = Ui.loadResource(Rez.Fonts.e44);
+         return Ui.loadResource(Rez.Fonts.e44);
       } else if (idx == 45) {
-         font = Ui.loadResource(Rez.Fonts.e45);
+         return Ui.loadResource(Rez.Fonts.e45);
       } else if (idx == 46) {
-         font = Ui.loadResource(Rez.Fonts.e46);
+         return Ui.loadResource(Rez.Fonts.e46);
       } else if (idx == 47) {
-         font = Ui.loadResource(Rez.Fonts.e47);
+         return Ui.loadResource(Rez.Fonts.e47);
       } else if (idx == 48) {
-         font = Ui.loadResource(Rez.Fonts.e48);
+         return Ui.loadResource(Rez.Fonts.e48);
       } else if (idx == 49) {
-         font = Ui.loadResource(Rez.Fonts.e49);
+         return Ui.loadResource(Rez.Fonts.e49);
       } else if (idx == 50) {
-         font = Ui.loadResource(Rez.Fonts.e50);
+         return Ui.loadResource(Rez.Fonts.e50);
       } else if (idx == 51) {
-         font = Ui.loadResource(Rez.Fonts.e51);
+         return Ui.loadResource(Rez.Fonts.e51);
       } else if (idx == 52) {
-         font = Ui.loadResource(Rez.Fonts.e52);
+         return Ui.loadResource(Rez.Fonts.e52);
       } else if (idx == 53) {
-         font = Ui.loadResource(Rez.Fonts.e53);
+         return Ui.loadResource(Rez.Fonts.e53);
       } else if (idx == 54) {
-         font = Ui.loadResource(Rez.Fonts.e54);
+         return Ui.loadResource(Rez.Fonts.e54);
       } else if (idx == 55) {
-         font = Ui.loadResource(Rez.Fonts.e55);
+         return Ui.loadResource(Rez.Fonts.e55);
       } else if (idx == 56) {
-         font = Ui.loadResource(Rez.Fonts.e56);
+         return Ui.loadResource(Rez.Fonts.e56);
       } else if (idx == 57) {
-         font = Ui.loadResource(Rez.Fonts.e57);
+         return Ui.loadResource(Rez.Fonts.e57);
       } else if (idx == 58) {
-         font = Ui.loadResource(Rez.Fonts.e58);
+         return Ui.loadResource(Rez.Fonts.e58);
       } else if (idx == 59) {
-         font = Ui.loadResource(Rez.Fonts.e59);
-      } else if (idx == 60) {
-         font = Ui.loadResource(Rez.Fonts.e60);
+         return Ui.loadResource(Rez.Fonts.e59);
+      } else {//(idx == 60)
+         return Ui.loadResource(Rez.Fonts.e60);
       }
    }
 }
