@@ -35,6 +35,9 @@ var gtheme = -1;
 var last_battery_percent = -1;
 var last_hour_consumption = -1;
 
+// Views
+var _backgroundView as BackgroundView?;
+
 class InfocalView extends WatchUi.WatchFace {
 
    //! Additional memory margin (in bytes) to safely create screen BufferedBitmap
@@ -86,6 +89,7 @@ class InfocalView extends WatchUi.WatchFace {
 
       // Load Watchface drawables from layout.xml (creates all Ui.Drawable classes)
       setLayout(Rez.Layouts.WatchFace(dc));
+      loadDrawables(dc);
 
       updateColorsInUse();
       updateCurrentFieldIdsInUse();
@@ -392,17 +396,23 @@ class InfocalView extends WatchUi.WatchFace {
       }
    }
 
+   //! Application replacement for setLayout(resource).
+   //! Provides a lower memory footprint
+   private function loadDrawables(dc as Dc) as Void {
+      if (_backgroundView == null) {
+         _backgroundView = new BackgroundView(null);
+      }
+   }
+
    //! Draw Drawables using our own device context (potentially a screen buffer)
    //! Used instead of View.onUpdate() to draw drawables
    function mainDrawComponents(dc) {
       // XXX: Why is this clearing the background twice?
-      // XXX: Can we move this to the BackgroundView class?
       dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
       dc.clear();
       dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
       dc.fillRectangle(0, 0, center_x * 2, center_y * 2);
 
-      var backgroundView = View.findDrawableById("background");
       var bar1 = View.findDrawableById("aBarDisplay");
       var bar2 = View.findDrawableById("bBarDisplay");
       var bar3 = View.findDrawableById("cBarDisplay");
@@ -421,8 +431,8 @@ class InfocalView extends WatchUi.WatchFace {
 
       dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
       dc.fillCircle(center_x, center_y, face_radius);
-      // XXX: Move to call backgroundView first
-      backgroundView.draw(dc);
+      // XXX: Move to call _backgroundView first
+      _backgroundView.draw(dc);
       bbar1.draw(dc);
       bbar2.draw(dc);
 

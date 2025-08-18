@@ -1,6 +1,7 @@
 <layout id="WatchFace">
-	<drawable id="background" class="BackgroundView"></drawable>
-
+<!--
+    <drawable id="background" class="BackgroundView"></drawable>
+-->
 	<drawable id="aBarDisplay" class="ArcTextComplication">
         <param name="base">270</param>
         <param name="angle">12</param>

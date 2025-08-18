@@ -1,27 +1,20 @@
 using Toybox.Application;
 using Toybox.Graphics;
-using Toybox.System;
-using Toybox.Time.Gregorian as Date;
-using Toybox.WatchUi;
+
+import Toybox.Lang;
 
 
 //! Background View draws the Tick Marks around the watch face
-class BackgroundView extends WatchUi.Drawable {
-   hidden var bgcir_font, bgcir_info;
+class BackgroundView {
+   private var radius as Number;
+   private var mark_length as Number;
 
-   var radius;
-   var mark_length = 10;
-
-   function initialize(params) {
-      Drawable.initialize(params);
-      radius = center_x - ((10 * center_x) / 120).toNumber();
-      if (center_x == 195) {
-         mark_length = 20;
-      }
+   function initialize(params as Dictionary?) {
+      radius = center_x - ((10 * center_x) / 120).toNumber(); // r - 1/12.r
+      mark_length = (center_x == 195) ? 20 : 10;
    }
 
-   function draw(dc) {
-
+   public function draw(dc) {
       dc.setPenWidth(4);
       dc.setColor(gsecondary_color, Graphics.COLOR_TRANSPARENT);
 
@@ -106,7 +99,7 @@ class BackgroundView extends WatchUi.Drawable {
       }
    }
 
-   function skipTick(tick_number, use_analog, digital_style, left_digital_info, ticks_style) {
+   private function skipTick(tick_number, use_analog, digital_style, left_digital_info, ticks_style) {
       var skip = false;
       // Not analog, and using big or xbig digital style
       // Skip ticks for digital info on left or right
