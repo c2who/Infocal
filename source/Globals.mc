@@ -12,45 +12,45 @@ public class Globals {
     static const DATA_TYPE_ERROR_SUFFIX = ".Error";
     static const DATA_TYPE_RETRIES_SUFFIX = ".Retries";
 
-   static const DAYS_OF_THE_WEEK = {
-         Date.DAY_MONDAY => "MON",
-         Date.DAY_TUESDAY => "TUE",
-         Date.DAY_WEDNESDAY => "WED",
-         Date.DAY_THURSDAY => "THU",
-         Date.DAY_FRIDAY => "FRI",
-         Date.DAY_SATURDAY => "SAT",
-         Date.DAY_SUNDAY => "SUN",
-      };
-   static const MONTHS_OF_THE_YEAR = {
-         Date.MONTH_JANUARY => "JAN",
-         Date.MONTH_FEBRUARY => "FEB",
-         Date.MONTH_MARCH => "MAR",
-         Date.MONTH_APRIL => "APR",
-         Date.MONTH_MAY => "MAY",
-         Date.MONTH_JUNE => "JUN",
-         Date.MONTH_JULY => "JUL",
-         Date.MONTH_AUGUST => "AUG",
-         Date.MONTH_SEPTEMBER => "SEP",
-         Date.MONTH_OCTOBER => "OCT",
-         Date.MONTH_NOVEMBER => "NOV",
-         Date.MONTH_DECEMBER => "DEC",
-      };
-
     static function getFormattedDate() as String {
       var now = Time.now();
       var date = Date.info(now, Time.FORMAT_SHORT);
       var date_formatter = Application.getApp().getProperty("date_format");
 
+      var DAYS_OF_THE_WEEK = [
+         "MON",
+         "TUE",
+         "WED",
+         "THU",
+         "FRI",
+         "SAT",
+         "SUN",
+      ];
+
+      var MONTHS_OF_THE_YEAR = [
+         "JAN",
+         "FEB",
+         "MAR",
+         "APR",
+         "MAY",
+         "JUN",
+         "JUL",
+         "AUG",
+         "SEP",
+         "OCT",
+         "NOV",
+         "DEC",
+      ];
+
       if (date_formatter == 0) {
          // ddd d
          if (Application.getApp().getProperty("force_date_english")) {
-            var day_of_week = date.day_of_week;
             return Lang.format("$1$ $2$", [
-               DAYS_OF_THE_WEEK[day_of_week],
+               DAYS_OF_THE_WEEK[date.day_of_week-1],
                date.day.format("%d"),
             ]);
          } else {
-            var long_date = Date.info(now, Time.FORMAT_LONG);
+            var long_date = Date.info(now, Time.FORMAT_MEDIUM);
             var day_of_week = long_date.day_of_week;
             return Lang.format("$1$ $2$", [
                day_of_week.toUpper(),
@@ -95,11 +95,11 @@ public class Globals {
          var month = null;
          if (Application.getApp().getProperty("force_date_english")) {
             day = date.day;
-            month = MONTHS_OF_THE_YEAR[date.month];
+            month = MONTHS_OF_THE_YEAR[date.month-1];
          } else {
             var medium_date = Date.info(now, Time.FORMAT_MEDIUM);
-            day = medium_date.day;
-            month = MONTHS_OF_THE_YEAR[medium_date.month];
+            day = date.day;
+            month = medium_date.month;
          }
          if (date_formatter == 5) {
             return Lang.format("$1$ $2$", [day.format("%d"), month]);
@@ -108,9 +108,8 @@ public class Globals {
          }
       } else {
          // Invalid use format 0: "ddd d"
-         var day_of_week = date.day_of_week;
             return Lang.format("$1$ $2$", [
-               DAYS_OF_THE_WEEK[day_of_week],
+               DAYS_OF_THE_WEEK[date.day_of_week-1],
                date.day.format("%d"),
             ]);
       }
