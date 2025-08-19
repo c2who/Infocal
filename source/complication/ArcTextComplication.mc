@@ -7,69 +7,17 @@ using Toybox.Application;
 import Toybox.Lang;
 
 class ArcTextComplication extends Ui.Drawable {
-   hidden var barRadius;
-   hidden var baseRadian;
-   hidden var baseDegree;
-   hidden var alignment;
-   hidden var perCharRadius;
+   private var barRadius;
+   private var baseRadian;
+   private var baseDegree;
+   private var alignment;
+   private var perCharRadius;
 
-   hidden var last_draw_text;
+   private var accumulation_sign;
+   private var angle;
 
-   var accumulation_sign;
-   var angle;
-   var kerning = 1.0;
-
-   var dt_field;
-   var field_type;
-
-   // PERF: Could be stored smaller as a Byte (1/256 resolution)
-   static const kerning_ratios = [
-      0.40,  // ' ' [0]
-      0.92,  // '%' [1]
-      0.47,  // '°' [2]
-      0.70,  // '+' [3]
-      0.25,  // ','    // TODO: international numbers use comma delimeters
-      0.38,  // '-'
-      0.25,  // '.'
-      0.64,  // '/'    // Packing to simplify array indexing
-      0.66,  // '0'
-      0.41,  // '1'
-      0.60,  // '2'
-      0.63,  // '3'
-      0.67,  // '4'
-      0.63,  // '5'
-      0.64,  // '6'
-      0.53,  // '7'
-      0.67,  // '8'
-      0.64,  // '9'
-      0.25,  // ':'
-      0.68,  // 'A' [19]
-      0.68,  // 'B'
-      0.66,  // 'C'
-      0.68,  // 'D'
-      0.59,  // 'E'
-      0.56,  // 'F'
-      0.67,  // 'G'
-      0.71,  // 'H'
-      0.33,  // 'I'
-      0.64,  // 'J'
-      0.68,  // 'K'
-      0.55,  // 'L'
-      0.89,  // 'M'
-      0.73,  // 'N'
-      0.68,  // 'O'
-      0.66,  // 'P'
-      0.80,  // 'Q'  // TODO : Add letter Q to all arc text fonts
-      0.67,  // 'R'
-      0.67,  // 'S'
-      0.55,  // 'T'
-      0.68,  // 'U'
-      0.64,  // 'V'
-      1.00,  // 'W'
-      0.64,  // 'X'  // TODO : Add letter X to all arc text fonts
-      0.64,  // 'Y'
-      0.64,  // 'Z'  // TODO : Add letter Z to all arc text fonts
-   ] as Array<Float>;
+   private var dt_field;
+   private var field_type;
 
    function initialize(params) {
       Drawable.initialize(params);
@@ -78,6 +26,7 @@ class ArcTextComplication extends Ui.Drawable {
       dt_field = buildFieldObject(field_type);
 
       barRadius = center_x - ((13 * center_x) / 120).toNumber();
+      var kerning = 1.0;
       if (center_x == 109) {
          kerning = 1.1;
          barRadius = center_x - 11;
@@ -97,8 +46,6 @@ class ArcTextComplication extends Ui.Drawable {
       accumulation_sign = baseDegree < 180 ? -1 : 1;
 
       alignment = Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER;
-
-      last_draw_text = "";
    }
 
    function getSettingDataKey() {
@@ -157,12 +104,12 @@ class ArcTextComplication extends Ui.Drawable {
          dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
          var text = get_text();
          drawArcText(dc, text);
-         last_draw_text = text;
       }
    }
 
    //! Prevent invalid characters from causing runtime exception
-   private function get_kerning_ratio(c as Char) as Float {
+   private function get_kerning_ratio(c as Char, kerning_ratios as Array<Float>) as Float {
+
       // PERF: Lookup Kerning Ratios in Array
       var kr;
       if ((c >= '+') && (c <= ':')) {
@@ -193,15 +140,65 @@ class ArcTextComplication extends Ui.Drawable {
       }
       var charArray = text.toUpper().toCharArray();
 
+      // PERF: Remove large constants from <Global> Object statics
+      // (created on stack, once per drawn field)
+      var KERNING_RATIOS = [
+         0.40,  // ' ' [0]
+         0.92,  // '%' [1]
+         0.47,  // '°' [2]
+         0.70,  // '+' [3]
+         0.25,  // ','    // TODO: international numbers use comma delimeters
+         0.38,  // '-'
+         0.25,  // '.'
+         0.64,  // '/'    // NOT USED: Packing to simplify array indexing
+         0.66,  // '0'
+         0.41,  // '1'
+         0.60,  // '2'
+         0.63,  // '3'
+         0.67,  // '4'
+         0.63,  // '5'
+         0.64,  // '6'
+         0.53,  // '7'
+         0.67,  // '8'
+         0.64,  // '9'
+         0.25,  // ':'
+         0.68,  // 'A' [19]
+         0.68,  // 'B'
+         0.66,  // 'C'
+         0.68,  // 'D'
+         0.59,  // 'E'
+         0.56,  // 'F'
+         0.67,  // 'G'
+         0.71,  // 'H'
+         0.33,  // 'I'
+         0.64,  // 'J'
+         0.68,  // 'K'
+         0.55,  // 'L'
+         0.89,  // 'M'
+         0.73,  // 'N'
+         0.68,  // 'O'
+         0.66,  // 'P'
+         0.80,  // 'Q'  // TODO : Add letter Q to all arc text fonts
+         0.67,  // 'R'
+         0.67,  // 'S'
+         0.55,  // 'T'
+         0.68,  // 'U'
+         0.64,  // 'V'
+         1.00,  // 'W'
+         0.64,  // 'X'  // TODO : Add letter X to all arc text fonts
+         0.64,  // 'Y'
+         0.64,  // 'Z'  // TODO : Add letter Z to all arc text fonts
+      ] as Array<Float>;
+
       var totalRad = 0.0;
       for (var i = 0; i < totalChar; i++) {
-         var ra = perCharRadius * get_kerning_ratio(charArray[i]);
+         var ra = perCharRadius * get_kerning_ratio(charArray[i], KERNING_RATIOS);
          totalRad += ra;
       }
       var lastRad = -totalRad / 2.0;
 
       for (var i = 0; i < totalChar; i++) {
-         var ra = perCharRadius * get_kerning_ratio(charArray[i]);
+         var ra = perCharRadius * get_kerning_ratio(charArray[i], KERNING_RATIOS);
 
          lastRad += ra;
          if (charArray[i] == ' ') {
