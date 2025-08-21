@@ -18,13 +18,13 @@ public class Globals {
       var date_formatter = Application.getApp().getProperty("date_format");
 
       var DAYS_OF_THE_WEEK = [
+         "SUN",
          "MON",
          "TUE",
          "WED",
          "THU",
          "FRI",
          "SAT",
-         "SUN",
       ];
 
       var MONTHS_OF_THE_YEAR = [
