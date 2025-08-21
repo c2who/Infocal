@@ -51,9 +51,9 @@ Infocal Custom needs access to your profile to calculate active calories, distan
 
 If using the OpenWeather for any of the features (see feature list above), internet and background communication is used to fetch data from the OpenWeather API.
 
-## Why isn't battery days remaining not working?
+## Why isn't battery days remaining available?
 
-The days remaining battery estimate needs about an 1 hour to calibrate before displaying any information. After calibration, the estimate updates once every hour. If you restart your watch or switch to a different watchface, it will need to calibrate again.
+Battery days remaining is provided by the garmin watch.  This is supported on devices running API level 3.3.0 and newer.
 
 ## Can I see the connection status between the watch and the phone?
 

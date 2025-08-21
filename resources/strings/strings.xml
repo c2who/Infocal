@@ -137,7 +137,7 @@
     <!-- Unit settings -->
     <string scope="settings" id="battery_format">Battery format</string>
     <string scope="settings" id="battery_format_1">Percent</string>
-    <string scope="settings" id="battery_format_2">Days left (needs at least 1 hour left to work)</string>
+    <string scope="settings" id="battery_format_2">Days left</string>
 
     <string scope="settings" id="barometer_unit">Barometer Unit</string>
     <string scope="settings" id="barometer_unit_0">Hector Pascal (Pa)</string>

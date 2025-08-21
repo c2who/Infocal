@@ -42,7 +42,7 @@ class InfocalView extends WatchUi.WatchFace {
 
    //! Additional memory margin (in bytes) to safely create screen BufferedBitmap
    // Minimum memory = (screen buffer size) + (runtime margin)
-   private static const RUNTIME_MEM_MARGIN_MIN = 5000;   //bytes
+   private const RUNTIME_MEM_MARGIN_MIN = 5000;   //bytes
 
    private const _screenShape as ScreenShape = System.getDeviceSettings().screenShape;;
 
@@ -50,8 +50,6 @@ class InfocalView extends WatchUi.WatchFace {
    private var last_draw_minute = -1;
    private var restore_from_resume = false;
    private var restore_from_sleep = false;
-
-   private var last_battery_hour = null;
 
    private var face_radius;
 
@@ -150,10 +148,6 @@ class InfocalView extends WatchUi.WatchFace {
       // force update layout if settings changed
       if (_settings_changed) {
          onLayout(screenDc);
-      }
-
-      if (minute_changed) {
-         calculateBatteryConsumption();
       }
 
       if (restore_from_resume || minute_changed || _settings_changed) {
@@ -348,51 +342,6 @@ class InfocalView extends WatchUi.WatchFace {
       } else {
          // Unload
          _screen_buffer = null;
-      }
-   }
-
-   function calculateBatteryConsumption() {
-      // Calculate battery consumption in days
-      var time_now = Time.now();
-      if (last_battery_hour == null) {
-         last_battery_hour = time_now;
-         last_battery_percent = System.getSystemStats().battery;
-         last_hour_consumption = -1;
-      } else if (time_now.compare(last_battery_hour) >= 60 * 60) {
-         // 60 min
-         last_battery_hour = time_now;
-         var current_battery = System.getSystemStats().battery;
-         var temp_last_battery_percent = last_battery_percent;
-         var temp_last_hour_consumption = temp_last_battery_percent - current_battery;
-         if (temp_last_hour_consumption < 0) {
-            temp_last_hour_consumption = -1;
-         }
-         if (temp_last_hour_consumption > 0) {
-            App.getApp().setProperty(
-               "last_hour_consumption",
-               temp_last_hour_consumption
-            );
-
-            var consumption_history =
-               App.getApp().getProperty("consumption_history");
-            if (consumption_history == null) {
-               App.getApp().setProperty("consumption_history", [
-                  temp_last_hour_consumption,
-               ]);
-            } else {
-               consumption_history.add(temp_last_hour_consumption);
-               if (consumption_history.size() > 24) {
-                  var object0 = consumption_history[0];
-                  consumption_history.remove(object0);
-               }
-               App.getApp().setProperty(
-                  "consumption_history",
-                  consumption_history
-               );
-            }
-         }
-         last_battery_percent = current_battery;
-         last_hour_consumption = temp_last_hour_consumption;
       }
    }
 

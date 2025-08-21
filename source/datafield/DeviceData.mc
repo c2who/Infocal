@@ -3,8 +3,13 @@ using Toybox.ActivityMonitor as ActivityMonitor;
 using Toybox.Application as App;
 using Toybox.System as Sys;
 
+import Toybox.Lang;
+
 /* BATTERY */
 class BatteryField extends BaseDataField {
+
+   private var _hasBatteryInDays = (Sys.Stats has :batteryInDays) as Boolean;
+
    function initialize(id) {
       BaseDataField.initialize(id);
    }
@@ -53,16 +58,13 @@ class BatteryField extends BaseDataField {
       }
       hour_consumption = hour_consumption.toFloat();
 
-      if (battery_format == 0 || hour_consumption == -1) {
-         // show percent
+      if (battery_format == 0 || !_hasBatteryInDays) {
+         // Battery Percent
          return Lang.format("BAT $1$%", [Math.round(value).format("%d")]);
       } else {
-         if (hour_consumption == 0) {
-            return Lang.format("$1$ DAYS", [99]);
-         }
-         var hour_left = value / (hour_consumption * 1.0);
-         var day_left = hour_left / 24.0;
-         return Lang.format("$1$ DAYS", [day_left.format("%0.1f")]);
+         // API Level 3.3.0 battery in days
+         var days_left = Sys.getSystemStats().batteryInDays;
+         return Lang.format("$1$ DAYS", [days_left.format("%0.1f")]);
       }
    }
 
