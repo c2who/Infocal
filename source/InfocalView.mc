@@ -32,31 +32,31 @@ var gbar_color_1 = 0x0000ff;
 
 var gtheme = -1;
 
-var last_battery_percent = -1;
-var last_hour_consumption = -1;
-
 // Views
 var _backgroundView as BackgroundView?;
 
 class InfocalView extends WatchUi.WatchFace {
 
    //! Additional memory margin (in bytes) to safely create screen BufferedBitmap
-   // Minimum memory = (screen buffer size) + (runtime margin)
+   //! Minimum memory = (screen buffer size) + (runtime margin)
    private const RUNTIME_MEM_MARGIN_MIN = 5000;   //bytes
 
-   private const _screenShape as ScreenShape = System.getDeviceSettings().screenShape;;
+   private const _hasBatteryInDays = (System.Stats has :batteryInDays) as Boolean;  // API 3.3.0
+   private const _hasServiceDelegate = (System has :ServiceDelegate) as Boolean;    // background service
 
+   private var _partialUpdatesAllowed = (WatchUi.WatchFace has :onPartialUpdate) as Boolean;
    private var _settings_changed as Boolean = false;
+   private var _isAwake as Boolean = true;
    private var last_draw_minute = -1;
    private var restore_from_resume = false;
    private var restore_from_sleep = false;
-
    private var face_radius;
 
-   private var _isAwake as Boolean = true;
-   private var _partialUpdatesAllowed as Boolean;
+   //! Battery Monitor Client.
+   //! Used on watches that do not have Stats.batteryInDays (API 3.3.0)
+   private var _batteryMonitor as BatteryMonitor?;
 
-   // List of Field Ids currently displayed on screen (in use)
+   //! List of Field Ids currently displayed on screen (in use)
    var _currentFieldsIdsInUse = [] as Array<Number>;
 
    //! Screen buffer stores a copy of the bitmap rendered to the screen.
@@ -151,7 +151,8 @@ class InfocalView extends WatchUi.WatchFace {
       }
 
       if (restore_from_resume || minute_changed || _settings_changed) {
-         checkPendingWebRequests();
+         // update all client data (e.g. Air Quality, Weather, Battery Info)
+         updateClientData();
       }
 
       // On some older devices (e.g. vivoactive_hr):
@@ -517,60 +518,63 @@ class InfocalView extends WatchUi.WatchFace {
    }
 
 
-   //! Determine if any web requests are needed.
-   //! If so, set approrpiate pendingWebRequests flag for use by BackgroundService,
-   //! then register for temporal event.
-   //! - Called by onUpdate(): on show; on settings changed; and every minute
-   //!
-   //! @note "pendingWebRequests" are stored as Dictionary keys to prevent duplicate-entries
-   //!       that may be introduced due to multi-threaded nature of updates to pendingWebRequests
-   function checkPendingWebRequests() {
+   //! Update Client Data
+   //! Called by onUpdate(): on show; on settings changed; and every minute
+   function updateClientData() {
+      var settings = System.getDeviceSettings();
+
       // Update last known location
       updateLastLocation();
 
-      // If watch device does not support background services
-      if (!(System has :ServiceDelegate)) {
-         return;
-      }
-
-      // Run need data / retry policy only if device has data connection
-      var settings = System.getDeviceSettings();
-      if (!settings.phoneConnected) {
-         return;
-      }
-
-      var pendingWebRequests = {};
-
-      // If AirQuality data fields in use
-      if (isAnyDataFieldsInUse( [FIELD_TYPE_AIR_QUALITY] )) {
-         if (IQAirClientHelper.needsDataUpdate()) {
-            pendingWebRequests[IQAirClient.DATA_TYPE] = true;
+      // Update Internal batteryInDays calculation
+      if ((!_hasBatteryInDays) && (isAnyDataFieldsInUse( [FIELD_TYPE_BATTERY] )) ) {
+         if (_batteryMonitor == null) {
+            _batteryMonitor = new BatteryMonitor();
          }
+         _batteryMonitor.update();
+      } else {
+         _batteryMonitor = null;
       }
 
-      // If Weather data fields in use
-      if (isAnyDataFieldsInUse( [FIELD_TYPE_TEMPERATURE_OUT,
-                                 FIELD_TYPE_TEMPERATURE_HL,
-                                 FIELD_TYPE_WEATHER,
-                                 FIELD_TYPE_WIND ] )) {
-         if (OpenWeatherClientHelper.needsDataUpdate()) {
-            pendingWebRequests[OpenWeatherClient.DATA_TYPE] = true;
+      // Update background communication (web) clients
+      // - watch must support background service (service delegate)
+      // - watch must be connected to phone
+      // @note "pendingWebRequests" are stored as Dictionary keys to prevent duplicate-entries
+      //       that may be introduced due to multi-threaded nature of updates to pendingWebRequests
+      if ((_hasServiceDelegate) && (settings.phoneConnected)) {
+         var pendingWebRequests = {};
+
+         // If AirQuality data fields in use
+         if (isAnyDataFieldsInUse( [FIELD_TYPE_AIR_QUALITY] )) {
+            if (IQAirClientHelper.needsDataUpdate()) {
+               pendingWebRequests[IQAirClient.DATA_TYPE] = true;
+            }
          }
-      }
 
-      Application.getApp().setProperty("PendingWebRequests", pendingWebRequests);
+         // If Weather data fields in use
+         if (isAnyDataFieldsInUse( [FIELD_TYPE_TEMPERATURE_OUT,
+                                    FIELD_TYPE_TEMPERATURE_HL,
+                                    FIELD_TYPE_WEATHER,
+                                    FIELD_TYPE_WIND ] )) {
+            if (OpenWeatherClientHelper.needsDataUpdate()) {
+               pendingWebRequests[OpenWeatherClient.DATA_TYPE] = true;
+            }
+         }
 
-      // If there are any pending data requests (and phone is connected)
-      if (pendingWebRequests.keys().size() > 0) {
-         // Register for background temporal event as soon as possible.
-         var lastTime = Background.getLastTemporalEventTime();
+         Application.getApp().setProperty("PendingWebRequests", pendingWebRequests);
 
-         if (lastTime) {
-            // Events scheduled for a time in the past trigger immediately.
-            var nextTime = lastTime.add(new Time.Duration(5 * 60));
-            Background.registerForTemporalEvent(nextTime);
-         } else {
-            Background.registerForTemporalEvent(Time.now());
+         // If there are any pending data requests (and phone is connected)
+         if (pendingWebRequests.keys().size() > 0) {
+            // Register for background temporal event as soon as possible.
+            var lastTime = Background.getLastTemporalEventTime();
+
+            if (lastTime != null) {
+               // Events scheduled for a time in the past trigger immediately.
+               var nextTime = lastTime.add(new Time.Duration(5 * 60));
+               Background.registerForTemporalEvent(nextTime);
+            } else {
+               Background.registerForTemporalEvent(Time.now());
+            }
          }
       }
    }

@@ -4,6 +4,9 @@
     <!--
         Use "Monkey C: Edit Application" from the Visual Studio Code command palette
         to update the application attributes.
+
+        Release AppId: e8f20be5-cb2b-4d2d-a29d-0288ce82bc1d
+        Beta AppId:    3332d9bd-c327-4d3a-a7cb-6de84b24c27d
     -->
     <iq:application id="e8f20be5-cb2b-4d2d-a29d-0288ce82bc1d" type="watchface" name="@Strings.AppName" entry="InfocalApp" launcherIcon="@Drawables.LauncherIcon" minApiLevel="2.4.0" >
         <!--
