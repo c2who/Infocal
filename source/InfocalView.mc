@@ -68,7 +68,7 @@ class InfocalView extends WatchUi.WatchFace {
    function initialize() {
       WatchFace.initialize();
 
-      _partialUpdatesAllowed = (WatchUi.WatchFace has :onPartialUpdate);
+      debug_print(:view, "init [$1$]", _partialUpdatesAllowed);
    }
 
    //! The entry point for the View.
@@ -197,6 +197,7 @@ class InfocalView extends WatchUi.WatchFace {
    //! @internal It is important to update as small of a portion of the display as possible in this method to avoid
    //!           exceeding the allowed power budget. To do this, the application must set the clipping region for the
    //!           Graphics.Dc object using the setClip() method.
+   //!
    //! @internal Calls to System.println() and System.print() will not execute on devices when this function is being
    //!           invoked, but can be used in the device *simulator*.
    public function onPartialUpdate(dc as Dc) as Void {
@@ -665,8 +666,7 @@ class InfocalViewDelegate extends WatchUi.WatchFaceDelegate
    //! If the onPartialUpdate() callback of the associated WatchFace exceeds the power budget of the device,
    //! this method will be called with information about the limits that were exceeded.
    function onPowerBudgetExceeded(powerInfo as WatchFacePowerInfo) as Void {
-        System.println( "Average execution time: " + powerInfo.executionTimeAverage );
-        System.println( "Allowed execution time: " + powerInfo.executionTimeLimit );
+        debug_print(:powerbudget, "PWR: $1$ > $2$", [powerInfo.executionTimeAverage, powerInfo.executionTimeLimit]);
 
         _view.onPowerBudgetExceeded();
     }

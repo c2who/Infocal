@@ -44,13 +44,12 @@ class BackgroundService extends System.ServiceDelegate {
    function onTemporalEvent() {
 
       var stats = System.getSystemStats();
-      System.println("Total: " + stats.totalMemory);
-      System.println("Free:  " + stats.freeMemory);
+      debug_print(:background, "Mem: $1$ / $2$", [stats.freeMemory, stats.totalMemory]);
 
       // If there are any undelivered background events, deliver them
       var data = Background.getBackgroundData();
       if (data != null) {
-         System.println("Undelivered: " + data);
+         debug_print(:background, "Undelivered: $1$", data);
          Background.exit(data);
       }
 
@@ -76,11 +75,11 @@ class BackgroundService extends System.ServiceDelegate {
             _iqAirClient.requestData(method(:onReceiveClientData));
 
          } else {
-            System.println("Unknown request: " + pendingWebRequests);
+            debug_print(:background, "Unknown: $1$", pendingWebRequests);
             Background.exit(null);
          }
       } else {
-         System.println("No pending requests: " + pendingWebRequests);
+         debug_print(:background, "Pending: $1$", pendingWebRequests);
          Background.exit(null);
       }
    }
@@ -97,7 +96,7 @@ class BackgroundService extends System.ServiceDelegate {
       _weatherClient = null;
       _iqAirClient = null;
 
-      System.println(data);
+      debug_print(:background, "Bkgd: $1$", data);
       Background.exit(data);
    }
 

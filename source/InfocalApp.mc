@@ -84,7 +84,7 @@ class InfocalApp extends AppBase {
    //! @see  https://developer.garmin.com/connect-iq/core-topics/backgrounding/
    //! @see  https://developer.garmin.com/connect-iq/connect-iq-faq/how-do-i-create-a-connect-iq-background-service/
    function onBackgroundData(data as PersistableType) {
-      System.println("Foreground: " + data);
+      debug_print(:background, "Data: $1$", data);
 
       var type = (data as Dictionary<String, PropertyValueType>)["type"];
 

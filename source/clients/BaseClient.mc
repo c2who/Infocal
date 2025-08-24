@@ -125,7 +125,7 @@ class BaseClientHelper {
             }
 
         } catch (ex) {
-            System.println(ex.getErrorMessage());
+            debug_print(:exception, "ex: $1$", ex.getErrorMessage());
             return "ERR";
         }
     }

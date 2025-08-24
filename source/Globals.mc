@@ -1,12 +1,12 @@
 using Toybox.Application;
 using Toybox.Math;
+using Toybox.System;
 using Toybox.Time;
-using Toybox.Time.Gregorian as Date;
+using Toybox.Time.Gregorian;
 
 import Toybox.Lang;
 
-//! Encapsulate (foreground) globas
-// TODO: Reduce number of Globals, Globals are bad!!!
+//! Encapsulate (foreground) globals
 //! @note minimize the number of classes, as each class _definition_ adds 120 bytes!
 public class Globals {
     static const DATA_TYPE_ERROR_SUFFIX = ".Error";
@@ -14,7 +14,7 @@ public class Globals {
 
     static function getFormattedDate() as String {
       var now = Time.now();
-      var date = Date.info(now, Time.FORMAT_SHORT);
+      var date = Gregorian.info(now, Time.FORMAT_SHORT);
       var date_formatter = Application.getApp().getProperty("date_format");
 
       var DAYS_OF_THE_WEEK = [
@@ -50,7 +50,7 @@ public class Globals {
                date.day.format("%d"),
             ]);
          } else {
-            var long_date = Date.info(now, Time.FORMAT_MEDIUM);
+            var long_date = Gregorian.info(now, Time.FORMAT_MEDIUM);
             var day_of_week = long_date.day_of_week;
             return Lang.format("$1$ $2$", [
                day_of_week.toUpper(),
@@ -97,7 +97,7 @@ public class Globals {
             day = date.day;
             month = MONTHS_OF_THE_YEAR[date.month-1];
          } else {
-            var medium_date = Date.info(now, Time.FORMAT_MEDIUM);
+            var medium_date = Gregorian.info(now, Time.FORMAT_MEDIUM);
             day = date.day;
             month = medium_date.month;
          }
