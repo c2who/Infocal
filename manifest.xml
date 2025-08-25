@@ -8,7 +8,7 @@
         Release AppId: e8f20be5-cb2b-4d2d-a29d-0288ce82bc1d
         Beta AppId:    3332d9bd-c327-4d3a-a7cb-6de84b24c27d
     -->
-    <iq:application id="e8f20be5-cb2b-4d2d-a29d-0288ce82bc1d" type="watchface" name="@Strings.AppName" entry="InfocalApp" launcherIcon="@Drawables.LauncherIcon" minApiLevel="2.4.0" >
+    <iq:application id="9e9d2c44-7753-41b2-82dc-f19a343e4a44" type="watchface" name="@Strings.AppName" entry="InfocalApp" launcherIcon="@Drawables.LauncherIcon" minApiLevel="2.4.0" minSdkVersion="5.1.0">
         <!--
             Use the following from the Visual Studio Code comand palette to edit
             the build targets:
@@ -17,46 +17,20 @@
             "Monkey C: Edit Products" - Lets you add or remove any product
         -->
         <iq:products>
-            <iq:product id="d2airx10"/>
             <iq:product id="d2mach1"/>
-            <iq:product id="descentmk2"/>
-            <iq:product id="descentmk2s"/>
-            <iq:product id="enduro"/>
+            <iq:product id="enduro3"/>
             <iq:product id="epix2"/>
-            <iq:product id="fenix6"/>
-            <iq:product id="fenix6pro"/>
-            <iq:product id="fenix6s"/>
-            <iq:product id="fenix6spro"/>
-            <iq:product id="fenix6xpro"/>
             <iq:product id="fenix7"/>
             <iq:product id="fenix7s"/>
             <iq:product id="fenix7spro"/>
             <iq:product id="fenix7x"/>
-            <iq:product id="fr245"/>
-            <iq:product id="fr245m"/>
             <iq:product id="fr255"/>
             <iq:product id="fr255m"/>
             <iq:product id="fr255s"/>
             <iq:product id="fr255sm"/>
-            <iq:product id="fr745"/>
-            <iq:product id="fr945"/>
-            <iq:product id="fr945lte"/>
             <iq:product id="fr955"/>
             <iq:product id="marq2"/>
             <iq:product id="marq2aviator"/>
-            <iq:product id="marqadventurer"/>
-            <iq:product id="marqathlete"/>
-            <iq:product id="marqaviator"/>
-            <iq:product id="marqcaptain"/>
-            <iq:product id="marqcommander"/>
-            <iq:product id="marqdriver"/>
-            <iq:product id="marqexpedition"/>
-            <iq:product id="venu"/>
-            <iq:product id="venu2"/>
-            <iq:product id="venu2plus"/>
-            <iq:product id="venu2s"/>
-            <iq:product id="vivoactive4"/>
-            <iq:product id="vivoactive4s"/>
         </iq:products>
         <!--
             Use "Monkey C: Edit Permissions" from the Visual Studio Code command

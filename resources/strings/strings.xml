@@ -98,7 +98,7 @@
 
     <!-- Date and time settings -->
     <string scope="settings" id="date_format">Date format</string>
-    <string scope="settings" id="datef1">ddd d (TUE 2)</string>
+    <string scope="settings" id="datef1">ddd d mmm (TUE 2 OCT)</string>
     <string scope="settings" id="datef2">dd.mm (2.9)</string>
     <string scope="settings" id="datef21">mm.dd (9.2)</string>
     <string scope="settings" id="datef3">dd.mm.yy (2.9.19)</string>
