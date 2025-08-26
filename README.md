@@ -4,10 +4,6 @@ A watchface for Garmin devices, available free on the [Garmin App Store](https:/
 
 Infocal is a digital and analogue watchface, carefully made with high quality rendering.
 
-This project was forked from [Infocal](https://github.com/RyanDam/Infocal), and would not exist if not for the work RyanDam put into that project.
-
-This project is free and will remain free under the MIT License.
-
 It's both customizable and functional. With up to 8 complications on the screen, each complication can show a variety of data:
 
 - Air Quality
@@ -24,7 +20,7 @@ It's both customizable and functional. With up to 8 complications on the screen,
 - Altitude
 - Temperature (on-device sensor)
 - Temperature (Garmin weather)
-- Temperature (outside, OpenWaather)
+- Temperature (outside, OpenWeather)
 - Temperature (high/low, OpenWeather)
 - Sunrise/Sunset time (OpenWeather)
 - Floor climbed
@@ -71,11 +67,23 @@ Not all complications are supported for all devices, or there is no data to disp
 
 Currently, this watch face only supports English (or Latin characters).
 
-## How do I get an OpenWeather API?
+## How do I get an OpenWeather API key?
 
 Go to https://openweathermap.org/, create an account, and log in. Once logged in, click on your account name in the upper right corner, then click on "My API keys". If you do not have any keys, click "Generate" and copy the newly generated key to the Infocal Custom settings.
 
-# Credits (from original Infocal project)
+# Credits
 
-- Special thanks to **[warmsound](https://github.com/warmsound)** for awesome [Crystal Watchface](https://github.com/warmsound/crystal-face). Without Crystal, I'm not able to add some features (suntime, sensor history, weather...) to this watchface.
-- Special thanks to **[sunpazed](https://github.com/sunpazed)** for his awesome GitHub projects. I learned a lot from him for anti-aliasing and get inspired to create curved text, which makes Infocal today.
+- ⭐️ Weather data provided by OpenWeather https://openweathermap.org/
+
+- ⭐️ Air Quality data provided by IQAir https://www.iqair.com/ca/world-air-quality
+
+I am not affiliated with either company - but I do think they're pretty awesome providing world-wide, accurate Weather and Air Quality data free of charge - and I think you will too :)
+
+- ⭐️ This project was forked from [Infocal](https://github.com/RyanDam/Infocal), and would not exist if not for the work RyanDam put into that project.
+
+- ⭐️ Special thanks to **[warmsound](https://github.com/warmsound)** for awesome [Crystal Watchface](https://github.com/warmsound/crystal-face).
+
+- ⭐️ Special thanks to **[sunpazed](https://github.com/sunpazed)** for his awesome GitHub projects.
+
+This project is free and will remain free under the MIT License.
+
