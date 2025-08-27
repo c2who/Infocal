@@ -9,21 +9,21 @@ class DigitalDial extends Ui.Drawable {
    ////////////////////////
    /// common variables ///
    ////////////////////////
-   hidden var digitalFont, xdigitalFont;
-   hidden var midDigitalFont;
-   hidden var midBoldFont;
-   hidden var midSemiFont;
-   hidden var xmidBoldFont;
-   hidden var xmidSemiFont;
-   hidden var barRadius;
+   private var digitalFont, xdigitalFont;
+   private var midDigitalFont;
+   private var midBoldFont;
+   private var midSemiFont;
+   private var xmidBoldFont;
+   private var xmidSemiFont;
+   private var barRadius;
 
    ///////////////////////////////
    /// non-antialias variables ///
    ///////////////////////////////
 
-   hidden var alignment;
+   private var alignment;
 
-   hidden var bonusy_smallsize;
+   private var bonusy_smallsize;
 
    function initialize(params) {
       Drawable.initialize(params);

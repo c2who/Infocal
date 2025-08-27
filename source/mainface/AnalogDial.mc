@@ -12,26 +12,26 @@ import Toybox.WatchUi;
 class AnalogDial extends Drawable {
    private var _secondHandEnabled = false;
 
-   hidden var hour_font_1,
+   private var hour_font_1,
       hour_font_2,
       hour_font_3,
       hour_font_4,
       hour_font_5,
       hour_font_6;
-   hidden var minu_font_1,
+   private var minu_font_1,
       minu_font_2,
       minu_font_3,
       minu_font_4,
       minu_font_5,
       minu_font_6;
-   hidden var hour_1, hour_2, hour_3, hour_4, hour_5, hour_6;
-   hidden var minu_1, minu_2, minu_3, minu_4, minu_5, minu_6;
+   private var hour_1, hour_2, hour_3, hour_4, hour_5, hour_6;
+   private var minu_1, minu_2, minu_3, minu_4, minu_5, minu_6;
 
    var offset_x = 0;
    var offset_y = 0;
    var offset_rad = 0;
 
-   hidden var factor = 1;
+   private var factor = 1;
 
    function initialize(params) {
       Drawable.initialize(params);
