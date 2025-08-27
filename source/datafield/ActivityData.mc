@@ -1,6 +1,7 @@
-using Toybox.Application as App;
-using Toybox.System as Sys;
+using Toybox.System;
 using Toybox.Time.Gregorian as Date;
+
+import Toybox.Application;
 
 /* ACTIVE MINUTES */
 class ActiveField extends BaseDataField {
@@ -112,8 +113,8 @@ class DistanceField extends BaseDataField {
    }
 
    function cur_label(value) {
-      var need_minimal = App.getApp().getProperty("minimal_data");
-      var settings = Sys.getDeviceSettings();
+      var need_minimal = Properties.getValue("minimal_data");
+      var settings = System.getDeviceSettings();
 
       var value2 = value;
       var kilo = value2 / 100000;
@@ -160,7 +161,7 @@ class CaloField extends BaseDataField {
 
    function cur_label(value) {
       var activeCalories = active_calories(value);
-      var need_minimal = App.getApp().getProperty("minimal_data");
+      var need_minimal = Properties.getValue("minimal_data");
       if (need_minimal) {
          return Lang.format("$1$-$2$", [
             value.format("%d"),
@@ -253,7 +254,7 @@ class StepField extends BaseDataField {
    }
 
    function cur_label(value) {
-      var need_minimal = App.getApp().getProperty("minimal_data");
+      var need_minimal = Properties.getValue("minimal_data");
       var currentStep = value;
       if (need_minimal) {
          if (currentStep > 999) {
@@ -274,19 +275,9 @@ class StepField extends BaseDataField {
 
 /* DISTANCE FOR WEEK */
 class WeekDistanceField extends BaseDataField {
-   var days;
 
    function initialize(id) {
       BaseDataField.initialize(id);
-      days = {
-         Date.DAY_MONDAY => "MON",
-         Date.DAY_TUESDAY => "TUE",
-         Date.DAY_WEDNESDAY => "WED",
-         Date.DAY_THURSDAY => "THU",
-         Date.DAY_FRIDAY => "FRI",
-         Date.DAY_SATURDAY => "SAT",
-         Date.DAY_SUNDAY => "SUN",
-      };
    }
 
    function min_val() {
@@ -307,8 +298,8 @@ class WeekDistanceField extends BaseDataField {
       var datas = _retriveWeekValues();
       var total_distance = datas[0];
 
-      var need_minimal = App.getApp().getProperty("minimal_data");
-      var settings = Sys.getDeviceSettings();
+      var need_minimal = Properties.getValue("minimal_data");
+      var settings = System.getDeviceSettings();
 
       var value2 = total_distance;
       var kilo = value2 / 100000;

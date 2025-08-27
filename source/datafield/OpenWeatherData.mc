@@ -12,8 +12,8 @@ class TemparatureHLField extends BaseDataField {
 
    function cur_label(value) {
       // WEATHER
-      var need_minimal = App.getApp().getProperty("minimal_data");
-      var weather_data = App.getApp().getProperty("Weather") as Dictionary<String, PropertyValueType>;
+      var need_minimal = Properties.getValue("minimal_data");
+      var weather_data = Storage.getValue("Weather") as Dictionary<String, PropertyValueType>;
       if (weather_data != null) {
          var settings = System.getDeviceSettings();
          var temp_min = weather_data["temp_min"];
@@ -53,8 +53,8 @@ class TemparatureOutField extends BaseDataField {
 
    function cur_label(value) {
       // WEATHER
-      var need_minimal = App.getApp().getProperty("minimal_data");
-      var weather_data = App.getApp().getProperty("Weather") as Dictionary<String, PropertyValueType>;
+      var need_minimal = Properties.getValue("minimal_data");
+      var weather_data = Storage.getValue("Weather") as Dictionary<String, PropertyValueType>;
       if (weather_data != null) {
          var settings = System.getDeviceSettings();
          var temp = weather_data["temp"];
@@ -111,7 +111,7 @@ class WeatherField extends BaseDataField {
    }
 
    function cur_icon() {
-      var weather_data = App.getApp().getProperty("Weather") as Dictionary<String, PropertyValueType>;
+      var weather_data = Storage.getValue("Weather") as Dictionary<String, PropertyValueType>;
       if (weather_data != null) {
          return weather_icon_mapper[weather_data["icon"]];
       }
@@ -120,8 +120,8 @@ class WeatherField extends BaseDataField {
 
    function cur_label(value) {
       // WEATHER
-      //var need_minimal = App.getApp().getProperty("minimal_data");
-      var weather_data = App.getApp().getProperty("Weather") as Dictionary<String, PropertyValueType>;
+      //var need_minimal = Properties.getValue("minimal_data");
+      var weather_data = Storage.getValue("Weather") as Dictionary<String, PropertyValueType>;
       if (weather_data != null) {
          var settings = System.getDeviceSettings();
          var temp = weather_data["temp"];
@@ -173,8 +173,8 @@ class WindField extends BaseDataField {
    }
 
    function cur_label(value) {
-      //var need_minimal = App.getApp().getProperty("minimal_data");
-      var weather_data = App.getApp().getProperty("Weather") as Dictionary<String, PropertyValueType>;
+      //var need_minimal = Properties.getValue("minimal_data");
+      var weather_data = Storage.getValue("Weather") as Dictionary<String, PropertyValueType>;
       if (weather_data != null) {
          var settings = System.getDeviceSettings();
          var speed = weather_data["wind_speed"] * 3.6; // kph
@@ -192,7 +192,8 @@ class WindField extends BaseDataField {
             unit = "m";
          }
          return directLabel + " " + speed.format("%0.1f") + unit;
+      } else {
+         return "--";
       }
-      return "--";
    }
 }

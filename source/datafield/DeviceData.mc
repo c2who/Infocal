@@ -55,7 +55,7 @@ class BatteryField extends BaseDataField {
    }
 
    function cur_label(value) {
-      var battery_format = Application.getApp().getProperty("battery_format");
+      var battery_format = Properties.getValue("battery_format");
 
       if (battery_format == 0) {
          // Battery Percent
@@ -317,7 +317,7 @@ class AltitudeField extends BaseDataField {
    }
 
    function cur_label(value) {
-      var need_minimal = Application.getApp().getProperty("minimal_data");
+      var need_minimal = Properties.getValue("minimal_data");
       value = 0;
       // #67 Try to retrieve altitude from current activity, before falling back on elevation history.
       // Note that Activity::Info.altitude is supported by CIQ 1.x, but elevation history only on select CIQ 2.x
@@ -377,7 +377,7 @@ class TemparatureField extends BaseDataField {
    }
 
    function cur_label(value) {
-      var need_minimal = Application.getApp().getProperty("minimal_data");
+      var need_minimal = Properties.getValue("minimal_data");
       value = 0;
       var settings = System.getDeviceSettings();
       if (
@@ -484,7 +484,7 @@ class BarometerField extends BaseDataField {
       } else {
          var hector_pascal = value1 / 100.0;
 
-         var unit = Application.getApp().getProperty("barometer_unit");
+         var unit = Properties.getValue("barometer_unit");
          if (unit == 1) {
             // convert to inHg
             hector_pascal = hector_pascal * 0.0295301;

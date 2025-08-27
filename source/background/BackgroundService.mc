@@ -54,7 +54,7 @@ class BackgroundService extends System.ServiceDelegate {
       }
 
       // Else, Process one pending request
-      var pendingWebRequests = Application.getApp().getProperty("PendingWebRequests") as Dictionary<String, Lang.Any>?;
+      var pendingWebRequests = Storage.getValue("PendingWebRequests") as Dictionary<String, Lang.Any>?;
       if ((pendingWebRequests != null) && (pendingWebRequests.size() > 0)) {
 
          // Use random pending client selection, to avoid starving others

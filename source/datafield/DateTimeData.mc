@@ -1,6 +1,7 @@
-using Toybox.Application as App;
-using Toybox.System as Sys;
-using Toybox.Time.Gregorian as Date;
+using Toybox.System;
+using Toybox.Time.Gregorian;
+
+import Toybox.Application;
 
 /* AM/PM INDICATOR */
 class AMPMField extends BaseDataField {
@@ -9,7 +10,7 @@ class AMPMField extends BaseDataField {
    }
 
    function cur_label(value) {
-      var clockTime = Sys.getClockTime();
+      var clockTime = System.getClockTime();
       var hour = clockTime.hour;
       if (hour >= 12) {
          return "pm";
@@ -31,7 +32,7 @@ class TimeField extends BaseDataField {
 
    function getTimeString() {
       var currentSettings = System.getDeviceSettings();
-      var clockTime = Sys.getClockTime();
+      var clockTime = System.getClockTime();
       var hour = clockTime.hour;
       var minute = clockTime.min;
       var mark = "";
@@ -116,7 +117,7 @@ class WeekCountField extends BaseDataField {
    }
 
    function cur_label(value) {
-      var date = Date.info(Time.now(), Time.FORMAT_SHORT);
+      var date = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
       var week_num = iso_week_number(date.year, date.month, date.day);
       return Lang.format("WEEK $1$", [week_num]);
    }
@@ -130,7 +131,7 @@ class CountdownField extends BaseDataField {
 
    function cur_label(value) {
       var set_end_date = new Time.Moment(
-         App.getApp().getProperty("countdown_date")
+         Properties.getValue("countdown_date")
       );
       var now_d = new Time.Moment(Time.today().value());
       var dif_e_n = -now_d.compare(set_end_date) / 86400;
@@ -150,17 +151,17 @@ class TimeSecondaryField extends BaseDataField {
 
    function cur_label(value) {
       var currentSettings = System.getDeviceSettings();
-      var clockTime = Sys.getClockTime();
+      var clockTime = System.getClockTime();
       var to_utc_second = clockTime.timeZoneOffset;
 
-      var target = App.getApp().getProperty("utc_timezone");
-      var shift_val = App.getApp().getProperty("utc_shift") ? 0.5 : 0.0;
+      var target = Properties.getValue("utc_timezone");
+      var shift_val = Properties.getValue("utc_shift") ? 0.5 : 0.0;
       var secondary_zone_delta = (target + shift_val) * 3600 - to_utc_second;
 
       var now = Time.now();
       var now_target_zone_delta = new Time.Duration(secondary_zone_delta.toNumber());
       var now_target_zone = now.add(now_target_zone_delta);
-      var target_zone = Date.info(now_target_zone, Time.FORMAT_SHORT);
+      var target_zone = Gregorian.info(now_target_zone, Time.FORMAT_SHORT);
 
       var hour = target_zone.hour;
       var minute = target_zone.min;

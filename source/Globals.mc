@@ -1,9 +1,9 @@
-using Toybox.Application;
 using Toybox.Math;
 using Toybox.System;
 using Toybox.Time;
 using Toybox.Time.Gregorian;
 
+import Toybox.Application;
 import Toybox.Lang;
 
 //! Encapsulate (foreground) globals
@@ -15,7 +15,7 @@ public class Globals {
     static function getFormattedDate() as String {
       var now = Time.now();
       var date = Gregorian.info(now, Time.FORMAT_SHORT);
-      var date_formatter = Application.getApp().getProperty("date_format");
+      var date_formatter = Properties.getValue("date_format");
 
       var DAYS_OF_THE_WEEK = [
          "SUN",
@@ -44,7 +44,7 @@ public class Globals {
 
       if (date_formatter == 0) {
          // ddd d
-         if (Application.getApp().getProperty("force_date_english")) {
+         if (Properties.getValue("force_date_english")) {
             return Lang.format("$1$ $2$", [
                DAYS_OF_THE_WEEK[date.day_of_week-1],
                date.day.format("%d"),
@@ -93,7 +93,7 @@ public class Globals {
          // dd mmm
          var day = null;
          var month = null;
-         if (Application.getApp().getProperty("force_date_english")) {
+         if (Properties.getValue("force_date_english")) {
             day = date.day;
             month = MONTHS_OF_THE_YEAR[date.month-1];
          } else {

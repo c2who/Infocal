@@ -1,6 +1,7 @@
-using Toybox.Application as App;
 using Toybox.System;
 using Toybox.Weather;
+
+import Toybox.Application;
 
 //! TEMPERATURE GARMIN
 //! @since API Level 3.2.0
@@ -41,7 +42,7 @@ class TemperatureHLGarminField extends BaseDataField {
 
    function cur_label(value) {
       if (Toybox has :Weather) {
-         var need_minimal = App.getApp().getProperty("minimal_data");
+         var need_minimal = Properties.getValue("minimal_data");
          var garmin_weather = Weather.getCurrentConditions();
          if (garmin_weather != null) {
             var settings = System.getDeviceSettings();

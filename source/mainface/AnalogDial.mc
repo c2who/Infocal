@@ -1,8 +1,8 @@
 using Toybox.Math;
 using Toybox.Graphics;
-using Toybox.Application;
 using Toybox.Time.Gregorian as Date;
 
+import Toybox.Application;
 import Toybox.Graphics;
 import Toybox.Lang;
 import Toybox.System;
@@ -46,7 +46,7 @@ class AnalogDial extends Drawable {
    //! This method assumes that the device context has already been configured to the proper options.
    //! Derived classes should check the isVisible property, if it exists, before trying to draw.
    public function draw(dc as Dc) {
-      if (Application.getApp().getProperty("use_analog") == false) {
+      if (Properties.getValue("use_analog") == false) {
          return;
       }
 
@@ -58,7 +58,7 @@ class AnalogDial extends Drawable {
 
       // Draw seconds hand if enabled, and not in power save mode
       if (  (_secondHandEnabled)
-         && (Application.getApp().getProperty("power_save_mode") == false)) {
+         && (Properties.getValue("power_save_mode") == false)) {
 
          dc.setColor(gsecondary_color, Graphics.COLOR_TRANSPARENT);
          drawSecondHand(dc, clockTime);

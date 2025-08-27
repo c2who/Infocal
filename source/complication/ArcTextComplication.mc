@@ -2,8 +2,8 @@ using Toybox.WatchUi as Ui;
 using Toybox.Math;
 using Toybox.Graphics;
 using Toybox.System;
-using Toybox.Application;
 
+import Toybox.Application;
 import Toybox.Lang;
 
 class ArcTextComplication extends Ui.Drawable {
@@ -49,7 +49,7 @@ class ArcTextComplication extends Ui.Drawable {
    }
 
    function getSettingDataKey() {
-      return Application.getApp().getProperty("comp" + angle + "h");
+      return Properties.getValue("comp" + angle + "h");
    }
 
    function get_text() {
@@ -59,19 +59,19 @@ class ArcTextComplication extends Ui.Drawable {
    }
 
    function need_draw() {
-      var digital_style = Application.getApp().getProperty("digital_style");
+      var digital_style = Properties.getValue("digital_style");
       if (digital_style == 1 || digital_style == 3) {
          // small digital
          return dt_field.need_draw();
       }
-      if (Application.getApp().getProperty("left_digital_info")) {
+      if (Properties.getValue("left_digital_info")) {
          var can_draw = !(
-            angle == 10 && !Application.getApp().getProperty("use_analog")
+            angle == 10 && !Properties.getValue("use_analog")
          );
          return dt_field.need_draw() && can_draw;
       } else {
          var can_draw = !(
-            angle == 2 && !Application.getApp().getProperty("use_analog")
+            angle == 2 && !Properties.getValue("use_analog")
          );
          return dt_field.need_draw() && can_draw;
       }

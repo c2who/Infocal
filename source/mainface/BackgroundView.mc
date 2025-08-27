@@ -1,6 +1,5 @@
-using Toybox.Application;
-using Toybox.Graphics;
-
+import Toybox.Application;
+import Toybox.Graphics;
 import Toybox.Lang;
 
 
@@ -28,11 +27,11 @@ class BackgroundView {
          );
       }
 
-      var ticks_style = Application.getApp().getProperty("ticks_style");
-      var use_analog = Application.getApp().getProperty("use_analog");
-      var digital_style = Application.getApp().getProperty("digital_style");
+      var ticks_style = Properties.getValue("ticks_style");
+      var use_analog = Properties.getValue("use_analog");
+      var digital_style = Properties.getValue("digital_style");
       var left_digital_info =
-         Application.getApp().getProperty("left_digital_info");
+         Properties.getValue("left_digital_info");
 
       if (ticks_style == 0) {
          return;

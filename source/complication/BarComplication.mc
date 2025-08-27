@@ -1,8 +1,8 @@
 using Toybox.WatchUi as Ui;
 using Toybox.Math;
 using Toybox.System;
-using Toybox.Application;
 
+import Toybox.Application;
 import Toybox.Graphics;
 
 class BarComplication extends Ui.Drawable {
@@ -111,10 +111,10 @@ class BarComplication extends Ui.Drawable {
    function getSettingDataKey() {
       if (position == 0) {
          // upper
-         return Application.getApp().getProperty("compbart");
+         return Properties.getValue("compbart");
       } else {
          // lower
-         return Application.getApp().getProperty("compbarb");
+         return Properties.getValue("compbarb");
       }
    }
 

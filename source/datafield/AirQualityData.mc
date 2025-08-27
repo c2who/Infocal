@@ -13,7 +13,7 @@ class AirQualityField extends BaseDataField {
    }
 
    function cur_label(value) {
-      var data = Application.getApp().getProperty(IQAirClient.DATA_TYPE) as Dictionary<String, PropertyValueType>;
+      var data = Storage.getValue(IQAirClient.DATA_TYPE) as Dictionary<String, PropertyValueType>;
 
       // Check if data is Invalid, or too old (> 360 minutes (6 hours))
       if (  (data == null)
@@ -21,7 +21,7 @@ class AirQualityField extends BaseDataField {
          || (data["clientTs"] < (Time.now().value() - (360 * Gregorian.SECONDS_PER_MINUTE)))) {
 
          // Display error(if any) or no-computed-data
-         var error = Application.getApp().getProperty(IQAirClient.DATA_TYPE + Globals.DATA_TYPE_ERROR_SUFFIX) as Dictionary<String, PropertyValueType>;
+         var error = Storage.getValue(IQAirClient.DATA_TYPE + Globals.DATA_TYPE_ERROR_SUFFIX) as Dictionary<String, PropertyValueType>;
          if (error != null) {
             var responseCode = error.get("code") as Number;
             return BaseClientHelper.getCommunicationsErrorCodeText(responseCode);

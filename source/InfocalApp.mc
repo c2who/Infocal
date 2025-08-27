@@ -93,12 +93,12 @@ class InfocalApp extends AppBase {
       if (type != null) {
          // New data received: clear pendingWebRequests flag for the received data type
          // Save list of any remaining background requests
-         var pendingWebRequests = getProperty("PendingWebRequests") as Dictionary<String, PropertyValueType>?;
+         var pendingWebRequests = Storage.getValue("PendingWebRequests") as Dictionary<String, PropertyValueType>?;
          if (pendingWebRequests == null) {
             pendingWebRequests = {};
          }
          pendingWebRequests.remove(type);
-         setProperty("PendingWebRequests", pendingWebRequests);
+         Storage.setValue("PendingWebRequests", pendingWebRequests);
 
          BaseClientHelper.storeData(data);
       }

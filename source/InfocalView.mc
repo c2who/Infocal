@@ -1,5 +1,4 @@
-using Toybox.Application as App;
-
+import Toybox.Application;
 import Toybox.Graphics;
 import Toybox.Lang;
 import Toybox.System;
@@ -160,7 +159,7 @@ class InfocalView extends WatchUi.WatchFace {
       //       - do not need to perform full redraw on every update as screen is not cleared
       //       - you just need to do full redraw on: onLayout, onShow and onExitSleep
       //         (and for this app minute_changed to print a new hh:mm time)
-      var power_save_mode = Application.getApp().getProperty("power_save_mode");
+      var power_save_mode = Properties.getValue("power_save_mode");
       if ((power_save_mode == false) || _settings_changed || restore_from_resume || restore_from_sleep || minute_changed) {
          // Clear screen clip region (may be set after onPartialUpdate/onPowerBudgetExceeded on some devices)
          screenDc.clearClip();
@@ -204,12 +203,12 @@ class InfocalView extends WatchUi.WatchFace {
    public function onPartialUpdate(dc as Dc) as Void {
 
       // FIXME: Support seconds on Analog by painting circular mask in centre of dial
-      if (Application.getApp().getProperty("use_analog")) {
+      if (Properties.getValue("use_analog")) {
          // not supported
          return;
       }
 
-      if ((always_on_digi_font != null) && (Application.getApp().getProperty("always_on_second"))) {
+      if ((always_on_digi_font != null) && (Properties.getValue("always_on_second"))) {
          var clockTime = System.getClockTime();
          var second_text = clockTime.sec.format("%02d");
 
@@ -231,7 +230,7 @@ class InfocalView extends WatchUi.WatchFace {
          );
       }
 
-      if ((always_on_digi_font != null) && (Application.getApp().getProperty("always_on_heart"))) {
+      if ((always_on_digi_font != null) && (Properties.getValue("always_on_heart"))) {
          var width = second_clip_size[0];
          dc.setClip(
             heart_x - width - 1,
@@ -284,7 +283,7 @@ class InfocalView extends WatchUi.WatchFace {
       _isAwake = false;
 
       // If the analog dial is used then disable the seconds hand.
-      if (Application.getApp().getProperty("use_analog")) {
+      if (Properties.getValue("use_analog")) {
          var dialDisplay = View.findDrawableById("analog") as AnalogDial;
          if (dialDisplay != null) {
             dialDisplay.disableSecondHand();
@@ -300,7 +299,7 @@ class InfocalView extends WatchUi.WatchFace {
    //!       operations that have previously caused an application crash!
    //!       (out-of-memory errors are fatal so cannot be handled)
    function setupScreenBuffer(dc) as Void {
-      var enable_buffering = Application.getApp().getProperty("enable_buffering");
+      var enable_buffering = Properties.getValue("enable_buffering");
       var err_runtime_oom = Application.Storage.getValue("err_runtime_oom");
       var stats = System.getSystemStats();
       var free_mem = stats.freeMemory;
@@ -393,7 +392,7 @@ class InfocalView extends WatchUi.WatchFace {
       bgraph2.draw(dc);
 
       // XXX: Set/Use View.isVisible instead
-      if (Application.getApp().getProperty("use_analog")) {
+      if (Properties.getValue("use_analog")) {
          View.findDrawableById("analog").draw(dc);
       } else {
          View.findDrawableById("digital").draw(dc);
@@ -401,28 +400,28 @@ class InfocalView extends WatchUi.WatchFace {
    }
 
    function updateColorsInUse() {
-      var theme_code = Application.getApp().getProperty("theme_code");
+      var theme_code = Properties.getValue("theme_code");
       if (gtheme != theme_code || theme_code == 18) {
          if (theme_code == 18) {
             var background_color =
-               Application.getApp().getProperty("background_color");
+               Properties.getValue("background_color");
             var text_color =
-               Application.getApp().getProperty("text_color");
+               Properties.getValue("text_color");
             var accent_color =
-               Application.getApp().getProperty("accent_color");
+               Properties.getValue("accent_color");
             var ticks_color =
-               Application.getApp().getProperty("ticks_color");
+               Properties.getValue("ticks_color");
             var bar_background_color =
-               Application.getApp().getProperty(
+               Properties.getValue(
                   "bar_background_color"
                );
             var bar_indicator_color =
-               Application.getApp().getProperty("bar_indicator_color");
-            var bar_graph_color_top = Application.getApp().getProperty(
+               Properties.getValue("bar_indicator_color");
+            var bar_graph_color_top = Properties.getValue(
                "bar_graph_color_top"
             );
             var bar_graph_color_bottom =
-               Application.getApp().getProperty(
+               Properties.getValue(
                   "bar_graph_color_bottom"
                );
             if (
@@ -480,9 +479,9 @@ class InfocalView extends WatchUi.WatchFace {
    }
 
    function loadAlwaysOnFonts(dc as Graphics.Dc) {
-      var always_on_second = Application.getApp().getProperty("always_on_second") as Lang.Boolean;
-      var always_on_heart = Application.getApp().getProperty("always_on_heart") as Lang.Boolean;
-      var always_on_style = Application.getApp().getProperty("always_on_style") as Lang.Number;
+      var always_on_second = Properties.getValue("always_on_second") as Lang.Boolean;
+      var always_on_heart = Properties.getValue("always_on_heart") as Lang.Boolean;
+      var always_on_style = Properties.getValue("always_on_style") as Lang.Number;
 
       if (always_on_second || always_on_heart) {
          // Loads always on (seconds/hr) Font
@@ -506,7 +505,7 @@ class InfocalView extends WatchUi.WatchFace {
          second_font_height_half = height/2;
          second_clip_size = [width, height];
 
-         if (Application.getApp().getProperty("use_analog")) {
+         if (Properties.getValue("use_analog")) {
             // Analog Watchface
             second_x = center_x;
             second_y = center_y - second_font_height_half * 2;
@@ -539,7 +538,7 @@ class InfocalView extends WatchUi.WatchFace {
       // Update background communication (web) clients
       // - watch must support background service (service delegate)
       // - watch must be connected to phone
-      // @note "pendingWebRequests" are stored as Dictionary keys to prevent duplicate-entries
+      // @note `pendingWebRequests` are stored as Dictionary keys to prevent duplicate-entries
       //       that may be introduced due to multi-threaded nature of updates to pendingWebRequests
       if ((_hasServiceDelegate) && (settings.phoneConnected)) {
          var pendingWebRequests = {};
@@ -561,7 +560,7 @@ class InfocalView extends WatchUi.WatchFace {
             }
          }
 
-         Application.getApp().setProperty("PendingWebRequests", pendingWebRequests);
+         Storage.setValue("PendingWebRequests", pendingWebRequests);
 
          // If there are any pending data requests (and phone is connected)
          if (pendingWebRequests.keys().size() > 0) {
@@ -580,24 +579,24 @@ class InfocalView extends WatchUi.WatchFace {
    }
 
    function getArcComplicationSettingFieldId(angle) {
-      return Application.getApp().getProperty("comp" + angle + "h");
+      return Properties.getValue("comp" + angle + "h");
    }
 
    function getBarDataComplicationSettingFieldId(position) {
       if (position == 0) {
          // upper
-         return Application.getApp().getProperty("compbart");
+         return Properties.getValue("compbart");
       } else {
          // lower
-         return Application.getApp().getProperty("compbarb");
+         return Properties.getValue("compbarb");
       }
    }
 
    function getGraphComplicationFieldId(position) {
       if (position == 0) {
-         return Application.getApp().getProperty("compgrapht");
+         return Properties.getValue("compgrapht");
       } else {
-         return Application.getApp().getProperty("compgraphb");
+         return Properties.getValue("compgraphb");
       }
    }
 
@@ -630,6 +629,9 @@ class InfocalView extends WatchUi.WatchFace {
       return false;
    }
 
+   //! Update last (known) location.
+   //! Persists location for later use (e.g. after app restart)
+   //! @note 2025.08.18 data moved from app Property to Storage class
    function updateLastLocation() as Void {
       // Attempt to update current location, to be used by Sunrise/Sunset, Weather, Air Quality.
       // If current location available from current activity, save it in case it goes "stale" and can not longer be retrieved.
@@ -640,16 +642,14 @@ class InfocalView extends WatchUi.WatchFace {
          gLocationLat = degrees[0].toFloat();
          gLocationLon = degrees[1].toFloat();
 
-         Application.getApp().setProperty("LastLocationLat", gLocationLat);
-         Application.getApp().setProperty("LastLocationLon", gLocationLon);
+         Storage.setValue("LastLocation", [gLocationLat, gLocationLon] );
       } else {
          // current location is not available, read stored value from Object Store, being careful not to overwrite a valid
          // in-memory value with an invalid stored one.
-         var lat = Application.getApp().getProperty("LastLocationLat");
-         var lon = Application.getApp().getProperty("LastLocationLon");
-         if ((lat != null) && (lon != null)) {
-            gLocationLat = lat;
-            gLocationLon = lon;
+         var storedLocation = Storage.getValue("LastLocation");
+         if ((storedLocation != null)) {
+            gLocationLat = storedLocation[0];
+            gLocationLon = storedLocation[1];
          }
       }
    }

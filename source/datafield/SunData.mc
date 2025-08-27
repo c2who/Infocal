@@ -1,6 +1,7 @@
-using Toybox.Application as App;
-using Toybox.System as Sys;
-using Toybox.Time.Gregorian as Date;
+import Toybox.Application;
+
+using Toybox.System;
+using Toybox.Time.Gregorian;
 
 /* SUNRISE/SUNSET */
 class SunField extends BaseDataField {
@@ -13,7 +14,7 @@ class SunField extends BaseDataField {
          value = "";
          var nextSunEvent = 0;
          var isSunriseNext = false;
-         var now = Date.info(Time.now(), Time.FORMAT_SHORT);
+         var now = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
 
          // Convert to same format as sunTimes, for easier comparison. Add a minute, so that e.g. if sun rises at
          // 07:38:17, then 07:38 is already consided daytime (seconds not shown to user).
@@ -61,7 +62,7 @@ class SunField extends BaseDataField {
             return "SUN --";
             // We have a sunrise/sunset time.
          } else {
-            var need_minimal = App.getApp().getProperty("minimal_data");
+            var need_minimal = Properties.getValue("minimal_data");
             var hour = Math.floor(nextSunEvent).toLong() % 24;
             var min = Math.floor(
                (nextSunEvent - Math.floor(nextSunEvent)) * 60
@@ -110,7 +111,7 @@ class SunField extends BaseDataField {
       if (tomorrow) {
          now = now.add(new Time.Duration(24 * 60 * 60));
       }
-      var d = Date.info(Time.now(), Time.FORMAT_SHORT);
+      var d = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
       var rad = Math.PI / 180.0d;
       var deg = 180.0d / Math.PI;
 
@@ -185,7 +186,7 @@ class SunField extends BaseDataField {
       var deltaJSet = jSet - jDate;
       var deltaJRise = jRise - jDate;
 
-      var tzOffset = tz == null ? Sys.getClockTime().timeZoneOffset / 3600 : tz;
+      var tzOffset = tz == null ? System.getClockTime().timeZoneOffset / 3600 : tz;
       return [
          /* localRise */ deltaJRise * 24 + tzOffset,
          /* localSet */ deltaJSet * 24 + tzOffset,
@@ -198,7 +199,7 @@ class SunField extends BaseDataField {
    function getFormattedTime(hour, min) {
       var amPm = "";
 
-      if (!Sys.getDeviceSettings().is24Hour) {
+      if (!System.getDeviceSettings().is24Hour) {
          // #6 Ensure noon is shown as PM.
          var isPm = hour >= 12;
          if (isPm) {

@@ -57,10 +57,9 @@ class BaseClientHelper {
     public static function calcNeedsDataUpdate(type as String, update_interval_secs as Number) as Boolean {
         // Check data valid and recent (within last 30 minutes)
         // Note: We use clientTs as we do not *know* how often weather data is updated (typically hourly)
-        var app = Application.getApp();
-        var data = app.getProperty(type) as Dictionary<String, Number>;
-        var error = app.getProperty(type + Globals.DATA_TYPE_ERROR_SUFFIX);
-        var retries = app.getProperty(type + Globals.DATA_TYPE_RETRIES_SUFFIX);
+        var data = Storage.getValue(type) as Dictionary<String, Number>;
+        var error = Storage.getValue(type + Globals.DATA_TYPE_ERROR_SUFFIX);
+        var retries = Storage.getValue(type + Globals.DATA_TYPE_RETRIES_SUFFIX);
 
         // Find the last data response time (valid or error)
         var lastTime = (data != null) ? data["clientTs"] : (error != null) ? error["clientTs"] : null;
@@ -86,24 +85,22 @@ class BaseClientHelper {
 
     //! Persist (store) the data received from a client
     public static function storeData(data as Dictionary<String, Number>) as Void {
-        var app = Application.getApp();
-
         var responseCdoe = data["code"];
         var type = data["type"];
         data.put("clientTs", Time.now().value());
 
         if (responseCdoe == 200) {
             // Valid data
-            app.setProperty(type, data);
-            app.setProperty(type + Globals.DATA_TYPE_ERROR_SUFFIX, null);
-            app.setProperty(type + Globals.DATA_TYPE_RETRIES_SUFFIX, null);
+            Storage.setValue(type, data);
+            Storage.deleteValue(type + Globals.DATA_TYPE_ERROR_SUFFIX);
+            Storage.deleteValue(type + Globals.DATA_TYPE_RETRIES_SUFFIX);
         } else {
             // return error to the caller, and update retries count
-            var retries = app.getProperty(type + Globals.DATA_TYPE_RETRIES_SUFFIX);
+            var retries = Storage.getValue(type + Globals.DATA_TYPE_RETRIES_SUFFIX);
             retries = (retries == null) ? 1 : (retries+1);
 
-            app.setProperty(type + Globals.DATA_TYPE_ERROR_SUFFIX, data);
-            app.setProperty(type + Globals.DATA_TYPE_RETRIES_SUFFIX, retries);
+            Storage.setValue(type + Globals.DATA_TYPE_ERROR_SUFFIX, data);
+            Storage.setValue(type + Globals.DATA_TYPE_RETRIES_SUFFIX, retries);
         }
     }
 

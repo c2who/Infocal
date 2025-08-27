@@ -1,14 +1,12 @@
-using Toybox.WatchUi as Ui;
+using Toybox.WatchUi;
 using Toybox.Math;
 using Toybox.Graphics;
+using Toybox.SensorHistory;
 using Toybox.System;
-using Toybox.Application;
 
-using Toybox.Activity as Activity;
-using Toybox.ActivityMonitor as ActivityMonitor;
-using Toybox.SensorHistory as SensorHistory;
+import Toybox.Application;
 
-class GraphComplication extends Ui.Drawable {
+class GraphComplication extends WatchUi.Drawable {
    hidden var position;
    hidden var position_x, position_y;
    hidden var graph_width, graph_height;
@@ -34,9 +32,9 @@ class GraphComplication extends Ui.Drawable {
 
    function get_data_type() {
       if (position == 0) {
-         return Application.getApp().getProperty("compgrapht");
+         return Properties.getValue("compgrapht");
       } else {
-         return Application.getApp().getProperty("compgraphb");
+         return Properties.getValue("compgraphb");
       }
    }
 

@@ -1,7 +1,7 @@
 using Toybox.Background;
 using Toybox.Communications;
 using Toybox.System;
-using Toybox.Time.Gregorian as Time;
+using Toybox.Time.Gregorian;
 
 import Toybox.Application;
 import Toybox.Lang;
@@ -16,7 +16,6 @@ import Toybox.Lang;
 (:background)
 class OpenWeatherClient extends BaseClient {
     public static const DATA_TYPE = "Weather";
-    private const CLIENT_NAME = "OWM";
 
     //! Uses OpenWeather Current Weather API
     //! https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
@@ -27,18 +26,12 @@ class OpenWeatherClient extends BaseClient {
     function requestData(callback as Method(type as String, responseCode as Number, data as Dictionary<String, PropertyValueType>) as Void) as Void {
         BaseClient.requestData(callback);
 
-        var app = Application.getApp();
-        var api_key = app.getProperty("openweather_api");
-        var lat = app.getProperty("LastLocationLat");
-        var lon = app.getProperty("LastLocationLon");
-
-        if ((api_key == null) || (api_key.length() == 0)) {
-            api_key = app.getProperty("owm_api_2");;
-        }
+        var api_key = Storage.getValue("owm_api_key");
+        var location = Storage.getValue("LastLocation");
 
         var params = {
-            "lat" => lat,
-            "lon" => lon,
+            "lat" => (location != null) ? location[0] : null,
+            "lon" => (location != null) ? location[1] : null,
             "appid" => api_key,
             "units" => "metric", // Celsius.
         };
@@ -70,8 +63,6 @@ class OpenWeatherClient extends BaseClient {
             result = {
                 "type" =>     DATA_TYPE,
                 "code" =>     responseCode,
-                //"client" =>   CLIENT_NAME,
-                //"clientTs" => Time.now().value(),
                 //"lat" => data["coord"]["lat"],
                 //"lon" => data["coord"]["lon"],
                 //"dt" => data["dt"],
@@ -89,8 +80,6 @@ class OpenWeatherClient extends BaseClient {
             result = {
                 "type" =>     DATA_TYPE,
                 "code" =>     responseCode.toNumber(),
-                //"client" =>   CLIENT_NAME,
-                //"clientTs" => Time.now().value()
             };
         }
 
@@ -108,18 +97,22 @@ public class OpenWeatherClientHelper {
 
     public static function needsDataUpdate() as Boolean {
         // Location must be available
-        var lat = Application.getApp().getProperty("LastLocationLat");
-        var lon = Application.getApp().getProperty("LastLocationLon");
-        if ((lat == null) || (lon == null)) {
+        var location = Storage.getValue("LastLocation");
+        if (location == null) {
             return false;
         }
 
-        // Set the default api key for new users
-        var default_key = Keys.getOpenWeatherDefaultKey();
-        Application.getApp().setProperty("owm_api_2", default_key);
+        var update_interval_secs = 30 * Gregorian.SECONDS_PER_MINUTE;   // 30 minutes
+        var user_key = Properties.getValue("openweather_api");
 
-        // Update rate
-        var update_interval_secs = 30 * Time.SECONDS_PER_MINUTE;   // 30 minutes
+        // Set the api key used by the service client (user key, or default key for new users)
+        if ((user_key != null) && (user_key.length() > 0)) {
+            Storage.setValue("owm_api_key", user_key);
+        } else {
+            // Set the default api key for new users
+            var default_key = Keys.getOpenWeatherDefaultKey();
+            Storage.setValue("owm_api_key", default_key);
+        }
 
         // Check based on default behavior with retries
         return BaseClientHelper.calcNeedsDataUpdate(OpenWeatherClient.DATA_TYPE, update_interval_secs);

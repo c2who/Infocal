@@ -1,9 +1,8 @@
 using Toybox.WatchUi as Ui;
 using Toybox.Math;
 using Toybox.System;
-using Toybox.Application;
-using Toybox.Time.Gregorian as Date;
 
+import Toybox.Application;
 import Toybox.Graphics;
 
 class DigitalDial extends Ui.Drawable {
@@ -49,7 +48,7 @@ class DigitalDial extends Ui.Drawable {
 
    // TODO: Simplify font handling (remove duplicate vars)
    private function loadFonts() {
-      var digital_style = Application.getApp().getProperty("digital_style");
+      var digital_style = Properties.getValue("digital_style");
       if (digital_style == 0) {
          // big
          digitalFont = Ui.loadResource(Rez.Fonts.bigdigi);
@@ -77,7 +76,7 @@ class DigitalDial extends Ui.Drawable {
    //! This method assumes that the device context has already been configured to the proper options.
    //! Derived classes should check the isVisible property, if it exists, before trying to draw.
    function draw(dc as Dc) as Void {
-      if (Application.getApp().getProperty("use_analog") == true) {
+      if (Properties.getValue("use_analog") == true) {
          return;
       }
 
@@ -101,15 +100,15 @@ class DigitalDial extends Ui.Drawable {
       }
       var minute = clockTime.min;
 
-      var leading_zeros = Application.getApp().getProperty("zero_leading_digital");
+      var leading_zeros = Properties.getValue("zero_leading_digital");
       var number_formater = leading_zeros ? "%02d" : "%d";
 
-      var digital_style = Application.getApp().getProperty("digital_style");
-      var alwayon_style = Application.getApp().getProperty("always_on_style");
+      var digital_style = Properties.getValue("digital_style");
+      var alwayon_style = Properties.getValue("always_on_style");
 
       if (digital_style == 0 || digital_style == 2) {
          // Big number in center_x style
-         var big_number_type = Application.getApp().getProperty("big_number_type");
+         var big_number_type = Properties.getValue("big_number_type");
          var bignumber = (big_number_type == 0) ? minute : hour;
          var smallnumber = (big_number_type == 0) ? hour : minute;
 
@@ -130,7 +129,7 @@ class DigitalDial extends Ui.Drawable {
          );
 
          // Draw stripes
-         if (Application.getApp().getProperty("big_num_stripes")) {
+         if (Properties.getValue("big_num_stripes")) {
             dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
             var w2 = dc.getTextWidthInPixels("\\", target_center_font);
             dc.drawText(
@@ -179,7 +178,7 @@ class DigitalDial extends Ui.Drawable {
             extra_info_alignment = 4;
          }
          var target_info_x = center_x * 1.6;
-         var left_digital_info = Application.getApp().getProperty("left_digital_info");
+         var left_digital_info = Properties.getValue("left_digital_info");
          if (left_digital_info) {
             target_info_x = center_x * 0.4;
             bonus_alignment = -bonus_alignment;
