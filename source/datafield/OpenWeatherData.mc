@@ -83,11 +83,7 @@ class TemparatureOutField extends BaseDataField {
 
 /* WEATHER */
 class WeatherField extends BaseDataField {
-   var weather_icon_mapper;
-   function initialize(id) {
-      BaseDataField.initialize(id);
-
-      weather_icon_mapper = {
+   private const weather_icon_mapper  = {
          "01d" => "",
          "02d" => "",
          "03d" => "",
@@ -108,20 +104,24 @@ class WeatherField extends BaseDataField {
          "13n" => "",
          "50n" => "",
       } as Dictionary<String, String>;
+
+   function initialize(id) {
+      BaseDataField.initialize(id);
    }
 
    function cur_icon() {
-      var weather_data = Storage.getValue("Weather") as Dictionary<String, PropertyValueType>;
+      var weather_data = Storage.getValue("Weather") as Dictionary<String, PropertyValueType>?;
       if (weather_data != null) {
          return weather_icon_mapper[weather_data["icon"]];
+      } else {
+         return null;
       }
-      return null;
    }
 
    function cur_label(value) {
       // WEATHER
       //var need_minimal = Properties.getValue("minimal_data");
-      var weather_data = Storage.getValue("Weather") as Dictionary<String, PropertyValueType>;
+      var weather_data = Storage.getValue("Weather") as Dictionary<String, PropertyValueType>?;
       if (weather_data != null) {
          var settings = System.getDeviceSettings();
          var temp = weather_data["temp"];
@@ -148,11 +148,7 @@ class WeatherField extends BaseDataField {
 
 /* WIND */
 class WindField extends BaseDataField {
-   var wind_direction_mapper;
-
-   function initialize(id) {
-      BaseDataField.initialize(id);
-      wind_direction_mapper = [
+   private const wind_direction_mapper = [
          "N",
          "NNE",
          "NE",
@@ -169,12 +165,15 @@ class WindField extends BaseDataField {
          "WNW",
          "NW",
          "NNW",
-      ];
+      ] as Array<String>;
+
+   function initialize(id) {
+      BaseDataField.initialize(id);
    }
 
    function cur_label(value) {
       //var need_minimal = Properties.getValue("minimal_data");
-      var weather_data = Storage.getValue("Weather") as Dictionary<String, PropertyValueType>;
+      var weather_data = Storage.getValue("Weather") as Dictionary<String, PropertyValueType>?;
       if (weather_data != null) {
          var settings = System.getDeviceSettings();
          var speed = weather_data["wind_speed"] * 3.6; // kph

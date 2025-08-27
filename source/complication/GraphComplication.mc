@@ -7,10 +7,12 @@ using Toybox.System;
 import Toybox.Application;
 
 class GraphComplication extends WatchUi.Drawable {
-   private var position;
    private var position_x, position_y;
    private var graph_width, graph_height;
-   var settings;
+   private var settings;
+
+   //layout
+   protected var position;
 
    function initialize(params) {
       Drawable.initialize(params);

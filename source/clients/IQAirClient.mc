@@ -22,13 +22,17 @@ class IQAirClient extends BaseClient {
     //! (GPS coordinates) http://api.airvisual.com/v2/nearest_city?lat={{LATITUDE}}&lon={{LONGITUDE}}&key={{YOUR_API_KEY}}
     const API_NEAREST_CITY_URL = "https://api.airvisual.com/v2/nearest_city";
 
+    function initialize() {
+        BaseClient.initialize();
+    }
+
     //! Public entry method to make background request to get data from remote service
     //! @param callback     Consumer callback for returning formatted data
     function requestData(callback as Method(type as String, responseCode as Number, data as Dictionary<String, PropertyValueType>) as Void) as Void {
         BaseClient.requestData(callback);
 
         var api_key = Storage.getValue("iqair_api_key");
-        var location = Storage.getValue("LastLocation");
+        var location = Storage.getValue("LastLocation") as Array<Float>?;
 
         var params = {
             "key" => api_key

@@ -23,17 +23,11 @@ class DigitalDial extends Ui.Drawable {
 
    private var alignment;
 
-   private var bonusy_smallsize;
-
    function initialize(params) {
       Drawable.initialize(params);
+      
       barRadius = center_x - 10;
       alignment = Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER;
-
-      bonusy_smallsize = 0;
-      if (center_x == 195) { // 390x390 screen
-         bonusy_smallsize = -35;
-      }
    }
 
    private function unloadFonts() {

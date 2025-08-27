@@ -24,8 +24,18 @@ class AnalogDial extends Drawable {
       minu_font_4,
       minu_font_5,
       minu_font_6;
-   private var hour_1, hour_2, hour_3, hour_4, hour_5, hour_6;
-   private var minu_1, minu_2, minu_3, minu_4, minu_5, minu_6;
+   private var hour_1 as Array<Array<Number>>?;
+   private var hour_2 as Array<Array<Number>>?;
+   private var hour_3 as Array<Array<Number>>?;
+   private var hour_4 as Array<Array<Number>>?;
+   private var hour_5 as Array<Array<Number>>?;
+   private var hour_6 as Array<Array<Number>>?;
+   private var minu_1 as Array<Array<Number>>?;
+   private var minu_2 as Array<Array<Number>>?;
+   private var minu_3 as Array<Array<Number>>?;
+   private var minu_4 as Array<Array<Number>>?;
+   private var minu_5 as Array<Array<Number>>?;
+   private var minu_6 as Array<Array<Number>>?;
 
    var offset_x = 0;
    var offset_y = 0;
@@ -220,7 +230,7 @@ class AnalogDial extends Drawable {
    //!   the full image from the font characters.
    //! - Each JsonData number represents an image part (tile) with byte encoding:
    //!   [ flags|char|xpos|ypos ]
-   private function drawTiles(packed_array, font, dc, index) {
+   private function drawTiles(packed_array as Array<Number>, font, dc, index) {
       var radian = (index.toFloat() / 60.0) * (2 * 3.1415) - 0.5 * 3.1415;
       var offset_rad_x = Globals.convertCoorX(radian, offset_rad) - center_x;
       var offset_rad_y = Globals.convertCoorY(radian, offset_rad) - center_y;

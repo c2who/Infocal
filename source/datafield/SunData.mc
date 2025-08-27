@@ -1,4 +1,5 @@
 import Toybox.Application;
+import Toybox.Lang;
 
 using Toybox.System;
 using Toybox.Time.Gregorian;
@@ -102,7 +103,7 @@ class SunField extends BaseDataField {
     * @return {Array} Returns array of length 2 with sunrise and sunset as floats.
     *                 Returns array with [null, -1] if the sun never rises, and [-1, null] if the sun never sets.
     */
-   function getSunTimes(lat, lon, tz, tomorrow) {
+   function getSunTimes(lat, lon, tz, tomorrow) as Array<Float?> {
       // Use double precision where possible, as floating point errors can affect result by minutes.
       lat = lat.toDouble();
       lon = lon.toDouble();
@@ -171,12 +172,12 @@ class SunField extends BaseDataField {
 
       // Sun never rises.
       if (cosOmega > 1) {
-         return [null, -1];
+         return [null, -1.0];
       }
 
       // Sun never sets.
       if (cosOmega < -1) {
-         return [-1, null];
+         return [-1.0, null];
       }
 
       // Calculate times from omega.
@@ -196,7 +197,7 @@ class SunField extends BaseDataField {
    // Return a formatted time dictionary that respects is24Hour and HideHoursLeadingZero settings.
    // - hour: 0-23.
    // - min:  0-59.
-   function getFormattedTime(hour, min) {
+   function getFormattedTime(hour, min) as Dictionary<Symbol, String> {
       var amPm = "";
 
       if (!System.getDeviceSettings().is24Hour) {

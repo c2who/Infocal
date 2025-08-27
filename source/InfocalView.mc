@@ -17,7 +17,7 @@ var center_y;
 var second_font_height_half = 7;
 var second_background_color = 0x000000;
 var second_font_color = 0xffffff;
-var second_clip_size = null;
+var second_clip_size as Array<Number>?;
 
 // theming
 var gbackground_color = 0x000000;
@@ -452,10 +452,8 @@ class InfocalView extends WatchUi.WatchFace {
                gbar_color_1 = bar_graph_color_bottom;
             }
          } else {
-            var theme_pallete = WatchUi.loadResource(
-               Rez.JsonData.theme_pallete
-            );
-            var theme = theme_pallete["" + theme_code];
+            var theme_pallete = WatchUi.loadResource(Rez.JsonData.theme_pallete) as Dictionary<String, Array<Number>>;
+            var theme = theme_pallete[theme_code.toString()];
             // background
             gbackground_color = theme[0];
             // main text
@@ -636,7 +634,7 @@ class InfocalView extends WatchUi.WatchFace {
       // Attempt to update current location, to be used by Sunrise/Sunset, Weather, Air Quality.
       // If current location available from current activity, save it in case it goes "stale" and can not longer be retrieved.
       var location = Activity.getActivityInfo().currentLocation;
-      if (location) {
+      if (location != null) {
          // Save current location to globals
          var degrees = location.toDegrees(); // Array of Doubles.
          gLocationLat = degrees[0].toFloat();
@@ -646,7 +644,7 @@ class InfocalView extends WatchUi.WatchFace {
       } else {
          // current location is not available, read stored value from Object Store, being careful not to overwrite a valid
          // in-memory value with an invalid stored one.
-         var storedLocation = Storage.getValue("LastLocation");
+         var storedLocation = Storage.getValue("LastLocation") as Array<Float>?;
          if ((storedLocation != null)) {
             gLocationLat = storedLocation[0];
             gLocationLon = storedLocation[1];

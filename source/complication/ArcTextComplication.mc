@@ -14,10 +14,12 @@ class ArcTextComplication extends Ui.Drawable {
    private var perCharRadius;
 
    private var accumulation_sign;
-   private var angle;
 
    private var dt_field;
-   private var field_type;
+
+   // layout
+   protected var angle;
+   protected var field_type;
 
    function initialize(params) {
       Drawable.initialize(params);

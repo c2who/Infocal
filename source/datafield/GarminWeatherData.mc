@@ -2,6 +2,7 @@ using Toybox.System;
 using Toybox.Weather;
 
 import Toybox.Application;
+import Toybox.Lang;
 
 //! TEMPERATURE GARMIN
 //! @since API Level 3.2.0
@@ -81,10 +82,7 @@ class TemperatureHLGarminField extends BaseDataField {
 /* WEATHER GARMIN */
 //! @since API Level 3.2.0
 class WeatherGarminField extends BaseDataField {
-   var weather_condition_mapper;
-   function initialize(id) {
-      BaseDataField.initialize(id);
-      weather_condition_mapper = [
+   private const weather_condition_mapper = [
          "CLR",  // 0
          "CLDY",
          "CLDY",
@@ -139,7 +137,10 @@ class WeatherGarminField extends BaseDataField {
          "SNOW",
          "CLDY",
          "WTHR"
-      ];
+      ] as Array<String>;
+
+   function initialize(id) {
+      BaseDataField.initialize(id);
    }
 
    function cur_label(value) {

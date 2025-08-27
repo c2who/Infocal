@@ -2,6 +2,7 @@ using Toybox.System;
 using Toybox.Time.Gregorian as Date;
 
 import Toybox.Application;
+import Toybox.Lang;
 
 /* ACTIVE MINUTES */
 class ActiveField extends BaseDataField {
@@ -331,7 +332,7 @@ class WeekDistanceField extends BaseDataField {
       return date.day_of_week;
    }
 
-   function _retriveWeekValues() {
+   function _retriveWeekValues() as Array<Float> {
       var settings = System.getDeviceSettings();
       var firstDayOfWeek = settings.firstDayOfWeek;
 
