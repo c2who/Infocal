@@ -78,7 +78,7 @@ class TemperatureHLGarminField extends BaseDataField {
 class WeatherGarminField extends BaseDataField {
    private const weather_condition_mapper =
       [
-         "CLR", // 0
+         "CLEAR", // 0
          "CLDY",
          "CLDY",
          "RAIN",
@@ -101,7 +101,7 @@ class WeatherGarminField extends BaseDataField {
          "CLDY", // 20
          "SNOW",
          "CLDY",
-         "CLR",
+         "CLEAR",
          "SHWR",
          "SHWR", // 25
          "SHWR",
