@@ -44,7 +44,7 @@
 
     <property id="utc_timezone" type="number">0</property>
     <property id="utc_shift" type="boolean">false</property>
-    <property id="date_format" type="number">5</property>
+    <property id="date_format" type="number">6</property>
 
     <property id="battery_format" type="number">0</property>
 

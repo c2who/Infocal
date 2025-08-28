@@ -21,8 +21,8 @@ public class Globals {
 
       var MONTHS_OF_THE_YEAR = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 
-      if (date_formatter == 0) {
-         // ddd d mmm
+      if (date_formatter == 0 || date_formatter == 1) {
+         // ddd d
          var day = null;
          var day_of_week = null;
          var month = null;
@@ -36,26 +36,32 @@ public class Globals {
             day_of_week = medium_date.day_of_week.toUpper();
             month = medium_date.month;
          }
-         return Lang.format("$1$ $2$ $3$", [day_of_week, day, month]);
-      } else if (date_formatter == 1) {
+         if (date_formatter == 0) {
+            // ddd d
+            return Lang.format("$1$ $2$", [day_of_week, day]);
+         } else {
+            // ddd d mmm
+            return Lang.format("$1$ $2$ $3$", [day_of_week, day, month]);
+         }
+      } else if (date_formatter == 2) {
          // dd.mm
          return Lang.format("$1$.$2$", [date.day.format("%d"), date.month.format("%d")]);
-      } else if (date_formatter == 2) {
+      } else if (date_formatter == 3) {
          // mm.dd
          return Lang.format("$1$.$2$", [date.month.format("%d"), date.day.format("%d")]);
-      } else if (date_formatter == 3) {
+      } else if (date_formatter == 4) {
          // dd.mm.yyyy
          var year = date.year;
          var yy = year / 100.0;
          yy = Math.round((yy - yy.toNumber()) * 100.0);
          return Lang.format("$1$.$2$.$3$", [date.day.format("%d"), date.month.format("%d"), yy.format("%d")]);
-      } else if (date_formatter == 4) {
+      } else if (date_formatter == 5) {
          // mm.dd.yyyy
          var year = date.year;
          var yy = year / 100.0;
          yy = Math.round((yy - yy.toNumber()) * 100.0);
          return Lang.format("$1$.$2$.$3$", [date.month.format("%d"), date.day.format("%d"), yy.format("%d")]);
-      } else if (date_formatter == 5 || date_formatter == 6) {
+      } else if (date_formatter == 6 || date_formatter == 7) {
          // dd mmm
          var day = null;
          var month = null;
@@ -67,7 +73,7 @@ public class Globals {
             day = date.day;
             month = medium_date.month;
          }
-         if (date_formatter == 5) {
+         if (date_formatter == 6) {
             return Lang.format("$1$ $2$", [day.format("%d"), month]);
          } else {
             return Lang.format("$1$ $2$", [month, day.format("%d")]);
