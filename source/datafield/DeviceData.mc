@@ -38,7 +38,7 @@ class BatteryField extends BaseDataField {
    //! Format hours as days/hours string
    private function format_hours(total_hours as Float) {
       if (total_hours < 24) {
-         return Lang.format("$1$ HRS", [total_hours.format("%0.1f")]);
+         return Lang.format("$1$ HRS", [Math.round(total_hours).format("%d")]);
       } else if (total_hours >= 99 * 24) {
          return "99+ DAYS";
       } else {

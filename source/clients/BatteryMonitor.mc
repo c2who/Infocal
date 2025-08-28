@@ -118,10 +118,17 @@ import Toybox.Time;
     //! Update the (average) battery discharge rate
     //! @note   As the battery voltage discharge rate is very irregular, we use an
     //!         exponentially-weighted moving average (EMA) to smooth the output
-    //!         y[n] = 0.135x[n] + 0.865y[n-1]
+    //!         y[n] = x[n]*alpha + y[n-1] * (1-alpha)
+    //! @note We use a 'ramped-alpha' to remove early sample noise (over first T samples)
+    //!         alpha[t] = 2 / ( min(t + 2, WINDOW_SIZE) + 1)
     private function update_discharge_rate(bat_pcnt as Float, time_now as Number) {
-        // alpha found by measurement on vivoactive4 with normal usage (no activity)
-        var alpha = 0.135;
+        // target alpha for averaging the discharge rate over 100% discharge
+        var WINDOW_SIZE = 100; // (target alpha = 0.0198)
+
+        // calculate ramped alpha over [t] samples
+        var t = Storage.getValue("bat_dchg1_t") as Number?;
+        t = (t == null) ? 0 : t+1;
+        var alpha = 2.0 / ( min( t + 2, WINDOW_SIZE) + 1.0 );
 
         // calculate x[n], current sample time (seconds) to lose 1% charge
         var x = ((time_now - _bat_last_time) / (_bat_last_pcnt - bat_pcnt)).toNumber();
@@ -135,11 +142,17 @@ import Toybox.Time;
             // Init
             y = x;
         } else {
-            // Apply EMA, // y[n] = (0.135 * x[n]) + (y[n−1] * (1-0.135))
+            // Apply EMA, // y[n] = (0.alpha * x[n]) + (y[n−1] * (1-alpha))
             y = ((x * alpha) + (y_n_1 * (1-alpha))).toNumber();
         }
         Storage.setValue("bat_dchg1_time", y);
+        Storage.setValue("bat_dchg1_t", t);
 
-        debug_print(:bms, "$1$ sec/% > $2$ sec/%", [x, y]);
+        debug_print(:bms, "a=$1$, $2$sec/% > $3$sec/%", [alpha.format("%0.4f"), x, y]);
+    }
+
+    private function min(a as Number or Float, b as Number or Float) as Number or Float {
+        return (a < b) ? a : b;
     }
 }
+
