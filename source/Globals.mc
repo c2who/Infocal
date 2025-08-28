@@ -86,8 +86,20 @@ public class Globals {
       return center_y + radius * Math.sin(radians);
    }
 
-   static function toKValue(value) {
-      var valK = value / 1000.0;
-      return valK.format("%0.1f");
+   static function toKValue(value, alwaysConvert as Boolean) {
+      if (!alwaysConvert and value <= 10000) {
+         return value.format("%d");
+      } else {
+         var valK = value / 1000.0;
+         return valK.format("%0.1f");
+      }
+   }
+
+   static function getKString(value) {
+      if (value <= 10000) {
+         return "";
+      } else {
+         return "K";
+      }
    }
 }

@@ -109,8 +109,8 @@ class DistanceField extends BaseDataField {
    function max_label(value) {
       value = value / 1000.0;
       value = value / 100.0; // convert cm to km
-      var valKp = Globals.toKValue(value);
-      return Lang.format("$1$K", [valKp]);
+      var valKp = Globals.toKValue(value, false);
+      return Lang.format("$1$$2$", [valKp, Globals.getKString(value)]);
    }
 
    function cur_label(value) {
@@ -130,7 +130,7 @@ class DistanceField extends BaseDataField {
       if (need_minimal) {
          return Lang.format("$1$ $2$", [kilo.format("%0.1f"), unit]);
       } else {
-         var valKp = Globals.toKValue(kilo * 1000);
+         var valKp = Globals.toKValue(kilo * 1000, true);
          return Lang.format("DIS $1$$2$", [valKp, unit]);
       }
    }
@@ -156,8 +156,8 @@ class CaloField extends BaseDataField {
    }
 
    function max_label(value) {
-      var valKp = Globals.toKValue(value);
-      return Lang.format("$1$K", [valKp]);
+      var valKp = Globals.toKValue(value, true);
+      return Lang.format("$1$$2$", [valKp, Globals.getKString(value)]);
    }
 
    function cur_label(value) {
@@ -166,8 +166,8 @@ class CaloField extends BaseDataField {
       if (need_minimal) {
          return Lang.format("$1$-$2$", [value.format("%d"), activeCalories.format("%d")]);
       } else {
-         var valKp = Globals.toKValue(value);
-         return Lang.format("$1$K-$2$", [valKp, activeCalories.format("%d")]);
+         var valKp = Globals.toKValue(value, true);
+         return Lang.format("$1$$2$-$3$", [valKp, Globals.getKString(value), activeCalories.format("%d")]);
       }
    }
 
@@ -247,8 +247,8 @@ class StepField extends BaseDataField {
    }
 
    function max_label(value) {
-      var valKp = Globals.toKValue(value);
-      return Lang.format("$1$K", [valKp]);
+      var valKp = Globals.toKValue(value, false);
+      return Lang.format("$1$$2$", [valKp, Globals.getKString(value)]);
    }
 
    function cur_label(value) {
@@ -261,8 +261,8 @@ class StepField extends BaseDataField {
             return Lang.format("STEP $1$", [currentStep.format("%d")]);
          }
       } else {
-         var valKp = Globals.toKValue(currentStep);
-         return Lang.format("STEP $1$K", [valKp]);
+         var valKp = Globals.toKValue(currentStep, false);
+         return Lang.format("STEP $1$$2$", [valKp, Globals.getKString(value)]);
       }
    }
 
@@ -311,7 +311,7 @@ class WeekDistanceField extends BaseDataField {
       if (need_minimal) {
          return Lang.format("$1$ $2$", [kilo.format("%0.1f"), unit]);
       } else {
-         var valKp = Globals.toKValue(kilo * 1000);
+         var valKp = Globals.toKValue(kilo * 1000, true);
          return Lang.format("DIS $1$$2$", [valKp, unit]);
       }
    }
@@ -354,6 +354,35 @@ class WeekDistanceField extends BaseDataField {
          total += activities[i].distance;
       }
       return [total, 10.0];
+   }
+
+   function bar_data() {
+      return true;
+   }
+}
+
+/* TIME TO RECOVERY */
+class RecoveryHoursField extends BaseDataField {
+   function initialize(id) {
+      BaseDataField.initialize(id);
+   }
+
+   function max_val() {
+      return 168; // max recovery time
+   }
+
+   function cur_val() {
+      var activityInfo = ActivityMonitor.getInfo();
+      var hours = activityInfo.timeToRecovery.toNumber();
+      return hours;
+   }
+
+   function max_label(value) {
+      return value.format("%d");
+   }
+
+   function cur_label(value) {
+      return Lang.format("RCVR $1$", [value]);
    }
 
    function bar_data() {

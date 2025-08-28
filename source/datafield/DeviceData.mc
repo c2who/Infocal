@@ -61,7 +61,11 @@ class BatteryField extends BaseDataField {
          return Lang.format("BAT $1$%", [Math.round(value).toNumber()]);
       } else if (_hasBatteryInDays) {
          // API Level 3.3.0 battery in days
-         return format_hours(System.getSystemStats().batteryInDays * 24);
+         var battery_in_days = System.getSystemStats().batteryInDays;
+         if (battery_format == 2) {
+            return Lang.format("$1$ DAYS", [battery_in_days.format("%0.1f")]);
+         }
+         return format_hours(battery_in_days * 24);
       } else {
          // Internal value for battery in days
          var bat_dchg1_time = Storage.getValue("bat_dchg1_time") as Number?;
@@ -77,7 +81,11 @@ class BatteryField extends BaseDataField {
                value = bat_last_pcnt;
                time_since = Time.now().value() - bat_last_time;
             }
-            return format_hours((value * bat_dchg1_time - time_since) / Gregorian.SECONDS_PER_HOUR);
+            var battery_in_days = (value * bat_dchg1_time - time_since) / Gregorian.SECONDS_PER_HOUR;
+            if (battery_format == 2) {
+               return Lang.format("$1$ DAYS", [battery_in_days.format("%0.1f")]);
+            }
+            return format_hours(battery_in_days);
          }
       }
    }
@@ -347,7 +355,7 @@ class AltitudeField extends BaseDataField {
          if (need_minimal) {
             return value;
          } else {
-            var temp = Lang.format("ALTI $1$", [value]);
+            var temp = Lang.format("ALT $1$", [value]);
             if (temp.length() > 10) {
                return Lang.format("$1$", [value]);
             }
@@ -357,7 +365,7 @@ class AltitudeField extends BaseDataField {
          if (need_minimal) {
             return "--";
          } else {
-            return "ALTI --";
+            return "ALT --";
          }
       }
    }
@@ -445,9 +453,9 @@ class FloorField extends BaseDataField {
 
    function cur_label(value) {
       if (value == null) {
-         return "FLOOR --";
+         return "FLR --";
       }
-      return Lang.format("FLOOR $1$", [value.format("%d")]);
+      return Lang.format("FLR $1$", [value.format("%d")]);
    }
 
    function bar_data() {

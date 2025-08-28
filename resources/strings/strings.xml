@@ -95,6 +95,7 @@
     <string scope="settings" id="stress">Stress</string>
     <string scope="settings" id="bodybattstress">Body Battery and Stress Combined</string>
     <string scope="settings" id="airquality">Air Quality Index</string>
+    <string scope="settings" id="recovery_hours">Time to Recovery</string>
 
     <!-- Date and time settings -->
     <string scope="settings" id="date_format">Date format</string>
@@ -138,6 +139,7 @@
     <string scope="settings" id="battery_format">Battery format</string>
     <string scope="settings" id="battery_format_1">Percent</string>
     <string scope="settings" id="battery_format_2">Days left</string>
+    <string scope="settings" id="battery_format_3">Days left (short)</string>
 
     <string scope="settings" id="barometer_unit">Barometer Unit</string>
     <string scope="settings" id="barometer_unit_0">Hector Pascal (Pa)</string>
