@@ -453,9 +453,9 @@ class FloorField extends BaseDataField {
 
    function cur_label(value) {
       if (value == null) {
-         return "FLR --";
+         return "FLOOR --";
       }
-      return Lang.format("FLR $1$", [value.format("%d")]);
+      return Lang.format("FLOOR $1$", [value.format("%d")]);
    }
 
    function bar_data() {
