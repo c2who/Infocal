@@ -154,7 +154,9 @@ class BarComplication extends Ui.Drawable {
       if (is_bar_data) {
          var mi = min_val().toFloat(); // 0
          var ma = max_val().toFloat(); // 5
-         var cu = cur_val().toFloat(); // 1
+         // support current value is null (for no-computed-data)
+         var val = cur_val();
+         var cu = (val != null) ? val.toFloat() : mi; // 1
 
          var i = 0;
          if (cu >= ma) {
