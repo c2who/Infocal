@@ -1,15 +1,15 @@
 <settings>
     <group id="color_group" title="@Strings.color_group" description="@Strings.color_group_desc">
-    <setting propertyKey="@Properties.theme_code" title="@Strings.theme_code">
-        <settingConfig type="list">
-        	<listEntry value="18">@Strings.theme_custom</listEntry>
+        <setting propertyKey="@Properties.theme_code" title="@Strings.theme_code">
+            <settingConfig type="list">
+                <listEntry value="18">@Strings.theme_custom</listEntry>
                 <listEntry value="0">@Strings.theme_red</listEntry>
                 <listEntry value="17">@Strings.theme_green</listEntry>
-        	<listEntry value="7">@Strings.theme_dark_blue</listEntry>
+                <listEntry value="7">@Strings.theme_dark_blue</listEntry>
                 <listEntry value="16">@Strings.theme_solar</listEntry>
-        	<listEntry value="13">@Strings.theme_dcontrast</listEntry>
-        	<listEntry value="14">@Strings.theme_lcontrast</listEntry>
-        	<listEntry value="15">@Strings.theme_camo</listEntry>
+                <listEntry value="13">@Strings.theme_dcontrast</listEntry>
+                <listEntry value="14">@Strings.theme_lcontrast</listEntry>
+                <listEntry value="15">@Strings.theme_camo</listEntry>
                 <listEntry value="12">@Strings.theme_deep_ocean</listEntry>
                 <listEntry value="2">@Strings.theme_ocean</listEntry>
                 <listEntry value="4">@Strings.theme_radioactive</listEntry>
@@ -19,691 +19,715 @@
                 <listEntry value="10">@Strings.theme_lgray</listEntry>
                 <listEntry value="8">@Strings.theme_light_blue</listEntry>
                 <listEntry value="1">@Strings.theme_light</listEntry>
-        </settingConfig>
-    </setting>
+            </settingConfig>
+        </setting>
 
-    <setting propertyKey="@Properties.background_color" title="@Strings.background_color">
-        <settingConfig type="list">
-        	<listEntry value="0">@Strings.black</listEntry>
-        	<listEntry value="16777215">@Strings.white</listEntry>
-        	<listEntry value="16711680">@Strings.red</listEntry>
-        	<listEntry value="5570560">@Strings.red_dark</listEntry>
-        	<listEntry value="16711765">@Strings.pink</listEntry>
-        	<listEntry value="65535">@Strings.cyan</listEntry>
-        	<listEntry value="255">@Strings.blue</listEntry>
-        	<listEntry value="43775">@Strings.blue_pale</listEntry>
-        	<listEntry value="85">@Strings.blue_dark</listEntry>
-        	<listEntry value="5614080">@Strings.green</listEntry>
-        	<listEntry value="65280">@Strings.green_lime</listEntry>
-        	<listEntry value="21760">@Strings.green_dark</listEntry>
-        	<listEntry value="5592320">@Strings.green_olive</listEntry>
-        	<listEntry value="16776960">@Strings.yellow</listEntry>
-        	<listEntry value="16733440">@Strings.orange</listEntry>
-        	<listEntry value="11162880">@Strings.brown</listEntry>
-        	<listEntry value="11184810">@Strings.gray</listEntry>
-        	<listEntry value="5592405">@Strings.gray_dark</listEntry>
-        </settingConfig>
-    </setting>
+        <setting propertyKey="@Properties.background_color" title="@Strings.background_color">
+            <settingConfig type="list">
+                <listEntry value="0">@Strings.black</listEntry>
+                <listEntry value="16777215">@Strings.white</listEntry>
+                <listEntry value="16711680">@Strings.red</listEntry>
+                <listEntry value="5570560">@Strings.red_dark</listEntry>
+                <listEntry value="16711765">@Strings.pink</listEntry>
+                <listEntry value="65535">@Strings.cyan</listEntry>
+                <listEntry value="255">@Strings.blue</listEntry>
+                <listEntry value="43775">@Strings.blue_pale</listEntry>
+                <listEntry value="85">@Strings.blue_dark</listEntry>
+                <listEntry value="5614080">@Strings.green</listEntry>
+                <listEntry value="65280">@Strings.green_lime</listEntry>
+                <listEntry value="21760">@Strings.green_dark</listEntry>
+                <listEntry value="5592320">@Strings.green_olive</listEntry>
+                <listEntry value="16776960">@Strings.yellow</listEntry>
+                <listEntry value="16733440">@Strings.orange</listEntry>
+                <listEntry value="11162880">@Strings.brown</listEntry>
+                <listEntry value="11184810">@Strings.gray</listEntry>
+                <listEntry value="5592405">@Strings.gray_dark</listEntry>
+            </settingConfig>
+        </setting>
 
-    <setting propertyKey="@Properties.text_color" title="@Strings.text_color">
-        <settingConfig type="list">
-        	<listEntry value="0">@Strings.black</listEntry>
-        	<listEntry value="16777215">@Strings.white</listEntry>
-        	<listEntry value="16711680">@Strings.red</listEntry>
-        	<listEntry value="5570560">@Strings.red_dark</listEntry>
-        	<listEntry value="16711765">@Strings.pink</listEntry>
-        	<listEntry value="65535">@Strings.cyan</listEntry>
-        	<listEntry value="255">@Strings.blue</listEntry>
-        	<listEntry value="43775">@Strings.blue_pale</listEntry>
-        	<listEntry value="85">@Strings.blue_dark</listEntry>
-        	<listEntry value="5614080">@Strings.green</listEntry>
-        	<listEntry value="65280">@Strings.green_lime</listEntry>
-        	<listEntry value="21760">@Strings.green_dark</listEntry>
-        	<listEntry value="5592320">@Strings.green_olive</listEntry>
-        	<listEntry value="16776960">@Strings.yellow</listEntry>
-        	<listEntry value="16733440">@Strings.orange</listEntry>
-        	<listEntry value="11162880">@Strings.brown</listEntry>
-        	<listEntry value="11184810">@Strings.gray</listEntry>
-        	<listEntry value="5592405">@Strings.gray_dark</listEntry>
-        </settingConfig>
-    </setting>
+        <setting propertyKey="@Properties.text_color" title="@Strings.text_color">
+            <settingConfig type="list">
+                <listEntry value="0">@Strings.black</listEntry>
+                <listEntry value="16777215">@Strings.white</listEntry>
+                <listEntry value="16711680">@Strings.red</listEntry>
+                <listEntry value="5570560">@Strings.red_dark</listEntry>
+                <listEntry value="16711765">@Strings.pink</listEntry>
+                <listEntry value="65535">@Strings.cyan</listEntry>
+                <listEntry value="255">@Strings.blue</listEntry>
+                <listEntry value="43775">@Strings.blue_pale</listEntry>
+                <listEntry value="85">@Strings.blue_dark</listEntry>
+                <listEntry value="5614080">@Strings.green</listEntry>
+                <listEntry value="65280">@Strings.green_lime</listEntry>
+                <listEntry value="21760">@Strings.green_dark</listEntry>
+                <listEntry value="5592320">@Strings.green_olive</listEntry>
+                <listEntry value="16776960">@Strings.yellow</listEntry>
+                <listEntry value="16733440">@Strings.orange</listEntry>
+                <listEntry value="11162880">@Strings.brown</listEntry>
+                <listEntry value="11184810">@Strings.gray</listEntry>
+                <listEntry value="5592405">@Strings.gray_dark</listEntry>
+            </settingConfig>
+        </setting>
 
-    <setting propertyKey="@Properties.accent_color" title="@Strings.accent_color">
-        <settingConfig type="list">
-        	<listEntry value="0">@Strings.black</listEntry>
-        	<listEntry value="16777215">@Strings.white</listEntry>
-        	<listEntry value="16711680">@Strings.red</listEntry>
-        	<listEntry value="5570560">@Strings.red_dark</listEntry>
-        	<listEntry value="16711765">@Strings.pink</listEntry>
-        	<listEntry value="65535">@Strings.cyan</listEntry>
-        	<listEntry value="255">@Strings.blue</listEntry>
-        	<listEntry value="43775">@Strings.blue_pale</listEntry>
-        	<listEntry value="85">@Strings.blue_dark</listEntry>
-        	<listEntry value="5614080">@Strings.green</listEntry>
-        	<listEntry value="65280">@Strings.green_lime</listEntry>
-        	<listEntry value="21760">@Strings.green_dark</listEntry>
-        	<listEntry value="5592320">@Strings.green_olive</listEntry>
-        	<listEntry value="16776960">@Strings.yellow</listEntry>
-        	<listEntry value="16733440">@Strings.orange</listEntry>
-        	<listEntry value="11162880">@Strings.brown</listEntry>
-        	<listEntry value="11184810">@Strings.gray</listEntry>
-        	<listEntry value="5592405">@Strings.gray_dark</listEntry>
-        </settingConfig>
-    </setting>
+        <setting propertyKey="@Properties.accent_color" title="@Strings.accent_color">
+            <settingConfig type="list">
+                <listEntry value="0">@Strings.black</listEntry>
+                <listEntry value="16777215">@Strings.white</listEntry>
+                <listEntry value="16711680">@Strings.red</listEntry>
+                <listEntry value="5570560">@Strings.red_dark</listEntry>
+                <listEntry value="16711765">@Strings.pink</listEntry>
+                <listEntry value="65535">@Strings.cyan</listEntry>
+                <listEntry value="255">@Strings.blue</listEntry>
+                <listEntry value="43775">@Strings.blue_pale</listEntry>
+                <listEntry value="85">@Strings.blue_dark</listEntry>
+                <listEntry value="5614080">@Strings.green</listEntry>
+                <listEntry value="65280">@Strings.green_lime</listEntry>
+                <listEntry value="21760">@Strings.green_dark</listEntry>
+                <listEntry value="5592320">@Strings.green_olive</listEntry>
+                <listEntry value="16776960">@Strings.yellow</listEntry>
+                <listEntry value="16733440">@Strings.orange</listEntry>
+                <listEntry value="11162880">@Strings.brown</listEntry>
+                <listEntry value="11184810">@Strings.gray</listEntry>
+                <listEntry value="5592405">@Strings.gray_dark</listEntry>
+            </settingConfig>
+        </setting>
 
-    <setting propertyKey="@Properties.bar_background_color" title="@Strings.bar_background_color">
-        <settingConfig type="list">
-        	<listEntry value="0">@Strings.black</listEntry>
-        	<listEntry value="16777215">@Strings.white</listEntry>
-        	<listEntry value="16711680">@Strings.red</listEntry>
-        	<listEntry value="5570560">@Strings.red_dark</listEntry>
-        	<listEntry value="16711765">@Strings.pink</listEntry>
-        	<listEntry value="65535">@Strings.cyan</listEntry>
-        	<listEntry value="255">@Strings.blue</listEntry>
-        	<listEntry value="43775">@Strings.blue_pale</listEntry>
-        	<listEntry value="85">@Strings.blue_dark</listEntry>
-        	<listEntry value="5614080">@Strings.green</listEntry>
-        	<listEntry value="65280">@Strings.green_lime</listEntry>
-        	<listEntry value="21760">@Strings.green_dark</listEntry>
-        	<listEntry value="5592320">@Strings.green_olive</listEntry>
-        	<listEntry value="16776960">@Strings.yellow</listEntry>
-        	<listEntry value="16733440">@Strings.orange</listEntry>
-        	<listEntry value="11162880">@Strings.brown</listEntry>
-        	<listEntry value="11184810">@Strings.gray</listEntry>
-        	<listEntry value="5592405">@Strings.gray_dark</listEntry>
-        </settingConfig>
-    </setting>
+        <setting propertyKey="@Properties.bar_background_color" title="@Strings.bar_background_color">
+            <settingConfig type="list">
+                <listEntry value="0">@Strings.black</listEntry>
+                <listEntry value="16777215">@Strings.white</listEntry>
+                <listEntry value="16711680">@Strings.red</listEntry>
+                <listEntry value="5570560">@Strings.red_dark</listEntry>
+                <listEntry value="16711765">@Strings.pink</listEntry>
+                <listEntry value="65535">@Strings.cyan</listEntry>
+                <listEntry value="255">@Strings.blue</listEntry>
+                <listEntry value="43775">@Strings.blue_pale</listEntry>
+                <listEntry value="85">@Strings.blue_dark</listEntry>
+                <listEntry value="5614080">@Strings.green</listEntry>
+                <listEntry value="65280">@Strings.green_lime</listEntry>
+                <listEntry value="21760">@Strings.green_dark</listEntry>
+                <listEntry value="5592320">@Strings.green_olive</listEntry>
+                <listEntry value="16776960">@Strings.yellow</listEntry>
+                <listEntry value="16733440">@Strings.orange</listEntry>
+                <listEntry value="11162880">@Strings.brown</listEntry>
+                <listEntry value="11184810">@Strings.gray</listEntry>
+                <listEntry value="5592405">@Strings.gray_dark</listEntry>
+            </settingConfig>
+        </setting>
 
-    <setting propertyKey="@Properties.ticks_color" title="@Strings.ticks_color">
-        <settingConfig type="list">
-        	<listEntry value="0">@Strings.black</listEntry>
-        	<listEntry value="16777215">@Strings.white</listEntry>
-        	<listEntry value="16711680">@Strings.red</listEntry>
-        	<listEntry value="5570560">@Strings.red_dark</listEntry>
-        	<listEntry value="16711765">@Strings.pink</listEntry>
-        	<listEntry value="65535">@Strings.cyan</listEntry>
-        	<listEntry value="255">@Strings.blue</listEntry>
-        	<listEntry value="43775">@Strings.blue_pale</listEntry>
-        	<listEntry value="85">@Strings.blue_dark</listEntry>
-        	<listEntry value="5614080">@Strings.green</listEntry>
-        	<listEntry value="65280">@Strings.green_lime</listEntry>
-        	<listEntry value="21760">@Strings.green_dark</listEntry>
-        	<listEntry value="5592320">@Strings.green_olive</listEntry>
-        	<listEntry value="16776960">@Strings.yellow</listEntry>
-        	<listEntry value="16733440">@Strings.orange</listEntry>
-        	<listEntry value="11162880">@Strings.brown</listEntry>
-        	<listEntry value="11184810">@Strings.gray</listEntry>
-        	<listEntry value="5592405">@Strings.gray_dark</listEntry>
-        </settingConfig>
-    </setting>
+        <setting propertyKey="@Properties.ticks_color" title="@Strings.ticks_color">
+            <settingConfig type="list">
+                <listEntry value="0">@Strings.black</listEntry>
+                <listEntry value="16777215">@Strings.white</listEntry>
+                <listEntry value="16711680">@Strings.red</listEntry>
+                <listEntry value="5570560">@Strings.red_dark</listEntry>
+                <listEntry value="16711765">@Strings.pink</listEntry>
+                <listEntry value="65535">@Strings.cyan</listEntry>
+                <listEntry value="255">@Strings.blue</listEntry>
+                <listEntry value="43775">@Strings.blue_pale</listEntry>
+                <listEntry value="85">@Strings.blue_dark</listEntry>
+                <listEntry value="5614080">@Strings.green</listEntry>
+                <listEntry value="65280">@Strings.green_lime</listEntry>
+                <listEntry value="21760">@Strings.green_dark</listEntry>
+                <listEntry value="5592320">@Strings.green_olive</listEntry>
+                <listEntry value="16776960">@Strings.yellow</listEntry>
+                <listEntry value="16733440">@Strings.orange</listEntry>
+                <listEntry value="11162880">@Strings.brown</listEntry>
+                <listEntry value="11184810">@Strings.gray</listEntry>
+                <listEntry value="5592405">@Strings.gray_dark</listEntry>
+            </settingConfig>
+        </setting>
 
-    <setting propertyKey="@Properties.bar_indicator_color" title="@Strings.bar_indicator_color">
-        <settingConfig type="list">
-        	<listEntry value="0">@Strings.black</listEntry>
-        	<listEntry value="16777215">@Strings.white</listEntry>
-        	<listEntry value="16711680">@Strings.red</listEntry>
-        	<listEntry value="5570560">@Strings.red_dark</listEntry>
-        	<listEntry value="16711765">@Strings.pink</listEntry>
-        	<listEntry value="65535">@Strings.cyan</listEntry>
-        	<listEntry value="255">@Strings.blue</listEntry>
-        	<listEntry value="43775">@Strings.blue_pale</listEntry>
-        	<listEntry value="85">@Strings.blue_dark</listEntry>
-        	<listEntry value="5614080">@Strings.green</listEntry>
-        	<listEntry value="65280">@Strings.green_lime</listEntry>
-        	<listEntry value="21760">@Strings.green_dark</listEntry>
-        	<listEntry value="5592320">@Strings.green_olive</listEntry>
-        	<listEntry value="16776960">@Strings.yellow</listEntry>
-        	<listEntry value="16733440">@Strings.orange</listEntry>
-        	<listEntry value="11162880">@Strings.brown</listEntry>
-        	<listEntry value="11184810">@Strings.gray</listEntry>
-        	<listEntry value="5592405">@Strings.gray_dark</listEntry>
-        </settingConfig>
-    </setting>
+        <setting propertyKey="@Properties.bar_indicator_color" title="@Strings.bar_indicator_color">
+            <settingConfig type="list">
+                <listEntry value="0">@Strings.black</listEntry>
+                <listEntry value="16777215">@Strings.white</listEntry>
+                <listEntry value="16711680">@Strings.red</listEntry>
+                <listEntry value="5570560">@Strings.red_dark</listEntry>
+                <listEntry value="16711765">@Strings.pink</listEntry>
+                <listEntry value="65535">@Strings.cyan</listEntry>
+                <listEntry value="255">@Strings.blue</listEntry>
+                <listEntry value="43775">@Strings.blue_pale</listEntry>
+                <listEntry value="85">@Strings.blue_dark</listEntry>
+                <listEntry value="5614080">@Strings.green</listEntry>
+                <listEntry value="65280">@Strings.green_lime</listEntry>
+                <listEntry value="21760">@Strings.green_dark</listEntry>
+                <listEntry value="5592320">@Strings.green_olive</listEntry>
+                <listEntry value="16776960">@Strings.yellow</listEntry>
+                <listEntry value="16733440">@Strings.orange</listEntry>
+                <listEntry value="11162880">@Strings.brown</listEntry>
+                <listEntry value="11184810">@Strings.gray</listEntry>
+                <listEntry value="5592405">@Strings.gray_dark</listEntry>
+            </settingConfig>
+        </setting>
 
-    <setting propertyKey="@Properties.bar_graph_color_top" title="@Strings.bar_graph_color_top">
-        <settingConfig type="list">
-        	<listEntry value="0">@Strings.black</listEntry>
-        	<listEntry value="16777215">@Strings.white</listEntry>
-        	<listEntry value="16711680">@Strings.red</listEntry>
-        	<listEntry value="5570560">@Strings.red_dark</listEntry>
-        	<listEntry value="16711765">@Strings.pink</listEntry>
-        	<listEntry value="65535">@Strings.cyan</listEntry>
-        	<listEntry value="255">@Strings.blue</listEntry>
-        	<listEntry value="43775">@Strings.blue_pale</listEntry>
-        	<listEntry value="85">@Strings.blue_dark</listEntry>
-        	<listEntry value="5614080">@Strings.green</listEntry>
-        	<listEntry value="65280">@Strings.green_lime</listEntry>
-        	<listEntry value="21760">@Strings.green_dark</listEntry>
-        	<listEntry value="5592320">@Strings.green_olive</listEntry>
-        	<listEntry value="16776960">@Strings.yellow</listEntry>
-        	<listEntry value="16733440">@Strings.orange</listEntry>
-        	<listEntry value="11162880">@Strings.brown</listEntry>
-        	<listEntry value="11184810">@Strings.gray</listEntry>
-        	<listEntry value="5592405">@Strings.gray_dark</listEntry>
-        </settingConfig>
-    </setting>
+        <setting propertyKey="@Properties.bar_graph_color_top" title="@Strings.bar_graph_color_top">
+            <settingConfig type="list">
+                <listEntry value="0">@Strings.black</listEntry>
+                <listEntry value="16777215">@Strings.white</listEntry>
+                <listEntry value="16711680">@Strings.red</listEntry>
+                <listEntry value="5570560">@Strings.red_dark</listEntry>
+                <listEntry value="16711765">@Strings.pink</listEntry>
+                <listEntry value="65535">@Strings.cyan</listEntry>
+                <listEntry value="255">@Strings.blue</listEntry>
+                <listEntry value="43775">@Strings.blue_pale</listEntry>
+                <listEntry value="85">@Strings.blue_dark</listEntry>
+                <listEntry value="5614080">@Strings.green</listEntry>
+                <listEntry value="65280">@Strings.green_lime</listEntry>
+                <listEntry value="21760">@Strings.green_dark</listEntry>
+                <listEntry value="5592320">@Strings.green_olive</listEntry>
+                <listEntry value="16776960">@Strings.yellow</listEntry>
+                <listEntry value="16733440">@Strings.orange</listEntry>
+                <listEntry value="11162880">@Strings.brown</listEntry>
+                <listEntry value="11184810">@Strings.gray</listEntry>
+                <listEntry value="5592405">@Strings.gray_dark</listEntry>
+            </settingConfig>
+        </setting>
 
-    <setting propertyKey="@Properties.bar_graph_color_bottom" title="@Strings.bar_graph_color_bottom">
-        <settingConfig type="list">
-        	<listEntry value="0">@Strings.black</listEntry>
-        	<listEntry value="16777215">@Strings.white</listEntry>
-        	<listEntry value="16711680">@Strings.red</listEntry>
-        	<listEntry value="5570560">@Strings.red_dark</listEntry>
-        	<listEntry value="16711765">@Strings.pink</listEntry>
-        	<listEntry value="65535">@Strings.cyan</listEntry>
-        	<listEntry value="255">@Strings.blue</listEntry>
-        	<listEntry value="43775">@Strings.blue_pale</listEntry>
-        	<listEntry value="85">@Strings.blue_dark</listEntry>
-        	<listEntry value="5614080">@Strings.green</listEntry>
-        	<listEntry value="65280">@Strings.green_lime</listEntry>
-        	<listEntry value="21760">@Strings.green_dark</listEntry>
-        	<listEntry value="5592320">@Strings.green_olive</listEntry>
-        	<listEntry value="16776960">@Strings.yellow</listEntry>
-        	<listEntry value="16733440">@Strings.orange</listEntry>
-        	<listEntry value="11162880">@Strings.brown</listEntry>
-        	<listEntry value="11184810">@Strings.gray</listEntry>
-        	<listEntry value="5592405">@Strings.gray_dark</listEntry>
-        </settingConfig>
-    </setting>
+        <setting propertyKey="@Properties.bar_graph_color_bottom" title="@Strings.bar_graph_color_bottom">
+            <settingConfig type="list">
+                <listEntry value="0">@Strings.black</listEntry>
+                <listEntry value="16777215">@Strings.white</listEntry>
+                <listEntry value="16711680">@Strings.red</listEntry>
+                <listEntry value="5570560">@Strings.red_dark</listEntry>
+                <listEntry value="16711765">@Strings.pink</listEntry>
+                <listEntry value="65535">@Strings.cyan</listEntry>
+                <listEntry value="255">@Strings.blue</listEntry>
+                <listEntry value="43775">@Strings.blue_pale</listEntry>
+                <listEntry value="85">@Strings.blue_dark</listEntry>
+                <listEntry value="5614080">@Strings.green</listEntry>
+                <listEntry value="65280">@Strings.green_lime</listEntry>
+                <listEntry value="21760">@Strings.green_dark</listEntry>
+                <listEntry value="5592320">@Strings.green_olive</listEntry>
+                <listEntry value="16776960">@Strings.yellow</listEntry>
+                <listEntry value="16733440">@Strings.orange</listEntry>
+                <listEntry value="11162880">@Strings.brown</listEntry>
+                <listEntry value="11184810">@Strings.gray</listEntry>
+                <listEntry value="5592405">@Strings.gray_dark</listEntry>
+            </settingConfig>
+        </setting>
+    </group>
 
-	<setting propertyKey="@Properties.power_save_mode" title="@Strings.power_save_mode">
-        <settingConfig type="boolean" />
-    </setting>
+    <group id="clock_group" title="@Strings.clock_group" description="@Strings.clock_group_desc">
+        <setting propertyKey="@Properties.use_analog" title="@Strings.use_analog">
+            <settingConfig type="boolean" />
+        </setting>
 
-    <setting propertyKey="@Properties.always_on_second" title="@Strings.always_on_second">
-        <settingConfig type="boolean" />
-    </setting>
-    <setting propertyKey="@Properties.always_on_heart" title="@Strings.always_on_heart">
-        <settingConfig type="boolean" />
-    </setting>
+        <setting propertyKey="@Properties.digital_style" title="@Strings.digital_style">
+            <settingConfig type="list">
+                <listEntry value="2">@Strings.digital_style_xbig</listEntry>
+                <listEntry value="0">@Strings.digital_style_big</listEntry>
+                <listEntry value="3">@Strings.digital_style_medium</listEntry>
+                <listEntry value="1">@Strings.digital_style_small</listEntry>
+            </settingConfig>
+        </setting>
 
-    <setting propertyKey="@Properties.use_analog" title="@Strings.use_analog">
-        <settingConfig type="boolean" />
-    </setting>
-    <setting propertyKey="@Properties.digital_style" title="@Strings.digital_style">
-        <settingConfig type="list">
-        	<listEntry value="2">@Strings.digital_style_xbig</listEntry>
-        	<listEntry value="0">@Strings.digital_style_big</listEntry>
-        	<listEntry value="3">@Strings.digital_style_medium</listEntry>
-        	<listEntry value="1">@Strings.digital_style_small</listEntry>
-        </settingConfig>
-    </setting>
-    <setting propertyKey="@Properties.zero_leading_digital" title="@Strings.zero_leading_digital">
-        <settingConfig type="boolean" />
-    </setting>
-    <setting propertyKey="@Properties.always_on_style" title="@Strings.always_on_style">
-        <settingConfig type="list">
-        	<listEntry value="1">@Strings.digital_style_medium</listEntry>
-        	<listEntry value="0">@Strings.digital_style_small</listEntry>
-        </settingConfig>
-    </setting>
-    <setting propertyKey="@Properties.big_number_type" title="@Strings.big_number_type">
-        <settingConfig type="list">
-        	<listEntry value="0">@Strings.minute_major</listEntry>
-        	<listEntry value="1">@Strings.hour_major</listEntry>
-        </settingConfig>
-    </setting>
-    <setting propertyKey="@Properties.minimal_data" title="@Strings.minimal_data">
-        <settingConfig type="boolean" />
-    </setting>
-    <setting propertyKey="@Properties.big_num_stripes" title="@Strings.big_num_stripes">
-        <settingConfig type="boolean" />
-    </setting>
-    <setting propertyKey="@Properties.left_digital_info" title="@Strings.left_digital_info">
-        <settingConfig type="boolean" />
-    </setting>
+        <setting propertyKey="@Properties.big_number_type" title="@Strings.big_number_type">
+            <settingConfig type="list">
+                <listEntry value="0">@Strings.minute_major</listEntry>
+                <listEntry value="1">@Strings.hour_major</listEntry>
+            </settingConfig>
+        </setting>
 
-    <setting propertyKey="@Properties.ticks_style" title="@Strings.ticks_style">
-        <settingConfig type="list">
-        	<listEntry value="0">@Strings.empty</listEntry>
-        	<listEntry value="1">@Strings.ticks_style_arc</listEntry>
-        	<listEntry value="2">@Strings.ticks_style_marks</listEntry>
-        	<listEntry value="3">@Strings.ticks_style_marks_top_gap</listEntry>
-        	<listEntry value="4">@Strings.ticks_style_marks_bottom_gap</listEntry>
-        	<listEntry value="5">@Strings.ticks_style_marks_top_bottom_gap</listEntry>
-        </settingConfig>
-    </setting>
+        <setting propertyKey="@Properties.ticks_style" title="@Strings.ticks_style">
+            <settingConfig type="list">
+                <listEntry value="0">@Strings.empty</listEntry>
+                <listEntry value="1">@Strings.ticks_style_arc</listEntry>
+                <listEntry value="2">@Strings.ticks_style_marks</listEntry>
+                <listEntry value="3">@Strings.ticks_style_marks_top_gap</listEntry>
+                <listEntry value="4">@Strings.ticks_style_marks_bottom_gap</listEntry>
+                <listEntry value="5">@Strings.ticks_style_marks_top_bottom_gap</listEntry>
+            </settingConfig>
+        </setting>
 
-    <setting propertyKey="@Properties.comp12h" title="@Strings.comp12h">
-        <settingConfig type="list">
-        	<listEntry value="9">@Strings.empty</listEntry>
-        	<listEntry value="7">@Strings.date</listEntry>
-            <listEntry value="22">@Strings.weeknum</listEntry>
-            <listEntry value="8">@Strings.time</listEntry>
-            <listEntry value="19">@Strings.time_secondary</listEntry>
-            <listEntry value="1">@Strings.battery</listEntry>
-            <listEntry value="2">@Strings.calories</listEntry>
-            <listEntry value="0">@Strings.heartrate</listEntry>
-            <listEntry value="3">@Strings.distance</listEntry>
-            <listEntry value="17">@Strings.distanceweek</listEntry>
-            <listEntry value="4">@Strings.movebar</listEntry>
-            <listEntry value="5">@Strings.steps</listEntry>
-            <listEntry value="6">@Strings.active</listEntry>
-            <listEntry value="36">@Strings.moderate</listEntry>
-            <listEntry value="37">@Strings.vigorous</listEntry>
-            <listEntry value="10">@Strings.notification</listEntry>
-            <listEntry value="11">@Strings.alarm</listEntry>
-            <listEntry value="20">@Strings.phonestatus</listEntry>
-            <listEntry value="16">@Strings.groupnoti</listEntry>
-            <listEntry value="12">@Strings.altitude</listEntry>
-            <listEntry value="13">@Strings.temperature</listEntry>
-            <listEntry value="32">@Strings.temperature_garmin</listEntry>
-            <listEntry value="23">@Strings.temperature_out</listEntry>
-            <listEntry value="24">@Strings.temperature_hl</listEntry>
-            <listEntry value="35">@Strings.temperature_hl_garmin</listEntry>
-            <listEntry value="33">@Strings.precipitation_garmin</listEntry>
-            <listEntry value="34">@Strings.weather_garmin</listEntry>
-            <listEntry value="14">@Strings.sunriseset</listEntry>
-            <listEntry value="15">@Strings.floorclimbed</listEntry>
-            <listEntry value="18">@Strings.barometer</listEntry>
-            <listEntry value="21">@Strings.countdown</listEntry>
-            <listEntry value="25">@Strings.weather</listEntry>
-            <listEntry value="26">@Strings.ampm</listEntry>
-            <listEntry value="28">@Strings.wind</listEntry>
-            <listEntry value="29">@Strings.bodybattery</listEntry>
-            <listEntry value="30">@Strings.stress</listEntry>
-            <listEntry value="31">@Strings.bodybattstress</listEntry>
-            <listEntry value="38">@Strings.airquality</listEntry>
-        </settingConfig>
-    </setting>
-    <setting propertyKey="@Properties.comp2h" title="@Strings.comp2h">
-        <settingConfig type="list">
-        	<listEntry value="9">@Strings.empty</listEntry>
-        	<listEntry value="7">@Strings.date</listEntry>
-            <listEntry value="22">@Strings.weeknum</listEntry>
-            <listEntry value="8">@Strings.time</listEntry>
-            <listEntry value="19">@Strings.time_secondary</listEntry>
-            <listEntry value="1">@Strings.battery</listEntry>
-            <listEntry value="2">@Strings.calories</listEntry>
-            <listEntry value="0">@Strings.heartrate</listEntry>
-            <listEntry value="3">@Strings.distance</listEntry>
-            <listEntry value="17">@Strings.distanceweek</listEntry>
-            <listEntry value="4">@Strings.movebar</listEntry>
-            <listEntry value="5">@Strings.steps</listEntry>
-            <listEntry value="6">@Strings.active</listEntry>
-            <listEntry value="36">@Strings.moderate</listEntry>
-            <listEntry value="37">@Strings.vigorous</listEntry>
-            <listEntry value="10">@Strings.notification</listEntry>
-            <listEntry value="11">@Strings.alarm</listEntry>
-            <listEntry value="20">@Strings.phonestatus</listEntry>
-            <listEntry value="16">@Strings.groupnoti</listEntry>
-            <listEntry value="12">@Strings.altitude</listEntry>
-            <listEntry value="13">@Strings.temperature</listEntry>
-            <listEntry value="32">@Strings.temperature_garmin</listEntry>
-            <listEntry value="23">@Strings.temperature_out</listEntry>
-            <listEntry value="24">@Strings.temperature_hl</listEntry>
-            <listEntry value="35">@Strings.temperature_hl_garmin</listEntry>
-            <listEntry value="33">@Strings.precipitation_garmin</listEntry>
-            <listEntry value="34">@Strings.weather_garmin</listEntry>
-            <listEntry value="14">@Strings.sunriseset</listEntry>
-            <listEntry value="15">@Strings.floorclimbed</listEntry>
-            <listEntry value="18">@Strings.barometer</listEntry>
-            <listEntry value="21">@Strings.countdown</listEntry>
-            <listEntry value="25">@Strings.weather</listEntry>
-            <listEntry value="26">@Strings.ampm</listEntry>
-            <listEntry value="28">@Strings.wind</listEntry>
-            <listEntry value="29">@Strings.bodybattery</listEntry>
-            <listEntry value="30">@Strings.stress</listEntry>
-            <listEntry value="31">@Strings.bodybattstress</listEntry>
-            <listEntry value="38">@Strings.airquality</listEntry>
-        </settingConfig>
-    </setting>
-    <setting propertyKey="@Properties.comp4h" title="@Strings.comp4h">
-        <settingConfig type="list">
-        	<listEntry value="9">@Strings.empty</listEntry>
-        	<listEntry value="7">@Strings.date</listEntry>
-            <listEntry value="22">@Strings.weeknum</listEntry>
-            <listEntry value="8">@Strings.time</listEntry>
-            <listEntry value="19">@Strings.time_secondary</listEntry>
-            <listEntry value="1">@Strings.battery</listEntry>
-            <listEntry value="2">@Strings.calories</listEntry>
-            <listEntry value="0">@Strings.heartrate</listEntry>
-            <listEntry value="3">@Strings.distance</listEntry>
-            <listEntry value="17">@Strings.distanceweek</listEntry>
-            <listEntry value="4">@Strings.movebar</listEntry>
-            <listEntry value="5">@Strings.steps</listEntry>
-            <listEntry value="6">@Strings.active</listEntry>
-            <listEntry value="36">@Strings.moderate</listEntry>
-            <listEntry value="37">@Strings.vigorous</listEntry>
-            <listEntry value="10">@Strings.notification</listEntry>
-            <listEntry value="11">@Strings.alarm</listEntry>
-            <listEntry value="20">@Strings.phonestatus</listEntry>
-            <listEntry value="16">@Strings.groupnoti</listEntry>
-            <listEntry value="12">@Strings.altitude</listEntry>
-            <listEntry value="13">@Strings.temperature</listEntry>
-            <listEntry value="32">@Strings.temperature_garmin</listEntry>
-            <listEntry value="23">@Strings.temperature_out</listEntry>
-            <listEntry value="24">@Strings.temperature_hl</listEntry>
-            <listEntry value="35">@Strings.temperature_hl_garmin</listEntry>
-            <listEntry value="33">@Strings.precipitation_garmin</listEntry>
-            <listEntry value="34">@Strings.weather_garmin</listEntry>
-            <listEntry value="14">@Strings.sunriseset</listEntry>
-            <listEntry value="15">@Strings.floorclimbed</listEntry>
-            <listEntry value="18">@Strings.barometer</listEntry>
-            <listEntry value="21">@Strings.countdown</listEntry>
-            <listEntry value="25">@Strings.weather</listEntry>
-            <listEntry value="26">@Strings.ampm</listEntry>
-            <listEntry value="28">@Strings.wind</listEntry>
-            <listEntry value="29">@Strings.bodybattery</listEntry>
-            <listEntry value="30">@Strings.stress</listEntry>
-            <listEntry value="31">@Strings.bodybattstress</listEntry>
-            <listEntry value="38">@Strings.airquality</listEntry>
-        </settingConfig>
-    </setting>
-    <setting propertyKey="@Properties.comp6h" title="@Strings.comp6h">
-        <settingConfig type="list">
-        	<listEntry value="9">@Strings.empty</listEntry>
-        	<listEntry value="7">@Strings.date</listEntry>
-            <listEntry value="22">@Strings.weeknum</listEntry>
-            <listEntry value="8">@Strings.time</listEntry>
-            <listEntry value="19">@Strings.time_secondary</listEntry>
-            <listEntry value="1">@Strings.battery</listEntry>
-            <listEntry value="2">@Strings.calories</listEntry>
-            <listEntry value="0">@Strings.heartrate</listEntry>
-            <listEntry value="3">@Strings.distance</listEntry>
-            <listEntry value="17">@Strings.distanceweek</listEntry>
-            <listEntry value="4">@Strings.movebar</listEntry>
-            <listEntry value="5">@Strings.steps</listEntry>
-            <listEntry value="6">@Strings.active</listEntry>
-            <listEntry value="36">@Strings.moderate</listEntry>
-            <listEntry value="37">@Strings.vigorous</listEntry>
-            <listEntry value="10">@Strings.notification</listEntry>
-            <listEntry value="11">@Strings.alarm</listEntry>
-            <listEntry value="20">@Strings.phonestatus</listEntry>
-            <listEntry value="16">@Strings.groupnoti</listEntry>
-            <listEntry value="12">@Strings.altitude</listEntry>
-            <listEntry value="13">@Strings.temperature</listEntry>
-            <listEntry value="32">@Strings.temperature_garmin</listEntry>
-            <listEntry value="23">@Strings.temperature_out</listEntry>
-            <listEntry value="24">@Strings.temperature_hl</listEntry>
-            <listEntry value="35">@Strings.temperature_hl_garmin</listEntry>
-            <listEntry value="33">@Strings.precipitation_garmin</listEntry>
-            <listEntry value="34">@Strings.weather_garmin</listEntry>
-            <listEntry value="14">@Strings.sunriseset</listEntry>
-            <listEntry value="15">@Strings.floorclimbed</listEntry>
-            <listEntry value="18">@Strings.barometer</listEntry>
-            <listEntry value="21">@Strings.countdown</listEntry>
-            <listEntry value="25">@Strings.weather</listEntry>
-            <listEntry value="26">@Strings.ampm</listEntry>
-            <listEntry value="28">@Strings.wind</listEntry>
-            <listEntry value="29">@Strings.bodybattery</listEntry>
-            <listEntry value="30">@Strings.stress</listEntry>
-            <listEntry value="31">@Strings.bodybattstress</listEntry>
-            <listEntry value="38">@Strings.airquality</listEntry>
-        </settingConfig>
-    </setting>
-    <setting propertyKey="@Properties.comp8h" title="@Strings.comp8h">
-        <settingConfig type="list">
-        	<listEntry value="9">@Strings.empty</listEntry>
-        	<listEntry value="7">@Strings.date</listEntry>
-            <listEntry value="22">@Strings.weeknum</listEntry>
-            <listEntry value="8">@Strings.time</listEntry>
-            <listEntry value="19">@Strings.time_secondary</listEntry>
-            <listEntry value="1">@Strings.battery</listEntry>
-            <listEntry value="2">@Strings.calories</listEntry>
-            <listEntry value="0">@Strings.heartrate</listEntry>
-            <listEntry value="3">@Strings.distance</listEntry>
-            <listEntry value="17">@Strings.distanceweek</listEntry>
-            <listEntry value="4">@Strings.movebar</listEntry>
-            <listEntry value="5">@Strings.steps</listEntry>
-            <listEntry value="6">@Strings.active</listEntry>
-            <listEntry value="36">@Strings.moderate</listEntry>
-            <listEntry value="37">@Strings.vigorous</listEntry>
-            <listEntry value="10">@Strings.notification</listEntry>
-            <listEntry value="11">@Strings.alarm</listEntry>
-            <listEntry value="20">@Strings.phonestatus</listEntry>
-            <listEntry value="16">@Strings.groupnoti</listEntry>
-            <listEntry value="12">@Strings.altitude</listEntry>
-            <listEntry value="13">@Strings.temperature</listEntry>
-            <listEntry value="32">@Strings.temperature_garmin</listEntry>
-            <listEntry value="23">@Strings.temperature_out</listEntry>
-            <listEntry value="24">@Strings.temperature_hl</listEntry>
-            <listEntry value="35">@Strings.temperature_hl_garmin</listEntry>
-            <listEntry value="33">@Strings.precipitation_garmin</listEntry>
-            <listEntry value="34">@Strings.weather_garmin</listEntry>
-            <listEntry value="14">@Strings.sunriseset</listEntry>
-            <listEntry value="15">@Strings.floorclimbed</listEntry>
-            <listEntry value="18">@Strings.barometer</listEntry>
-            <listEntry value="21">@Strings.countdown</listEntry>
-            <listEntry value="25">@Strings.weather</listEntry>
-            <listEntry value="26">@Strings.ampm</listEntry>
-            <listEntry value="28">@Strings.wind</listEntry>
-            <listEntry value="29">@Strings.bodybattery</listEntry>
-            <listEntry value="30">@Strings.stress</listEntry>
-            <listEntry value="31">@Strings.bodybattstress</listEntry>
-            <listEntry value="38">@Strings.airquality</listEntry>
-        </settingConfig>
-    </setting>
-    <setting propertyKey="@Properties.comp10h" title="@Strings.comp10h">
-        <settingConfig type="list">
-        	<listEntry value="9">@Strings.empty</listEntry>
-        	<listEntry value="7">@Strings.date</listEntry>
-            <listEntry value="22">@Strings.weeknum</listEntry>
-            <listEntry value="8">@Strings.time</listEntry>
-            <listEntry value="19">@Strings.time_secondary</listEntry>
-            <listEntry value="1">@Strings.battery</listEntry>
-            <listEntry value="2">@Strings.calories</listEntry>
-            <listEntry value="0">@Strings.heartrate</listEntry>
-            <listEntry value="3">@Strings.distance</listEntry>
-            <listEntry value="17">@Strings.distanceweek</listEntry>
-            <listEntry value="4">@Strings.movebar</listEntry>
-            <listEntry value="5">@Strings.steps</listEntry>
-            <listEntry value="6">@Strings.active</listEntry>
-            <listEntry value="36">@Strings.moderate</listEntry>
-            <listEntry value="37">@Strings.vigorous</listEntry>
-            <listEntry value="10">@Strings.notification</listEntry>
-            <listEntry value="11">@Strings.alarm</listEntry>
-            <listEntry value="20">@Strings.phonestatus</listEntry>
-            <listEntry value="16">@Strings.groupnoti</listEntry>
-            <listEntry value="12">@Strings.altitude</listEntry>
-            <listEntry value="13">@Strings.temperature</listEntry>
-            <listEntry value="32">@Strings.temperature_garmin</listEntry>
-            <listEntry value="23">@Strings.temperature_out</listEntry>
-            <listEntry value="24">@Strings.temperature_hl</listEntry>
-            <listEntry value="35">@Strings.temperature_hl_garmin</listEntry>
-            <listEntry value="33">@Strings.precipitation_garmin</listEntry>
-            <listEntry value="34">@Strings.weather_garmin</listEntry>
-            <listEntry value="14">@Strings.sunriseset</listEntry>
-            <listEntry value="15">@Strings.floorclimbed</listEntry>
-            <listEntry value="18">@Strings.barometer</listEntry>
-            <listEntry value="21">@Strings.countdown</listEntry>
-            <listEntry value="25">@Strings.weather</listEntry>
-            <listEntry value="26">@Strings.ampm</listEntry>
-            <listEntry value="28">@Strings.wind</listEntry>
-            <listEntry value="29">@Strings.bodybattery</listEntry>
-            <listEntry value="30">@Strings.stress</listEntry>
-            <listEntry value="31">@Strings.bodybattstress</listEntry>
-            <listEntry value="38">@Strings.airquality</listEntry>
-        </settingConfig>
-    </setting>
-    <setting propertyKey="@Properties.compbart" title="@Strings.compbart">
-        <settingConfig type="list">
-        	<listEntry value="9">@Strings.empty</listEntry>
-        	<listEntry value="7">@Strings.date</listEntry>
-            <listEntry value="22">@Strings.weeknum</listEntry>
-            <listEntry value="8">@Strings.time</listEntry>
-            <listEntry value="19">@Strings.time_secondary</listEntry>
-            <listEntry value="1">@Strings.battery</listEntry>
-            <listEntry value="2">@Strings.calories</listEntry>
-            <listEntry value="0">@Strings.heartrate</listEntry>
-            <listEntry value="3">@Strings.distance</listEntry>
-            <listEntry value="17">@Strings.distanceweek</listEntry>
-            <listEntry value="4">@Strings.movebar</listEntry>
-            <listEntry value="5">@Strings.steps</listEntry>
-            <listEntry value="6">@Strings.active</listEntry>
-            <listEntry value="36">@Strings.moderate</listEntry>
-            <listEntry value="37">@Strings.vigorous</listEntry>
-            <listEntry value="10">@Strings.notification</listEntry>
-            <listEntry value="11">@Strings.alarm</listEntry>
-            <listEntry value="20">@Strings.phonestatus</listEntry>
-            <listEntry value="16">@Strings.groupnoti</listEntry>
-            <listEntry value="12">@Strings.altitude</listEntry>
-            <listEntry value="13">@Strings.temperature</listEntry>
-            <listEntry value="32">@Strings.temperature_garmin</listEntry>
-            <listEntry value="23">@Strings.temperature_out</listEntry>
-            <listEntry value="24">@Strings.temperature_hl</listEntry>
-            <listEntry value="35">@Strings.temperature_hl_garmin</listEntry>
-            <listEntry value="33">@Strings.precipitation_garmin</listEntry>
-            <listEntry value="34">@Strings.weather_garmin</listEntry>
-            <listEntry value="14">@Strings.sunriseset</listEntry>
-            <listEntry value="15">@Strings.floorclimbed</listEntry>
-            <listEntry value="18">@Strings.barometer</listEntry>
-            <listEntry value="21">@Strings.countdown</listEntry>
-            <listEntry value="25">@Strings.weather</listEntry>
-            <listEntry value="26">@Strings.ampm</listEntry>
-            <listEntry value="27">@Strings.ctext</listEntry>
-            <listEntry value="28">@Strings.wind</listEntry>
-            <listEntry value="29">@Strings.bodybattery</listEntry>
-            <listEntry value="30">@Strings.stress</listEntry>
-            <listEntry value="38">@Strings.airquality</listEntry>
-        </settingConfig>
-    </setting>
-    <setting propertyKey="@Properties.compbarb" title="@Strings.compbarb">
-        <settingConfig type="list">
-        	<listEntry value="9">@Strings.empty</listEntry>
-        	<listEntry value="7">@Strings.date</listEntry>
-            <listEntry value="22">@Strings.weeknum</listEntry>
-            <listEntry value="8">@Strings.time</listEntry>
-            <listEntry value="19">@Strings.time_secondary</listEntry>
-            <listEntry value="1">@Strings.battery</listEntry>
-            <listEntry value="2">@Strings.calories</listEntry>
-            <listEntry value="0">@Strings.heartrate</listEntry>
-            <listEntry value="3">@Strings.distance</listEntry>
-            <listEntry value="17">@Strings.distanceweek</listEntry>
-            <listEntry value="4">@Strings.movebar</listEntry>
-            <listEntry value="5">@Strings.steps</listEntry>
-            <listEntry value="6">@Strings.active</listEntry>
-            <listEntry value="36">@Strings.moderate</listEntry>
-            <listEntry value="37">@Strings.vigorous</listEntry>
-            <listEntry value="10">@Strings.notification</listEntry>
-            <listEntry value="11">@Strings.alarm</listEntry>
-            <listEntry value="20">@Strings.phonestatus</listEntry>
-            <listEntry value="16">@Strings.groupnoti</listEntry>
-            <listEntry value="12">@Strings.altitude</listEntry>
-            <listEntry value="13">@Strings.temperature</listEntry>
-            <listEntry value="32">@Strings.temperature_garmin</listEntry>
-            <listEntry value="23">@Strings.temperature_out</listEntry>
-            <listEntry value="24">@Strings.temperature_hl</listEntry>
-            <listEntry value="35">@Strings.temperature_hl_garmin</listEntry>
-            <listEntry value="33">@Strings.precipitation_garmin</listEntry>
-            <listEntry value="34">@Strings.weather_garmin</listEntry>
-            <listEntry value="14">@Strings.sunriseset</listEntry>
-            <listEntry value="15">@Strings.floorclimbed</listEntry>
-            <listEntry value="18">@Strings.barometer</listEntry>
-            <listEntry value="21">@Strings.countdown</listEntry>
-            <listEntry value="25">@Strings.weather</listEntry>
-            <listEntry value="26">@Strings.ampm</listEntry>
-            <listEntry value="27">@Strings.ctext</listEntry>
-            <listEntry value="28">@Strings.wind</listEntry>
-            <listEntry value="29">@Strings.bodybattery</listEntry>
-            <listEntry value="30">@Strings.stress</listEntry>
-            <listEntry value="38">@Strings.airquality</listEntry>
-        </settingConfig>
-    </setting>
+        <setting propertyKey="@Properties.big_num_stripes" title="@Strings.big_num_stripes">
+            <settingConfig type="boolean" />
+        </setting>
+        <setting propertyKey="@Properties.left_digital_info" title="@Strings.left_digital_info">
+            <settingConfig type="boolean" />
+        </setting>
+        <setting propertyKey="@Properties.zero_leading_digital" title="@Strings.zero_leading_digital">
+            <settingConfig type="boolean" />
+        </setting>
+        <setting propertyKey="@Properties.always_on_second" title="@Strings.always_on_second">
+            <settingConfig type="boolean" />
+        </setting>
+        <setting propertyKey="@Properties.always_on_heart" title="@Strings.always_on_heart">
+            <settingConfig type="boolean" />
+        </setting>
+        <setting propertyKey="@Properties.always_on_style" title="@Strings.always_on_style">
+            <settingConfig type="list">
+                <listEntry value="1">@Strings.digital_style_medium</listEntry>
+                <listEntry value="0">@Strings.digital_style_small</listEntry>
+            </settingConfig>
+        </setting>
+    </group>
 
-    <setting propertyKey="@Properties.compgrapht" title="@Strings.compgrapht">
-        <settingConfig type="list">
-        	<listEntry value="0">@Strings.empty</listEntry>
-            <listEntry value="1">@Strings.heartrate</listEntry>
-            <listEntry value="2">@Strings.altitude</listEntry>
-            <listEntry value="3">@Strings.barometer</listEntry>
-            <listEntry value="4">@Strings.temperature</listEntry>
-            <listEntry value="5">@Strings.bodybattery</listEntry>
-            <listEntry value="6">@Strings.stress</listEntry>
-        </settingConfig>
-    </setting>
-    <setting propertyKey="@Properties.compgraphb" title="@Strings.compgraphb">
-        <settingConfig type="list">
-        	<listEntry value="0">@Strings.empty</listEntry>
-            <listEntry value="1">@Strings.heartrate</listEntry>
-            <listEntry value="2">@Strings.altitude</listEntry>
-            <listEntry value="3">@Strings.barometer</listEntry>
-            <listEntry value="4">@Strings.temperature</listEntry>
-            <listEntry value="5">@Strings.bodybattery</listEntry>
-            <listEntry value="6">@Strings.stress</listEntry>
-        </settingConfig>
-    </setting>
-    <!-- <setting propertyKey="@Properties.baro_period" title="@Strings.baro_period">
-        <settingConfig type="list">
-        	<listEntry value="1">@Strings.h1</listEntry>
-        	<listEntry value="2">@Strings.h2</listEntry>
-        	<listEntry value="3">@Strings.h3</listEntry>
-        	<listEntry value="4">@Strings.h4</listEntry>
-        	<listEntry value="5">@Strings.h5</listEntry>
-        </settingConfig>
-    </setting> -->
-    <setting propertyKey="@Properties.utc_timezone" title="@Strings.utc_timezone">
-        <settingConfig type="list">
-        	<listEntry value="0">@Strings.utc0</listEntry>
-        	<listEntry value="1">@Strings.utc1</listEntry>
-        	<listEntry value="2">@Strings.utc2</listEntry>
-        	<listEntry value="3">@Strings.utc3</listEntry>
-        	<listEntry value="4">@Strings.utc4</listEntry>
-        	<listEntry value="5">@Strings.utc5</listEntry>
-        	<listEntry value="6">@Strings.utc6</listEntry>
-        	<listEntry value="7">@Strings.utc7</listEntry>
-        	<listEntry value="8">@Strings.utc8</listEntry>
-        	<listEntry value="9">@Strings.utc9</listEntry>
-        	<listEntry value="10">@Strings.utc10</listEntry>
-        	<listEntry value="11">@Strings.utc11</listEntry>
-        	<listEntry value="12">@Strings.utc12</listEntry>
-        	<listEntry value="-1">@Strings.utc1m</listEntry>
-        	<listEntry value="-2">@Strings.utc2m</listEntry>
-        	<listEntry value="-3">@Strings.utc3m</listEntry>
-        	<listEntry value="-4">@Strings.utc4m</listEntry>
-        	<listEntry value="-5">@Strings.utc5m</listEntry>
-        	<listEntry value="-6">@Strings.utc6m</listEntry>
-        	<listEntry value="-7">@Strings.utc7m</listEntry>
-        	<listEntry value="-8">@Strings.utc8m</listEntry>
-        	<listEntry value="-9">@Strings.utc9m</listEntry>
-        	<listEntry value="-10">@Strings.utc10m</listEntry>
-        	<listEntry value="-11">@Strings.utc11m</listEntry>
-        	<listEntry value="-12">@Strings.utc12m</listEntry>
-        </settingConfig>
-    </setting>
-    <setting propertyKey="@Properties.utc_shift" title="@Strings.utc_shift">
-        <settingConfig type="boolean" />
-    </setting>
-    <setting propertyKey="@Properties.date_format" title="@Strings.date_format">
-        <settingConfig type="list">
-        	<listEntry value="0">@Strings.datef1</listEntry>
-        	<listEntry value="1">@Strings.datef2</listEntry>
-        	<listEntry value="2">@Strings.datef21</listEntry>
-        	<listEntry value="3">@Strings.datef3</listEntry>
-        	<listEntry value="4">@Strings.datef31</listEntry>
-        	<listEntry value="5">@Strings.datef4</listEntry>
-        	<listEntry value="6">@Strings.datef41</listEntry>
-        </settingConfig>
-    </setting>
-    <setting propertyKey="@Properties.force_date_english" title="@Strings.force_date_english">
-        <settingConfig type="boolean" />
-    </setting>
-    <setting propertyKey="@Properties.battery_format" title="@Strings.battery_format">
-        <settingConfig type="list">
-        	<listEntry value="0">@Strings.battery_format_1</listEntry>
-        	<listEntry value="1">@Strings.battery_format_2</listEntry>
-        </settingConfig>
-    </setting>
-    <setting propertyKey="@Properties.countdown_date" title="@Strings.countdown_date">
-        <settingConfig type="date">
-        </settingConfig>
-    </setting>
-    <setting propertyKey="@Properties.barometer_unit" title="@Strings.barometer_unit">
-        <settingConfig type="list">
-        	<listEntry value="0">@Strings.barometer_unit_0</listEntry>
-        	<listEntry value="1">@Strings.barometer_unit_1</listEntry>
-        </settingConfig>
-    </setting>
-    <setting propertyKey="@Properties.ctext_input" title="@Strings.ctext">
-        <settingConfig type="alphaNumeric" />
-    </setting>
-    <setting propertyKey="@Properties.openweather_api" title="@Strings.openweather_api">
-        <settingConfig type="alphaNumeric" />
-    </setting>
-    <setting propertyKey="@Properties.iqair_api" title="@Strings.iqair_api">
-        <settingConfig type="alphaNumeric" />
-    </setting>
-    <setting propertyKey="@Properties.enable_buffering" title="@Strings.enable_buffering">
-        <settingConfig type="boolean" />
-    </setting>
+    <group id="data_group" title="@Strings.data_group" description="@Strings.data_group_desc">
+        <setting propertyKey="@Properties.comp12h" title="@Strings.comp12h">
+            <settingConfig type="list">
+                <listEntry value="9">@Strings.empty</listEntry>
+                <listEntry value="6">@Strings.active</listEntry>            <!-- Active Minutes -->
+                <listEntry value="36">@Strings.moderate</listEntry>
+                <listEntry value="37">@Strings.vigorous</listEntry>
+                <listEntry value="38">@Strings.airquality</listEntry>       <!-- Air -->
+                <listEntry value="12">@Strings.altitude</listEntry>
+                <listEntry value="18">@Strings.barometer</listEntry>
+                <listEntry value="1">@Strings.battery</listEntry>
+                <listEntry value="2">@Strings.calories</listEntry>
+                <listEntry value="21">@Strings.countdown</listEntry>        <!-- Custom -->
+                <listEntry value="27">@Strings.ctext</listEntry>
+                <listEntry value="7">@Strings.date</listEntry>              <!-- Date -->
+                <listEntry value="22">@Strings.dateweek</listEntry>
+                <listEntry value="3">@Strings.distance</listEntry>
+                <listEntry value="17">@Strings.distanceweek</listEntry>
+                <listEntry value="15">@Strings.floorclimbed</listEntry>
+                <listEntry value="0">@Strings.heartrate</listEntry>
+                <listEntry value="29">@Strings.bodybattery</listEntry>      <!-- Health Metrics -->
+                <listEntry value="30">@Strings.stress</listEntry>
+                <listEntry value="31">@Strings.bodybattstress</listEntry>
+                <listEntry value="39">@Strings.timetorecovery</listEntry>
+                <listEntry value="4">@Strings.movebar</listEntry>
+                <listEntry value="16">@Strings.groupnoti</listEntry>        <!-- Phone -->
+                <listEntry value="11">@Strings.alarm</listEntry>
+                <listEntry value="20">@Strings.phonestatus</listEntry>
+                <listEntry value="10">@Strings.notification</listEntry>
+                <listEntry value="5">@Strings.steps</listEntry>
+                <listEntry value="13">@Strings.temperature</listEntry>      <!-- Temperature -->
+                <listEntry value="32">@Strings.temperature_garmin</listEntry>
+                <listEntry value="23">@Strings.temperature_out</listEntry>
+                <listEntry value="24">@Strings.temperature_hl</listEntry>
+                <listEntry value="35">@Strings.temperature_hl_garmin</listEntry>
+                <listEntry value="33">@Strings.precipitation_garmin</listEntry>
+                <listEntry value="8">@Strings.time</listEntry>              <!-- Time -->
+                <listEntry value="26">@Strings.ampm</listEntry>
+                <listEntry value="19">@Strings.time_secondary</listEntry>
+                <listEntry value="14">@Strings.sunriseset</listEntry>
+                <listEntry value="25">@Strings.weather</listEntry>          <!-- Weather -->
+                <listEntry value="34">@Strings.weather_garmin</listEntry>
+                <listEntry value="28">@Strings.wind</listEntry>
+            </settingConfig>
+        </setting>
+        <setting propertyKey="@Properties.comp2h" title="@Strings.comp2h">
+            <settingConfig type="list">
+                <listEntry value="9">@Strings.empty</listEntry>
+                <listEntry value="6">@Strings.active</listEntry>            <!-- Active Minutes -->
+                <listEntry value="36">@Strings.moderate</listEntry>
+                <listEntry value="37">@Strings.vigorous</listEntry>
+                <listEntry value="38">@Strings.airquality</listEntry>       <!-- Air -->
+                <listEntry value="12">@Strings.altitude</listEntry>
+                <listEntry value="18">@Strings.barometer</listEntry>
+                <listEntry value="1">@Strings.battery</listEntry>
+                <listEntry value="2">@Strings.calories</listEntry>
+                <listEntry value="21">@Strings.countdown</listEntry>        <!-- Custom -->
+                <listEntry value="27">@Strings.ctext</listEntry>
+                <listEntry value="7">@Strings.date</listEntry>              <!-- Date -->
+                <listEntry value="22">@Strings.dateweek</listEntry>
+                <listEntry value="3">@Strings.distance</listEntry>
+                <listEntry value="17">@Strings.distanceweek</listEntry>
+                <listEntry value="15">@Strings.floorclimbed</listEntry>
+                <listEntry value="0">@Strings.heartrate</listEntry>
+                <listEntry value="29">@Strings.bodybattery</listEntry>      <!-- Health Metrics -->
+                <listEntry value="30">@Strings.stress</listEntry>
+                <listEntry value="31">@Strings.bodybattstress</listEntry>
+                <listEntry value="39">@Strings.timetorecovery</listEntry>
+                <listEntry value="4">@Strings.movebar</listEntry>
+                <listEntry value="16">@Strings.groupnoti</listEntry>        <!-- Phone -->
+                <listEntry value="11">@Strings.alarm</listEntry>
+                <listEntry value="20">@Strings.phonestatus</listEntry>
+                <listEntry value="10">@Strings.notification</listEntry>
+                <listEntry value="5">@Strings.steps</listEntry>
+                <listEntry value="13">@Strings.temperature</listEntry>      <!-- Temperature -->
+                <listEntry value="32">@Strings.temperature_garmin</listEntry>
+                <listEntry value="23">@Strings.temperature_out</listEntry>
+                <listEntry value="24">@Strings.temperature_hl</listEntry>
+                <listEntry value="35">@Strings.temperature_hl_garmin</listEntry>
+                <listEntry value="33">@Strings.precipitation_garmin</listEntry>
+                <listEntry value="8">@Strings.time</listEntry>              <!-- Time -->
+                <listEntry value="26">@Strings.ampm</listEntry>
+                <listEntry value="19">@Strings.time_secondary</listEntry>
+                <listEntry value="14">@Strings.sunriseset</listEntry>
+                <listEntry value="25">@Strings.weather</listEntry>          <!-- Weather -->
+                <listEntry value="34">@Strings.weather_garmin</listEntry>
+                <listEntry value="28">@Strings.wind</listEntry>
+            </settingConfig>
+        </setting>
+        <setting propertyKey="@Properties.comp4h" title="@Strings.comp4h">
+            <settingConfig type="list">
+                <listEntry value="9">@Strings.empty</listEntry>
+                <listEntry value="6">@Strings.active</listEntry>            <!-- Active Minutes -->
+                <listEntry value="36">@Strings.moderate</listEntry>
+                <listEntry value="37">@Strings.vigorous</listEntry>
+                <listEntry value="38">@Strings.airquality</listEntry>       <!-- Air -->
+                <listEntry value="12">@Strings.altitude</listEntry>
+                <listEntry value="18">@Strings.barometer</listEntry>
+                <listEntry value="1">@Strings.battery</listEntry>
+                <listEntry value="2">@Strings.calories</listEntry>
+                <listEntry value="21">@Strings.countdown</listEntry>        <!-- Custom -->
+                <listEntry value="27">@Strings.ctext</listEntry>
+                <listEntry value="7">@Strings.date</listEntry>              <!-- Date -->
+                <listEntry value="22">@Strings.dateweek</listEntry>
+                <listEntry value="3">@Strings.distance</listEntry>
+                <listEntry value="17">@Strings.distanceweek</listEntry>
+                <listEntry value="15">@Strings.floorclimbed</listEntry>
+                <listEntry value="0">@Strings.heartrate</listEntry>
+                <listEntry value="29">@Strings.bodybattery</listEntry>      <!-- Health Metrics -->
+                <listEntry value="30">@Strings.stress</listEntry>
+                <listEntry value="31">@Strings.bodybattstress</listEntry>
+                <listEntry value="39">@Strings.timetorecovery</listEntry>
+                <listEntry value="4">@Strings.movebar</listEntry>
+                <listEntry value="16">@Strings.groupnoti</listEntry>        <!-- Phone -->
+                <listEntry value="11">@Strings.alarm</listEntry>
+                <listEntry value="20">@Strings.phonestatus</listEntry>
+                <listEntry value="10">@Strings.notification</listEntry>
+                <listEntry value="5">@Strings.steps</listEntry>
+                <listEntry value="13">@Strings.temperature</listEntry>      <!-- Temperature -->
+                <listEntry value="32">@Strings.temperature_garmin</listEntry>
+                <listEntry value="23">@Strings.temperature_out</listEntry>
+                <listEntry value="24">@Strings.temperature_hl</listEntry>
+                <listEntry value="35">@Strings.temperature_hl_garmin</listEntry>
+                <listEntry value="33">@Strings.precipitation_garmin</listEntry>
+                <listEntry value="8">@Strings.time</listEntry>              <!-- Time -->
+                <listEntry value="26">@Strings.ampm</listEntry>
+                <listEntry value="19">@Strings.time_secondary</listEntry>
+                <listEntry value="14">@Strings.sunriseset</listEntry>
+                <listEntry value="25">@Strings.weather</listEntry>          <!-- Weather -->
+                <listEntry value="34">@Strings.weather_garmin</listEntry>
+                <listEntry value="28">@Strings.wind</listEntry>
+            </settingConfig>
+        </setting>
+        <setting propertyKey="@Properties.comp6h" title="@Strings.comp6h">
+            <settingConfig type="list">
+                <listEntry value="9">@Strings.empty</listEntry>
+                <listEntry value="6">@Strings.active</listEntry>            <!-- Active Minutes -->
+                <listEntry value="36">@Strings.moderate</listEntry>
+                <listEntry value="37">@Strings.vigorous</listEntry>
+                <listEntry value="38">@Strings.airquality</listEntry>       <!-- Air -->
+                <listEntry value="12">@Strings.altitude</listEntry>
+                <listEntry value="18">@Strings.barometer</listEntry>
+                <listEntry value="1">@Strings.battery</listEntry>
+                <listEntry value="2">@Strings.calories</listEntry>
+                <listEntry value="21">@Strings.countdown</listEntry>        <!-- Custom -->
+                <listEntry value="27">@Strings.ctext</listEntry>
+                <listEntry value="7">@Strings.date</listEntry>              <!-- Date -->
+                <listEntry value="22">@Strings.dateweek</listEntry>
+                <listEntry value="3">@Strings.distance</listEntry>
+                <listEntry value="17">@Strings.distanceweek</listEntry>
+                <listEntry value="15">@Strings.floorclimbed</listEntry>
+                <listEntry value="0">@Strings.heartrate</listEntry>
+                <listEntry value="29">@Strings.bodybattery</listEntry>      <!-- Health Metrics -->
+                <listEntry value="30">@Strings.stress</listEntry>
+                <listEntry value="31">@Strings.bodybattstress</listEntry>
+                <listEntry value="39">@Strings.timetorecovery</listEntry>
+                <listEntry value="4">@Strings.movebar</listEntry>
+                <listEntry value="16">@Strings.groupnoti</listEntry>        <!-- Phone -->
+                <listEntry value="11">@Strings.alarm</listEntry>
+                <listEntry value="20">@Strings.phonestatus</listEntry>
+                <listEntry value="10">@Strings.notification</listEntry>
+                <listEntry value="5">@Strings.steps</listEntry>
+                <listEntry value="13">@Strings.temperature</listEntry>      <!-- Temperature -->
+                <listEntry value="32">@Strings.temperature_garmin</listEntry>
+                <listEntry value="23">@Strings.temperature_out</listEntry>
+                <listEntry value="24">@Strings.temperature_hl</listEntry>
+                <listEntry value="35">@Strings.temperature_hl_garmin</listEntry>
+                <listEntry value="33">@Strings.precipitation_garmin</listEntry>
+                <listEntry value="8">@Strings.time</listEntry>              <!-- Time -->
+                <listEntry value="26">@Strings.ampm</listEntry>
+                <listEntry value="19">@Strings.time_secondary</listEntry>
+                <listEntry value="14">@Strings.sunriseset</listEntry>
+                <listEntry value="25">@Strings.weather</listEntry>          <!-- Weather -->
+                <listEntry value="34">@Strings.weather_garmin</listEntry>
+                <listEntry value="28">@Strings.wind</listEntry>
+            </settingConfig>
+        </setting>
+        <setting propertyKey="@Properties.comp8h" title="@Strings.comp8h">
+            <settingConfig type="list">
+                <listEntry value="9">@Strings.empty</listEntry>
+                <listEntry value="6">@Strings.active</listEntry>            <!-- Active Minutes -->
+                <listEntry value="36">@Strings.moderate</listEntry>
+                <listEntry value="37">@Strings.vigorous</listEntry>
+                <listEntry value="38">@Strings.airquality</listEntry>       <!-- Air -->
+                <listEntry value="12">@Strings.altitude</listEntry>
+                <listEntry value="18">@Strings.barometer</listEntry>
+                <listEntry value="1">@Strings.battery</listEntry>
+                <listEntry value="2">@Strings.calories</listEntry>
+                <listEntry value="21">@Strings.countdown</listEntry>        <!-- Custom -->
+                <listEntry value="27">@Strings.ctext</listEntry>
+                <listEntry value="7">@Strings.date</listEntry>              <!-- Date -->
+                <listEntry value="22">@Strings.dateweek</listEntry>
+                <listEntry value="3">@Strings.distance</listEntry>
+                <listEntry value="17">@Strings.distanceweek</listEntry>
+                <listEntry value="15">@Strings.floorclimbed</listEntry>
+                <listEntry value="0">@Strings.heartrate</listEntry>
+                <listEntry value="29">@Strings.bodybattery</listEntry>      <!-- Health Metrics -->
+                <listEntry value="30">@Strings.stress</listEntry>
+                <listEntry value="31">@Strings.bodybattstress</listEntry>
+                <listEntry value="39">@Strings.timetorecovery</listEntry>
+                <listEntry value="4">@Strings.movebar</listEntry>
+                <listEntry value="16">@Strings.groupnoti</listEntry>        <!-- Phone -->
+                <listEntry value="11">@Strings.alarm</listEntry>
+                <listEntry value="20">@Strings.phonestatus</listEntry>
+                <listEntry value="10">@Strings.notification</listEntry>
+                <listEntry value="5">@Strings.steps</listEntry>
+                <listEntry value="13">@Strings.temperature</listEntry>      <!-- Temperature -->
+                <listEntry value="32">@Strings.temperature_garmin</listEntry>
+                <listEntry value="23">@Strings.temperature_out</listEntry>
+                <listEntry value="24">@Strings.temperature_hl</listEntry>
+                <listEntry value="35">@Strings.temperature_hl_garmin</listEntry>
+                <listEntry value="33">@Strings.precipitation_garmin</listEntry>
+                <listEntry value="8">@Strings.time</listEntry>              <!-- Time -->
+                <listEntry value="26">@Strings.ampm</listEntry>
+                <listEntry value="19">@Strings.time_secondary</listEntry>
+                <listEntry value="14">@Strings.sunriseset</listEntry>
+                <listEntry value="25">@Strings.weather</listEntry>          <!-- Weather -->
+                <listEntry value="34">@Strings.weather_garmin</listEntry>
+                <listEntry value="28">@Strings.wind</listEntry>
+            </settingConfig>
+        </setting>
+        <setting propertyKey="@Properties.comp10h" title="@Strings.comp10h">
+            <settingConfig type="list">
+                <listEntry value="9">@Strings.empty</listEntry>
+                <listEntry value="6">@Strings.active</listEntry>            <!-- Active Minutes -->
+                <listEntry value="36">@Strings.moderate</listEntry>
+                <listEntry value="37">@Strings.vigorous</listEntry>
+                <listEntry value="38">@Strings.airquality</listEntry>       <!-- Air -->
+                <listEntry value="12">@Strings.altitude</listEntry>
+                <listEntry value="18">@Strings.barometer</listEntry>
+                <listEntry value="1">@Strings.battery</listEntry>
+                <listEntry value="2">@Strings.calories</listEntry>
+                <listEntry value="21">@Strings.countdown</listEntry>        <!-- Custom -->
+                <listEntry value="27">@Strings.ctext</listEntry>
+                <listEntry value="7">@Strings.date</listEntry>              <!-- Date -->
+                <listEntry value="22">@Strings.dateweek</listEntry>
+                <listEntry value="3">@Strings.distance</listEntry>
+                <listEntry value="17">@Strings.distanceweek</listEntry>
+                <listEntry value="15">@Strings.floorclimbed</listEntry>
+                <listEntry value="0">@Strings.heartrate</listEntry>
+                <listEntry value="29">@Strings.bodybattery</listEntry>      <!-- Health Metrics -->
+                <listEntry value="30">@Strings.stress</listEntry>
+                <listEntry value="31">@Strings.bodybattstress</listEntry>
+                <listEntry value="39">@Strings.timetorecovery</listEntry>
+                <listEntry value="4">@Strings.movebar</listEntry>
+                <listEntry value="16">@Strings.groupnoti</listEntry>        <!-- Phone -->
+                <listEntry value="11">@Strings.alarm</listEntry>
+                <listEntry value="20">@Strings.phonestatus</listEntry>
+                <listEntry value="10">@Strings.notification</listEntry>
+                <listEntry value="5">@Strings.steps</listEntry>
+                <listEntry value="13">@Strings.temperature</listEntry>      <!-- Temperature -->
+                <listEntry value="32">@Strings.temperature_garmin</listEntry>
+                <listEntry value="23">@Strings.temperature_out</listEntry>
+                <listEntry value="24">@Strings.temperature_hl</listEntry>
+                <listEntry value="35">@Strings.temperature_hl_garmin</listEntry>
+                <listEntry value="33">@Strings.precipitation_garmin</listEntry>
+                <listEntry value="8">@Strings.time</listEntry>              <!-- Time -->
+                <listEntry value="26">@Strings.ampm</listEntry>
+                <listEntry value="19">@Strings.time_secondary</listEntry>
+                <listEntry value="14">@Strings.sunriseset</listEntry>
+                <listEntry value="25">@Strings.weather</listEntry>          <!-- Weather -->
+                <listEntry value="34">@Strings.weather_garmin</listEntry>
+                <listEntry value="28">@Strings.wind</listEntry>
+            </settingConfig>
+        </setting>
+        <setting propertyKey="@Properties.compbart" title="@Strings.compbart">
+            <settingConfig type="list">
+                <listEntry value="9">@Strings.empty</listEntry>
+                <listEntry value="6">@Strings.active</listEntry>            <!-- Active Minutes -->
+                <listEntry value="36">@Strings.moderate</listEntry>
+                <listEntry value="37">@Strings.vigorous</listEntry>
+                <listEntry value="38">@Strings.airquality</listEntry>       <!-- Air -->
+                <listEntry value="12">@Strings.altitude</listEntry>
+                <listEntry value="18">@Strings.barometer</listEntry>
+                <listEntry value="1">@Strings.battery</listEntry>
+                <listEntry value="2">@Strings.calories</listEntry>
+                <listEntry value="21">@Strings.countdown</listEntry>        <!-- Custom -->
+                <listEntry value="27">@Strings.ctext</listEntry>
+                <listEntry value="7">@Strings.date</listEntry>              <!-- Date -->
+                <listEntry value="22">@Strings.dateweek</listEntry>
+                <listEntry value="3">@Strings.distance</listEntry>
+                <listEntry value="17">@Strings.distanceweek</listEntry>
+                <listEntry value="15">@Strings.floorclimbed</listEntry>
+                <listEntry value="0">@Strings.heartrate</listEntry>
+                <listEntry value="29">@Strings.bodybattery</listEntry>      <!-- Health Metrics -->
+                <listEntry value="30">@Strings.stress</listEntry>
+                <listEntry value="31">@Strings.bodybattstress</listEntry>
+                <listEntry value="39">@Strings.timetorecovery</listEntry>
+                <listEntry value="4">@Strings.movebar</listEntry>
+                <listEntry value="16">@Strings.groupnoti</listEntry>        <!-- Phone -->
+                <listEntry value="11">@Strings.alarm</listEntry>
+                <listEntry value="20">@Strings.phonestatus</listEntry>
+                <listEntry value="10">@Strings.notification</listEntry>
+                <listEntry value="5">@Strings.steps</listEntry>
+                <listEntry value="13">@Strings.temperature</listEntry>      <!-- Temperature -->
+                <listEntry value="32">@Strings.temperature_garmin</listEntry>
+                <listEntry value="23">@Strings.temperature_out</listEntry>
+                <listEntry value="24">@Strings.temperature_hl</listEntry>
+                <listEntry value="35">@Strings.temperature_hl_garmin</listEntry>
+                <listEntry value="33">@Strings.precipitation_garmin</listEntry>
+                <listEntry value="8">@Strings.time</listEntry>              <!-- Time -->
+                <listEntry value="26">@Strings.ampm</listEntry>
+                <listEntry value="19">@Strings.time_secondary</listEntry>
+                <listEntry value="14">@Strings.sunriseset</listEntry>
+                <listEntry value="25">@Strings.weather</listEntry>          <!-- Weather -->
+                <listEntry value="34">@Strings.weather_garmin</listEntry>
+                <listEntry value="28">@Strings.wind</listEntry>
+            </settingConfig>
+        </setting>
+        <setting propertyKey="@Properties.compbarb" title="@Strings.compbarb">
+            <settingConfig type="list">
+                <listEntry value="9">@Strings.empty</listEntry>
+                <listEntry value="6">@Strings.active</listEntry>            <!-- Active Minutes -->
+                <listEntry value="36">@Strings.moderate</listEntry>
+                <listEntry value="37">@Strings.vigorous</listEntry>
+                <listEntry value="38">@Strings.airquality</listEntry>       <!-- Air -->
+                <listEntry value="12">@Strings.altitude</listEntry>
+                <listEntry value="18">@Strings.barometer</listEntry>
+                <listEntry value="1">@Strings.battery</listEntry>
+                <listEntry value="2">@Strings.calories</listEntry>
+                <listEntry value="21">@Strings.countdown</listEntry>        <!-- Custom -->
+                <listEntry value="27">@Strings.ctext</listEntry>
+                <listEntry value="7">@Strings.date</listEntry>              <!-- Date -->
+                <listEntry value="22">@Strings.dateweek</listEntry>
+                <listEntry value="3">@Strings.distance</listEntry>
+                <listEntry value="17">@Strings.distanceweek</listEntry>
+                <listEntry value="15">@Strings.floorclimbed</listEntry>
+                <listEntry value="0">@Strings.heartrate</listEntry>
+                <listEntry value="29">@Strings.bodybattery</listEntry>      <!-- Health Metrics -->
+                <listEntry value="30">@Strings.stress</listEntry>
+                <listEntry value="31">@Strings.bodybattstress</listEntry>
+                <listEntry value="39">@Strings.timetorecovery</listEntry>
+                <listEntry value="4">@Strings.movebar</listEntry>
+                <listEntry value="16">@Strings.groupnoti</listEntry>        <!-- Phone -->
+                <listEntry value="11">@Strings.alarm</listEntry>
+                <listEntry value="20">@Strings.phonestatus</listEntry>
+                <listEntry value="10">@Strings.notification</listEntry>
+                <listEntry value="5">@Strings.steps</listEntry>
+                <listEntry value="13">@Strings.temperature</listEntry>      <!-- Temperature -->
+                <listEntry value="32">@Strings.temperature_garmin</listEntry>
+                <listEntry value="23">@Strings.temperature_out</listEntry>
+                <listEntry value="24">@Strings.temperature_hl</listEntry>
+                <listEntry value="35">@Strings.temperature_hl_garmin</listEntry>
+                <listEntry value="33">@Strings.precipitation_garmin</listEntry>
+                <listEntry value="8">@Strings.time</listEntry>              <!-- Time -->
+                <listEntry value="26">@Strings.ampm</listEntry>
+                <listEntry value="19">@Strings.time_secondary</listEntry>
+                <listEntry value="14">@Strings.sunriseset</listEntry>
+                <listEntry value="25">@Strings.weather</listEntry>          <!-- Weather -->
+                <listEntry value="34">@Strings.weather_garmin</listEntry>
+                <listEntry value="28">@Strings.wind</listEntry>
+            </settingConfig>
+        </setting>
+
+        <setting propertyKey="@Properties.compgrapht" title="@Strings.compgrapht">
+            <settingConfig type="list">
+                <listEntry value="0">@Strings.empty</listEntry>
+                <listEntry value="2">@Strings.altitude</listEntry>
+                <listEntry value="3">@Strings.barometer</listEntry>
+                <listEntry value="5">@Strings.bodybattery</listEntry>
+                <listEntry value="6">@Strings.stress</listEntry>
+                <listEntry value="1">@Strings.heartrate</listEntry>
+                <listEntry value="4">@Strings.temperature</listEntry>
+            </settingConfig>
+        </setting>
+        <setting propertyKey="@Properties.compgraphb" title="@Strings.compgraphb">
+            <settingConfig type="list">
+                <listEntry value="0">@Strings.empty</listEntry>
+                <listEntry value="2">@Strings.altitude</listEntry>
+                <listEntry value="3">@Strings.barometer</listEntry>
+                <listEntry value="5">@Strings.bodybattery</listEntry>
+                <listEntry value="6">@Strings.stress</listEntry>
+                <listEntry value="1">@Strings.heartrate</listEntry>
+                <listEntry value="4">@Strings.temperature</listEntry>
+            </settingConfig>
+        </setting>
+    </group>
+
+    <group id="format_group" title="@Strings.format_group" description="@Strings.format_group_desc">
+        <setting propertyKey="@Properties.date_format" title="@Strings.date_format">
+            <settingConfig type="list">
+                <listEntry value="0">@Strings.datef1</listEntry>
+                <listEntry value="1">@Strings.datef2</listEntry>
+                <listEntry value="2">@Strings.datef21</listEntry>
+                <listEntry value="3">@Strings.datef3</listEntry>
+                <listEntry value="4">@Strings.datef31</listEntry>
+                <listEntry value="5">@Strings.datef4</listEntry>
+                <listEntry value="6">@Strings.datef41</listEntry>
+            </settingConfig>
+        </setting>
+        <setting propertyKey="@Properties.battery_format" title="@Strings.battery_format">
+            <settingConfig type="list">
+                <listEntry value="0">@Strings.battery_format_1</listEntry>
+                <listEntry value="1">@Strings.battery_format_2</listEntry>
+            </settingConfig>
+        </setting>
+        <setting propertyKey="@Properties.barometer_unit" title="@Strings.barometer_unit">
+            <settingConfig type="list">
+                <listEntry value="0">@Strings.barometer_unit_0</listEntry>
+                <listEntry value="1">@Strings.barometer_unit_1</listEntry>
+            </settingConfig>
+        </setting>
+        <setting propertyKey="@Properties.minimal_data" title="@Strings.minimal_data">
+            <settingConfig type="boolean" />
+        </setting>
+
+        <setting propertyKey="@Properties.force_date_english" title="@Strings.force_date_english">
+            <settingConfig type="boolean" />
+        </setting>
+
+    </group>
+
+    <group id="custom_group" title="@Strings.custom_group" description="@Strings.custom_group_desc">
+        <setting propertyKey="@Properties.utc_timezone" title="@Strings.utc_timezone">
+            <settingConfig type="list">
+                <listEntry value="0">@Strings.utc0</listEntry>
+                <listEntry value="1">@Strings.utc1</listEntry>
+                <listEntry value="2">@Strings.utc2</listEntry>
+                <listEntry value="3">@Strings.utc3</listEntry>
+                <listEntry value="4">@Strings.utc4</listEntry>
+                <listEntry value="5">@Strings.utc5</listEntry>
+                <listEntry value="6">@Strings.utc6</listEntry>
+                <listEntry value="7">@Strings.utc7</listEntry>
+                <listEntry value="8">@Strings.utc8</listEntry>
+                <listEntry value="9">@Strings.utc9</listEntry>
+                <listEntry value="10">@Strings.utc10</listEntry>
+                <listEntry value="11">@Strings.utc11</listEntry>
+                <listEntry value="12">@Strings.utc12</listEntry>
+                <listEntry value="-1">@Strings.utc1m</listEntry>
+                <listEntry value="-2">@Strings.utc2m</listEntry>
+                <listEntry value="-3">@Strings.utc3m</listEntry>
+                <listEntry value="-4">@Strings.utc4m</listEntry>
+                <listEntry value="-5">@Strings.utc5m</listEntry>
+                <listEntry value="-6">@Strings.utc6m</listEntry>
+                <listEntry value="-7">@Strings.utc7m</listEntry>
+                <listEntry value="-8">@Strings.utc8m</listEntry>
+                <listEntry value="-9">@Strings.utc9m</listEntry>
+                <listEntry value="-10">@Strings.utc10m</listEntry>
+                <listEntry value="-11">@Strings.utc11m</listEntry>
+                <listEntry value="-12">@Strings.utc12m</listEntry>
+            </settingConfig>
+        </setting>
+        <setting propertyKey="@Properties.utc_shift" title="@Strings.utc_shift">
+            <settingConfig type="boolean" />
+        </setting>
+        <setting propertyKey="@Properties.countdown_date" title="@Strings.countdown_date">
+            <settingConfig type="date">
+            </settingConfig>
+        </setting>
+        <setting propertyKey="@Properties.ctext_input" title="@Strings.ctext">
+            <settingConfig type="alphaNumeric" maxLength="10"/>
+        </setting>
+        <setting propertyKey="@Properties.openweather_api" title="@Strings.openweather_api">
+            <settingConfig type="alphaNumeric" maxLength="36"/>
+        </setting>
+        <setting propertyKey="@Properties.iqair_api" title="@Strings.iqair_api">
+            <settingConfig type="alphaNumeric" maxLength="36"/>
+        </setting>
+    </group>
+
+    <group id="advanced_group" title="@Strings.advanced_group" description="@Strings.advanced_group_desc">
+        <setting propertyKey="@Properties.enable_buffering" title="@Strings.enable_buffering">
+            <settingConfig type="boolean" />
+        </setting>
+            <setting propertyKey="@Properties.power_save_mode" title="@Strings.power_save_mode">
+            <settingConfig type="boolean" />
+        </setting>
+    </group>
 </settings>

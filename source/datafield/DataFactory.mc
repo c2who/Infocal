@@ -46,87 +46,90 @@ enum /* FIELD_TYPES */ {
    FIELD_TYPE_MODERATE = 36,
    FIELD_TYPE_VIGOROUS,
    FIELD_TYPE_AIR_QUALITY,
+   FIELD_TYPE_TIME_TO_RECOVERY,
 }
 
 function buildFieldObject(type) {
    if (type == FIELD_TYPE_HEART_RATE) {
-      return new HRField(FIELD_TYPE_HEART_RATE);
+      return new HRField(type);
    } else if (type == FIELD_TYPE_BATTERY) {
-      return new BatteryField(FIELD_TYPE_BATTERY);
+      return new BatteryField(type);
    } else if (type == FIELD_TYPE_CALORIES) {
-      return new CaloField(FIELD_TYPE_CALORIES);
+      return new CaloField(type);
    } else if (type == FIELD_TYPE_DISTANCE) {
-      return new DistanceField(FIELD_TYPE_DISTANCE);
+      return new DistanceField(type);
    } else if (type == FIELD_TYPE_MOVE) {
-      return new MoveField(FIELD_TYPE_MOVE);
+      return new MoveField(type);
    } else if (type == FIELD_TYPE_STEP) {
-      return new StepField(FIELD_TYPE_STEP);
+      return new StepField(type);
    } else if (type == FIELD_TYPE_ACTIVE) {
-      return new ActiveField(FIELD_TYPE_ACTIVE);
+      return new ActiveField(type);
    } else if (type == FIELD_TYPE_MODERATE) {
-      return new ActiveModerateField(FIELD_TYPE_MODERATE);
+      return new ActiveModerateField(type);
    } else if (type == FIELD_TYPE_VIGOROUS) {
-      return new ActiveVigorousField(FIELD_TYPE_VIGOROUS);
+      return new ActiveVigorousField(type);
    } else if (type == FIELD_TYPE_DATE) {
-      return new DateField(FIELD_TYPE_DATE);
+      return new DateField(type);
    } else if (type == FIELD_TYPE_TIME) {
-      return new TimeField(FIELD_TYPE_TIME);
+      return new TimeField(type);
    } else if (type == FIELD_TYPE_EMPTY) {
-      return new EmptyDataField(FIELD_TYPE_EMPTY);
+      return new EmptyDataField(type);
    } else if (type == FIELD_TYPE_NOTIFICATIONS) {
-      return new NotifyField(FIELD_TYPE_NOTIFICATIONS);
+      return new NotifyField(type);
    } else if (type == FIELD_TYPE_ALARMS) {
-      return new AlarmField(FIELD_TYPE_ALARMS);
+      return new AlarmField(type);
    } else if (type == FIELD_TYPE_ALTITUDE) {
-      return new AltitudeField(FIELD_TYPE_ALTITUDE);
+      return new AltitudeField(type);
    } else if (type == FIELD_TYPE_TEMPERATURE) {
-      return new TemparatureField(FIELD_TYPE_TEMPERATURE);
+      return new TemparatureField(type);
    } else if (type == FIELD_TYPE_SUNRISE_SUNSET) {
-      return new SunField(FIELD_TYPE_SUNRISE_SUNSET);
+      return new SunField(type);
    } else if (type == FIELD_TYPE_FLOOR) {
-      return new FloorField(FIELD_TYPE_FLOOR);
+      return new FloorField(type);
    } else if (type == FIELD_TYPE_GROUP_NOTI) {
-      return new GroupNotiField(FIELD_TYPE_GROUP_NOTI);
+      return new GroupNotiField(type);
    } else if (type == FIELD_TYPE_DISTANCE_WEEK) {
-      return new WeekDistanceField(FIELD_TYPE_DISTANCE_WEEK);
+      return new WeekDistanceField(type);
    } else if (type == FIELD_TYPE_BAROMETER) {
-      return new BarometerField(FIELD_TYPE_BAROMETER);
+      return new BarometerField(type);
    } else if (type == FIELD_TYPE_TIME_SECONDARY) {
-      return new TimeSecondaryField(FIELD_TYPE_TIME_SECONDARY);
+      return new TimeSecondaryField(type);
    } else if (type == FIELD_TYPE_PHONE_STATUS) {
-      return new PhoneField(FIELD_TYPE_PHONE_STATUS);
+      return new PhoneField(type);
    } else if (type == FIELD_TYPE_COUNTDOWN) {
-      return new CountdownField(FIELD_TYPE_COUNTDOWN);
+      return new CountdownField(type);
    } else if (type == FIELD_TYPE_WEEKCOUNT) {
-      return new WeekCountField(FIELD_TYPE_WEEKCOUNT);
+      return new WeekCountField(type);
    } else if (type == FIELD_TYPE_TEMPERATURE_OUT) {
-      return new TemparatureOutField(FIELD_TYPE_TEMPERATURE_OUT);
+      return new TemparatureOutField(type);
    } else if (type == FIELD_TYPE_TEMPERATURE_HL) {
-      return new TemparatureHLField(FIELD_TYPE_TEMPERATURE_HL);
+      return new TemparatureHLField(type);
    } else if (type == FIELD_TYPE_WEATHER) {
-      return new WeatherField(FIELD_TYPE_WEATHER);
+      return new WeatherField(type);
    } else if (type == FIELD_TYPE_AMPM_INDICATOR) {
-      return new AMPMField(FIELD_TYPE_AMPM_INDICATOR);
+      return new AMPMField(type);
    } else if (type == FIELD_TYPE_CTEXT_INDICATOR) {
-      return new CTextField(FIELD_TYPE_CTEXT_INDICATOR);
+      return new CTextField(type);
    } else if (type == FIELD_TYPE_WIND) {
-      return new WindField(FIELD_TYPE_WIND);
+      return new WindField(type);
    } else if (type == FIELD_TYPE_BODY_BATTERY) {
-      return new BodyBatteryField(FIELD_TYPE_BODY_BATTERY);
+      return new BodyBatteryField(type);
    } else if (type == FIELD_TYPE_STRESS) {
-      return new StressField(FIELD_TYPE_STRESS);
+      return new StressField(type);
    } else if (type == FIELD_TYPE_BB_STRESS) {
-      return new BodyBatteryStressField(FIELD_TYPE_BB_STRESS);
+      return new BodyBatteryStressField(type);
    } else if (type == FIELD_TYPE_TEMPERATURE_GARMIN) {
-      return new TemparatureGarminField(FIELD_TYPE_TEMPERATURE_GARMIN);
+      return new TemparatureGarminField(type);
    } else if (type == FIELD_TYPE_PRECIPITATION_GARMIN) {
-      return new PrecipitationGarminField(FIELD_TYPE_PRECIPITATION_GARMIN);
+      return new PrecipitationGarminField(type);
    } else if (type == FIELD_TYPE_WEATHER_GARMIN) {
-      return new WeatherGarminField(FIELD_TYPE_WEATHER_GARMIN);
+      return new WeatherGarminField(type);
    } else if (type == FIELD_TYPE_TEMPERATURE_HL_GARMIN) {
-      return new TemperatureHLGarminField(FIELD_TYPE_TEMPERATURE_HL_GARMIN);
+      return new TemperatureHLGarminField(type);
    } else if (type == FIELD_TYPE_AIR_QUALITY) {
-      return new AirQualityField(FIELD_TYPE_AIR_QUALITY);
+      return new AirQualityField(type);
+   } else if (type == FIELD_TYPE_TIME_TO_RECOVERY) {
+      return new TimeToRecoveryField(type);
    }
 
    return new EmptyDataField(FIELD_TYPE_EMPTY);
