@@ -29,25 +29,23 @@ class InfocalApp extends AppBase {
    //! Before the initial WatchUi.View is retrieved, onStart() is called.
    //! Application level settings can be initialized or retrieved from the object store before the initial View is created.
    //! This method must be overridden to handle your own app initialization.
-   function onStart(state as Dictionary?) as Void {
-   }
+   function onStart(state as Dictionary?) as Void {}
 
    //! Override to handle application cleanup upon termination.
    //!
    //! If the application needs to save data to the object store it should be done in this function.
    //! Once the function is complete, the application will terminate.
-   function onStop(state as Dictionary?) as Void {
-   }
+   function onStop(state as Dictionary?) as Void {}
 
    //! Override to provide the initial View and Input Delegate of the application.
    //! @note This method must be overridden in derived classes. If called, this function will cause the application to crash.
    function getInitialView() as [Views] or [Views, InputDelegates] {
       _View = new InfocalView();
 
-      if( Toybox.WatchUi.WatchFace has :onPartialUpdate ) {
-         return [ _View, new InfocalViewDelegate(_View) ];
+      if (Toybox.WatchUi.WatchFace has :onPartialUpdate) {
+         return [_View, new InfocalViewDelegate(_View)];
       } else {
-         return [ _View ];
+         return [_View];
       }
    }
 
@@ -93,12 +91,12 @@ class InfocalApp extends AppBase {
       if (type != null) {
          // New data received: clear pendingWebRequests flag for the received data type
          // Save list of any remaining background requests
-         var pendingWebRequests = getProperty("PendingWebRequests") as Dictionary<String, PropertyValueType>?;
+         var pendingWebRequests = Storage.getValue("PendingWebRequests") as Dictionary<String, PropertyValueType>?;
          if (pendingWebRequests == null) {
             pendingWebRequests = {};
          }
          pendingWebRequests.remove(type);
-         setProperty("PendingWebRequests", pendingWebRequests);
+         Storage.setValue("PendingWebRequests", pendingWebRequests);
 
          BaseClientHelper.storeData(data);
       }

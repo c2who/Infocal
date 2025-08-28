@@ -43,9 +43,9 @@ class GroupNotiField extends BaseDataField {
       var noti_str = Lang.format("N$1$", [value.format("%d")]);
 
       if (settings.phoneConnected) {
-         return Lang.format("$1$-$2$-C",[noti_str, alarm_str]);
+         return Lang.format("$1$-$2$-C", [noti_str, alarm_str]);
       } else {
-         return Lang.format("$1$-$2$-D",[noti_str, alarm_str]);
+         return Lang.format("$1$-$2$-D", [noti_str, alarm_str]);
       }
    }
 }

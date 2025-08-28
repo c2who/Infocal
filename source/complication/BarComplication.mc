@@ -1,19 +1,23 @@
 using Toybox.WatchUi as Ui;
 using Toybox.Math;
 using Toybox.System;
-using Toybox.Application;
 
+import Toybox.Application;
 import Toybox.Graphics;
+import Toybox.Lang;
 
 class BarComplication extends Ui.Drawable {
-   private var position, position_y_draw, position_y_draw_bonus;
-   private var font, fontInfo, arrFont, arrInfo;
+   private var position_y_draw, position_y_draw_bonus;
+   private var font, arrFont;
+   private var fontInfo as Array<Array<Number> >?;
+   private var arrInfo as Array<Array<Number> >?;
    private var weatherFont;
-
    private var factor = 1;
-
-   private var field_type;
    private var dt_field;
+
+   // layout
+   protected var field_type;
+   protected var position;
 
    function initialize(params) {
       Drawable.initialize(params);
@@ -111,10 +115,10 @@ class BarComplication extends Ui.Drawable {
    function getSettingDataKey() {
       if (position == 0) {
          // upper
-         return Application.getApp().getProperty("compbart");
+         return Properties.getValue("compbart");
       } else {
          // lower
-         return Application.getApp().getProperty("compbarb");
+         return Properties.getValue("compbarb");
       }
    }
 
@@ -130,7 +134,6 @@ class BarComplication extends Ui.Drawable {
    }
 
    function draw_bar(dc as Dc) as Void {
-
       var is_bar_data = bar_data();
       if (is_bar_data) {
          load_font();
@@ -188,13 +191,7 @@ class BarComplication extends Ui.Drawable {
          var icon = get_weather_icon();
          if (icon != null) {
             dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(
-               center_x,
-               position_y_draw + position_y_draw_bonus,
-               weatherFont,
-               icon,
-               Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
-            );
+            dc.drawText(center_x, position_y_draw + position_y_draw_bonus, weatherFont, icon, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
          }
          bonus_padding = position == 0 ? 2 : -2;
       } else {
@@ -208,13 +205,7 @@ class BarComplication extends Ui.Drawable {
 
       title = title.toUpper();
       dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-      dc.drawText(
-         center_x,
-         position_y_draw + bonus_padding,
-         small_digi_font,
-         title,
-         Graphics.TEXT_JUSTIFY_CENTER
-      );
+      dc.drawText(center_x, position_y_draw + bonus_padding, small_digi_font, title, Graphics.TEXT_JUSTIFY_CENTER);
 
       font = null;
       fontInfo = null;
@@ -230,7 +221,7 @@ class BarComplication extends Ui.Drawable {
    //!   the full image from the font characters.
    //! - Each JsonData number represents an image part (tile) with byte encoding:
    //!   [ flags|char|xpos|ypos ]
-   function drawTiles(packed_array, font, dc) {
+   function drawTiles(packed_array as Array<Number>, font, dc) {
       for (var i = 0; i < packed_array.size(); i++) {
          var val = packed_array[i];
          var flag = (val >> 24) & 255;

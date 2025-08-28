@@ -1,270 +1,228 @@
-using Toybox.WatchUi as Ui;
+using Toybox.WatchUi;
 using Toybox.Math;
 using Toybox.Graphics;
+using Toybox.SensorHistory;
 using Toybox.System;
-using Toybox.Application;
 
-using Toybox.Activity as Activity;
-using Toybox.ActivityMonitor as ActivityMonitor;
-using Toybox.SensorHistory as SensorHistory;
+import Toybox.Application;
 
-class GraphComplication extends Ui.Drawable {
-  hidden var position;
-  hidden var position_x, position_y;
-  hidden var graph_width, graph_height;
-  var settings;
+class GraphComplication extends WatchUi.Drawable {
+   private var position_x, position_y;
+   private var graph_width, graph_height;
+   private var settings;
 
-  function initialize(params) {
-    Drawable.initialize(params);
+   //layout
+   protected var position;
 
-    position = params.get(:position);
-    if (position == 0) {
-      // top
-      position_x = center_x;
-      position_y = 0.5 * center_y;
-    } else {
-      // bottom
-      position_x = center_x;
-      position_y = 1.45 * center_y;
-    }
+   function initialize(params) {
+      Drawable.initialize(params);
 
-    graph_width = 90;
-    graph_height = Math.round(0.25 * center_x);
-  }
-
-  function get_data_type() {
-    if (position == 0) {
-      return Application.getApp().getProperty("compgrapht");
-    } else {
-      return Application.getApp().getProperty("compgraphb");
-    }
-  }
-
-  function get_data_interator(type) {
-    if (type == 1) {
-      if (
-        Toybox has :SensorHistory &&
-        Toybox.SensorHistory has :getHeartRateHistory
-      ) {
-        return Toybox.SensorHistory.getHeartRateHistory({});
+      position = params.get(:position);
+      if (position == 0) {
+         // top
+         position_x = center_x;
+         position_y = 0.5 * center_y;
+      } else {
+         // bottom
+         position_x = center_x;
+         position_y = 1.45 * center_y;
       }
-    } else if (type == 2) {
-      if (
-        Toybox has :SensorHistory &&
-        Toybox.SensorHistory has :getElevationHistory
-      ) {
-        return Toybox.SensorHistory.getElevationHistory({});
+
+      graph_width = 90;
+      graph_height = Math.round(0.25 * center_x);
+   }
+
+   function get_data_type() {
+      if (position == 0) {
+         return Properties.getValue("compgrapht");
+      } else {
+         return Properties.getValue("compgraphb");
       }
-    } else if (type == 3) {
-      if (
-        Toybox has :SensorHistory &&
-        Toybox.SensorHistory has :getPressureHistory
-      ) {
-        return Toybox.SensorHistory.getPressureHistory({});
+   }
+
+   function get_data_interator(type) {
+      if (type == 1) {
+         if (Toybox has :SensorHistory && Toybox.SensorHistory has :getHeartRateHistory) {
+            return Toybox.SensorHistory.getHeartRateHistory({});
+         }
+      } else if (type == 2) {
+         if (Toybox has :SensorHistory && Toybox.SensorHistory has :getElevationHistory) {
+            return Toybox.SensorHistory.getElevationHistory({});
+         }
+      } else if (type == 3) {
+         if (Toybox has :SensorHistory && Toybox.SensorHistory has :getPressureHistory) {
+            return Toybox.SensorHistory.getPressureHistory({});
+         }
+      } else if (type == 4) {
+         if (Toybox has :SensorHistory && Toybox.SensorHistory has :getTemperatureHistory) {
+            return Toybox.SensorHistory.getTemperatureHistory({});
+         }
+      } else if (type == 5) {
+         if (Toybox has :SensorHistory && Toybox.SensorHistory has :getBodyBatteryHistory) {
+            return Toybox.SensorHistory.getBodyBatteryHistory({});
+         }
+      } else if (type == 6) {
+         if (Toybox has :SensorHistory && Toybox.SensorHistory has :getStressHistory) {
+            return Toybox.SensorHistory.getStressHistory({});
+         }
+      } else {
+         return null;
       }
-    } else if (type == 4) {
-      if (
-        Toybox has :SensorHistory &&
-        Toybox.SensorHistory has :getTemperatureHistory
-      ) {
-        return Toybox.SensorHistory.getTemperatureHistory({});
-      }
-    } else if (type == 5) {
-      if (
-        Toybox has :SensorHistory &&
-        Toybox.SensorHistory has :getBodyBatteryHistory
-      ) {
-        return Toybox.SensorHistory.getBodyBatteryHistory({});
-      }
-    } else if (type == 6) {
-      if (
-        Toybox has :SensorHistory &&
-        Toybox.SensorHistory has :getStressHistory
-      ) {
-        return Toybox.SensorHistory.getStressHistory({});
-      }
-    } else {
       return null;
-    }
-    return null;
-  }
+   }
 
-  function need_draw() {
-    return get_data_type() > 0;
-  }
+   function need_draw() {
+      return get_data_type() > 0;
+   }
 
-  function parse_data_value(type, value) {
-    if (type == 1) {
-      return value;
-    } else if (type == 2) {
-      if (settings.elevationUnits == System.UNIT_METRIC) {
-        // Metres (no conversion necessary).
-        return value;
+   function parse_data_value(type, value) {
+      if (type == 1) {
+         return value;
+      } else if (type == 2) {
+         if (settings.elevationUnits == System.UNIT_METRIC) {
+            // Metres (no conversion necessary).
+            return value;
+         } else {
+            // Feet.
+            return value * 3.28084;
+         }
+      } else if (type == 3) {
+         return value / 100.0;
+      } else if (type == 4) {
+         if (settings.temperatureUnits == System.UNIT_STATUTE) {
+            return value * (9.0 / 5) + 32; // Convert to Farenheit: ensure floating point division.
+         } else {
+            return value;
+         }
       } else {
-        // Feet.
-        return value * 3.28084;
+         return value;
       }
-    } else if (type == 3) {
-      return value / 100.0;
-    } else if (type == 4) {
-      if (settings.temperatureUnits == System.UNIT_STATUTE) {
-        return value * (9.0 / 5) + 32; // Convert to Farenheit: ensure floating point division.
-      } else {
-        return value;
-      }
-    } else {
-      return value;
-    }
-  }
+   }
 
-  function draw(dc) {
-    if (!need_draw()) {
-      return;
-    }
-
-    try {
-      settings = System.getDeviceSettings();
-
-      var primaryColor = position == 1 ? gbar_color_1 : gbar_color_0;
-
-      //Calculation
-      var targetdatatype = get_data_type();
-      var HistoryIter = get_data_interator(targetdatatype);
-
-      if (HistoryIter == null) {
-        dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(
-          position_x,
-          position_y,
-          small_digi_font,
-          "--",
-          Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
-        );
-        return;
+   function draw(dc) {
+      if (!need_draw()) {
+         return;
       }
 
-      var HistoryMin = HistoryIter.getMin();
-      var HistoryMax = HistoryIter.getMax();
+      try {
+         settings = System.getDeviceSettings();
 
-      // Fixed: Prevent divide by zero if diff=0 (min==max)
-      if (
-        HistoryMin == null ||
-        HistoryMax == null ||
-        HistoryMin == HistoryMax
-      ) {
-        dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(
-          position_x,
-          position_y,
-          small_digi_font,
-          "--",
-          Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
-        );
-        return;
-      }
+         var primaryColor = position == 1 ? gbar_color_1 : gbar_color_0;
 
-      var minMaxDiff = (HistoryMax - HistoryMin).toFloat();
+         //Calculation
+         var targetdatatype = get_data_type();
+         var HistoryIter = get_data_interator(targetdatatype);
 
-      var xStep = graph_width;
-      var height = graph_height;
-      var HistoryPresent = 0;
+         if (HistoryIter == null) {
+            dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(position_x, position_y, small_digi_font, "--", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+            return;
+         }
 
-      var HistoryNew = 0;
-      var lastyStep = 0;
-      //var step_max = -1;
-      //var step_min = -1;
+         var HistoryMin = HistoryIter.getMin();
+         var HistoryMax = HistoryIter.getMax();
 
-      var latest_sample = HistoryIter.next();
-      if (latest_sample != null) {
-        HistoryPresent = latest_sample.data;
-        if (HistoryPresent != null) {
-          // draw diagram
-          // Fixed: Divide by zero checked above
-          var historyDifPers = (HistoryPresent - HistoryMin) / minMaxDiff;
-          var yStep = historyDifPers * height;
-          yStep = yStep > height ? height : yStep;
-          yStep = yStep < 0 ? 0 : yStep;
-          lastyStep = yStep;
-        } else {
-          lastyStep = null;
-        }
-      }
+         // Fixed: Prevent divide by zero if diff=0 (min==max)
+         if (HistoryMin == null || HistoryMax == null || HistoryMin == HistoryMax) {
+            dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(position_x, position_y, small_digi_font, "--", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+            return;
+         }
 
-      dc.setPenWidth(2);
-      dc.setColor(primaryColor, Graphics.COLOR_TRANSPARENT);
+         var minMaxDiff = (HistoryMax - HistoryMin).toFloat();
 
-      //Build and draw Iteration
-      for (var i = 90; i > 0; i--) {
-        var sample = HistoryIter.next();
+         var xStep = graph_width;
+         var height = graph_height;
+         var HistoryPresent = 0;
 
-        if (sample != null) {
-          HistoryNew = sample.data;
-          if (HistoryNew == HistoryMax) {
-            //step_max = xStep;
-          } else if (HistoryNew == HistoryMin) {
-            //step_min = xStep;
-          }
-          if (HistoryNew == null) {
-            // ignore
-          } else {
-            // draw diagram
-            var historyDifPers = (HistoryNew - HistoryMin) / minMaxDiff;
-            var yStep = historyDifPers * height;
-            yStep = yStep > height ? height : yStep;
-            yStep = yStep < 0 ? 0 : yStep;
+         var HistoryNew = 0;
+         var lastyStep = 0;
+         //var step_max = -1;
+         //var step_min = -1;
 
-            if (lastyStep == null) {
-              // ignore
+         var latest_sample = HistoryIter.next();
+         if (latest_sample != null) {
+            HistoryPresent = latest_sample.data;
+            if (HistoryPresent != null) {
+               // draw diagram
+               // Fixed: Divide by zero checked above
+               var historyDifPers = (HistoryPresent - HistoryMin) / minMaxDiff;
+               var yStep = historyDifPers * height;
+               yStep = yStep > height ? height : yStep;
+               yStep = yStep < 0 ? 0 : yStep;
+               lastyStep = yStep;
             } else {
-              // draw diagram
-              dc.drawLine(
-                position_x + (xStep - graph_width / 2),
-                position_y - (lastyStep - graph_height / 2),
-                position_x + (xStep - graph_width / 2),
-                position_y - (yStep - graph_height / 2)
-              );
+               lastyStep = null;
             }
-            lastyStep = yStep;
-          }
-        }
-        xStep--;
+         }
+
+         dc.setPenWidth(2);
+         dc.setColor(primaryColor, Graphics.COLOR_TRANSPARENT);
+
+         //Build and draw Iteration
+         for (var i = 90; i > 0; i--) {
+            var sample = HistoryIter.next();
+
+            if (sample != null) {
+               HistoryNew = sample.data;
+               if (HistoryNew == HistoryMax) {
+                  //step_max = xStep;
+               } else if (HistoryNew == HistoryMin) {
+                  //step_min = xStep;
+               }
+               if (HistoryNew == null) {
+                  // ignore
+               } else {
+                  // draw diagram
+                  var historyDifPers = (HistoryNew - HistoryMin) / minMaxDiff;
+                  var yStep = historyDifPers * height;
+                  yStep = yStep > height ? height : yStep;
+                  yStep = yStep < 0 ? 0 : yStep;
+
+                  if (lastyStep == null) {
+                     // ignore
+                  } else {
+                     // draw diagram
+                     dc.drawLine(
+                        position_x + (xStep - graph_width / 2),
+                        position_y - (lastyStep - graph_height / 2),
+                        position_x + (xStep - graph_width / 2),
+                        position_y - (yStep - graph_height / 2)
+                     );
+                  }
+                  lastyStep = yStep;
+               }
+            }
+            xStep--;
+         }
+
+         dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
+
+         if (HistoryPresent == null) {
+            dc.drawText(
+               position_x,
+               position_y + (position == 1 ? graph_height / 2 + 10 : -graph_height / 2 - 16),
+               small_digi_font,
+               "--",
+               Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
+            );
+            return;
+         }
+         var value_label = parse_data_value(targetdatatype, HistoryPresent);
+         var labelll = value_label.format("%d");
+         dc.drawText(
+            position_x,
+            position_y + (position == 1 ? graph_height / 2 + 10 : -graph_height / 2 - 16),
+            small_digi_font,
+            labelll,
+            Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
+         );
+
+         settings = null;
+      } catch (ex) {
+         // currently unknown, weird bug
+         dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
+         dc.drawText(position_x, position_y, small_digi_font, "--", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
       }
-
-      dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-
-      if (HistoryPresent == null) {
-        dc.drawText(
-          position_x,
-          position_y +
-            (position == 1 ? graph_height / 2 + 10 : -graph_height / 2 - 16),
-          small_digi_font,
-          "--",
-          Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
-        );
-        return;
-      }
-      var value_label = parse_data_value(targetdatatype, HistoryPresent);
-      var labelll = value_label.format("%d");
-      dc.drawText(
-        position_x,
-        position_y +
-          (position == 1 ? graph_height / 2 + 10 : -graph_height / 2 - 16),
-        small_digi_font,
-        labelll,
-        Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
-      );
-
-      settings = null;
-    } catch (ex) {
-      // currently unknown, weird bug
-      dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-      dc.drawText(
-        position_x,
-        position_y,
-        small_digi_font,
-        "--",
-        Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
-      );
-    }
-  }
+   }
 }
