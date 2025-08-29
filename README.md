@@ -1,5 +1,7 @@
 A watchface for Garmin devices, available free on the [Garmin App Store](https://apps.garmin.com/apps/f86d1406-8272-4ede-abe5-cc566dd8e2d6)
 
+![Hero Image](assets/hero.png)
+
 # Description
 
 Infocal is a digital and analogue watchface, carefully made with high quality rendering.
