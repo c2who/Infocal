@@ -337,7 +337,6 @@
                 <listEntry value="36">@Strings.moderate</listEntry>
                 <listEntry value="37">@Strings.vigorous</listEntry>
                 <listEntry value="38">@Strings.airquality</listEntry>       <!-- Air -->
-                <listEntry value="12">@Strings.altitude</listEntry>
                 <listEntry value="18">@Strings.barometer</listEntry>
                 <listEntry value="1">@Strings.battery</listEntry>
                 <listEntry value="2">@Strings.calories</listEntry>
@@ -347,6 +346,7 @@
                 <listEntry value="22">@Strings.dateweek</listEntry>
                 <listEntry value="3">@Strings.distance</listEntry>
                 <listEntry value="17">@Strings.distanceweek</listEntry>
+                <listEntry value="12">@Strings.elevation</listEntry>
                 <listEntry value="15">@Strings.floorclimbed</listEntry>
                 <listEntry value="0">@Strings.heartrate</listEntry>
                 <listEntry value="29">@Strings.bodybattery</listEntry>      <!-- Health Metrics -->
@@ -381,7 +381,6 @@
                 <listEntry value="36">@Strings.moderate</listEntry>
                 <listEntry value="37">@Strings.vigorous</listEntry>
                 <listEntry value="38">@Strings.airquality</listEntry>       <!-- Air -->
-                <listEntry value="12">@Strings.altitude</listEntry>
                 <listEntry value="18">@Strings.barometer</listEntry>
                 <listEntry value="1">@Strings.battery</listEntry>
                 <listEntry value="2">@Strings.calories</listEntry>
@@ -391,6 +390,7 @@
                 <listEntry value="22">@Strings.dateweek</listEntry>
                 <listEntry value="3">@Strings.distance</listEntry>
                 <listEntry value="17">@Strings.distanceweek</listEntry>
+                <listEntry value="12">@Strings.elevation</listEntry>
                 <listEntry value="15">@Strings.floorclimbed</listEntry>
                 <listEntry value="0">@Strings.heartrate</listEntry>
                 <listEntry value="29">@Strings.bodybattery</listEntry>      <!-- Health Metrics -->
@@ -425,7 +425,6 @@
                 <listEntry value="36">@Strings.moderate</listEntry>
                 <listEntry value="37">@Strings.vigorous</listEntry>
                 <listEntry value="38">@Strings.airquality</listEntry>       <!-- Air -->
-                <listEntry value="12">@Strings.altitude</listEntry>
                 <listEntry value="18">@Strings.barometer</listEntry>
                 <listEntry value="1">@Strings.battery</listEntry>
                 <listEntry value="2">@Strings.calories</listEntry>
@@ -435,6 +434,7 @@
                 <listEntry value="22">@Strings.dateweek</listEntry>
                 <listEntry value="3">@Strings.distance</listEntry>
                 <listEntry value="17">@Strings.distanceweek</listEntry>
+                <listEntry value="12">@Strings.elevation</listEntry>
                 <listEntry value="15">@Strings.floorclimbed</listEntry>
                 <listEntry value="0">@Strings.heartrate</listEntry>
                 <listEntry value="29">@Strings.bodybattery</listEntry>      <!-- Health Metrics -->
@@ -469,7 +469,6 @@
                 <listEntry value="36">@Strings.moderate</listEntry>
                 <listEntry value="37">@Strings.vigorous</listEntry>
                 <listEntry value="38">@Strings.airquality</listEntry>       <!-- Air -->
-                <listEntry value="12">@Strings.altitude</listEntry>
                 <listEntry value="18">@Strings.barometer</listEntry>
                 <listEntry value="1">@Strings.battery</listEntry>
                 <listEntry value="2">@Strings.calories</listEntry>
@@ -479,6 +478,7 @@
                 <listEntry value="22">@Strings.dateweek</listEntry>
                 <listEntry value="3">@Strings.distance</listEntry>
                 <listEntry value="17">@Strings.distanceweek</listEntry>
+                <listEntry value="12">@Strings.elevation</listEntry>
                 <listEntry value="15">@Strings.floorclimbed</listEntry>
                 <listEntry value="0">@Strings.heartrate</listEntry>
                 <listEntry value="29">@Strings.bodybattery</listEntry>      <!-- Health Metrics -->
@@ -513,7 +513,6 @@
                 <listEntry value="36">@Strings.moderate</listEntry>
                 <listEntry value="37">@Strings.vigorous</listEntry>
                 <listEntry value="38">@Strings.airquality</listEntry>       <!-- Air -->
-                <listEntry value="12">@Strings.altitude</listEntry>
                 <listEntry value="18">@Strings.barometer</listEntry>
                 <listEntry value="1">@Strings.battery</listEntry>
                 <listEntry value="2">@Strings.calories</listEntry>
@@ -523,6 +522,7 @@
                 <listEntry value="22">@Strings.dateweek</listEntry>
                 <listEntry value="3">@Strings.distance</listEntry>
                 <listEntry value="17">@Strings.distanceweek</listEntry>
+                <listEntry value="12">@Strings.elevation</listEntry>
                 <listEntry value="15">@Strings.floorclimbed</listEntry>
                 <listEntry value="0">@Strings.heartrate</listEntry>
                 <listEntry value="29">@Strings.bodybattery</listEntry>      <!-- Health Metrics -->
@@ -557,7 +557,6 @@
                 <listEntry value="36">@Strings.moderate</listEntry>
                 <listEntry value="37">@Strings.vigorous</listEntry>
                 <listEntry value="38">@Strings.airquality</listEntry>       <!-- Air -->
-                <listEntry value="12">@Strings.altitude</listEntry>
                 <listEntry value="18">@Strings.barometer</listEntry>
                 <listEntry value="1">@Strings.battery</listEntry>
                 <listEntry value="2">@Strings.calories</listEntry>
@@ -567,6 +566,7 @@
                 <listEntry value="22">@Strings.dateweek</listEntry>
                 <listEntry value="3">@Strings.distance</listEntry>
                 <listEntry value="17">@Strings.distanceweek</listEntry>
+                <listEntry value="12">@Strings.elevation</listEntry>
                 <listEntry value="15">@Strings.floorclimbed</listEntry>
                 <listEntry value="0">@Strings.heartrate</listEntry>
                 <listEntry value="29">@Strings.bodybattery</listEntry>      <!-- Health Metrics -->
@@ -601,7 +601,6 @@
                 <listEntry value="36">@Strings.moderate</listEntry>
                 <listEntry value="37">@Strings.vigorous</listEntry>
                 <listEntry value="38">@Strings.airquality</listEntry>       <!-- Air -->
-                <listEntry value="12">@Strings.altitude</listEntry>
                 <listEntry value="18">@Strings.barometer</listEntry>
                 <listEntry value="1">@Strings.battery</listEntry>
                 <listEntry value="2">@Strings.calories</listEntry>
@@ -611,6 +610,7 @@
                 <listEntry value="22">@Strings.dateweek</listEntry>
                 <listEntry value="3">@Strings.distance</listEntry>
                 <listEntry value="17">@Strings.distanceweek</listEntry>
+                <listEntry value="12">@Strings.elevation</listEntry>
                 <listEntry value="15">@Strings.floorclimbed</listEntry>
                 <listEntry value="0">@Strings.heartrate</listEntry>
                 <listEntry value="29">@Strings.bodybattery</listEntry>      <!-- Health Metrics -->
@@ -645,7 +645,6 @@
                 <listEntry value="36">@Strings.moderate</listEntry>
                 <listEntry value="37">@Strings.vigorous</listEntry>
                 <listEntry value="38">@Strings.airquality</listEntry>       <!-- Air -->
-                <listEntry value="12">@Strings.altitude</listEntry>
                 <listEntry value="18">@Strings.barometer</listEntry>
                 <listEntry value="1">@Strings.battery</listEntry>
                 <listEntry value="2">@Strings.calories</listEntry>
@@ -655,6 +654,7 @@
                 <listEntry value="22">@Strings.dateweek</listEntry>
                 <listEntry value="3">@Strings.distance</listEntry>
                 <listEntry value="17">@Strings.distanceweek</listEntry>
+                <listEntry value="12">@Strings.elevation</listEntry>
                 <listEntry value="15">@Strings.floorclimbed</listEntry>
                 <listEntry value="0">@Strings.heartrate</listEntry>
                 <listEntry value="29">@Strings.bodybattery</listEntry>      <!-- Health Metrics -->
@@ -686,8 +686,8 @@
         <setting propertyKey="@Properties.compgrapht" title="@Strings.compgrapht">
             <settingConfig type="list">
                 <listEntry value="0">@Strings.empty</listEntry>
-                <listEntry value="2">@Strings.altitude</listEntry>
                 <listEntry value="3">@Strings.barometer</listEntry>
+                <listEntry value="2">@Strings.elevation</listEntry>
                 <listEntry value="5">@Strings.bodybattery</listEntry>
                 <listEntry value="6">@Strings.stress</listEntry>
                 <listEntry value="1">@Strings.heartrate</listEntry>
@@ -697,8 +697,8 @@
         <setting propertyKey="@Properties.compgraphb" title="@Strings.compgraphb">
             <settingConfig type="list">
                 <listEntry value="0">@Strings.empty</listEntry>
-                <listEntry value="2">@Strings.altitude</listEntry>
                 <listEntry value="3">@Strings.barometer</listEntry>
+                <listEntry value="2">@Strings.elevation</listEntry>
                 <listEntry value="5">@Strings.bodybattery</listEntry>
                 <listEntry value="6">@Strings.stress</listEntry>
                 <listEntry value="1">@Strings.heartrate</listEntry>

@@ -10,7 +10,7 @@ It's both customizable and functional. With up to 8 complications on the screen,
 
 - Active minutes (total, moderate, vigorous)
 - Air Quality
-- Altitude
+- Elevation (altitude)
 - Barometer (air pressure)
 - Battery (% / time in days)
 - Calories used (total/active)

@@ -310,8 +310,8 @@ class BodyBatteryStressField extends BaseDataField {
    }
 }
 
-/* ALTITUDE */
-class AltitudeField extends BaseDataField {
+/* ELEVATION */
+class ElevationField extends BaseDataField {
    function initialize(id) {
       BaseDataField.initialize(id);
    }
@@ -324,9 +324,9 @@ class AltitudeField extends BaseDataField {
       // devices.
       var settings = System.getDeviceSettings();
       var activityInfo = Activity.getActivityInfo();
-      var altitude = activityInfo.altitude;
+      var elevation = activityInfo.altitude;
       if (
-         altitude == null &&
+         elevation == null &&
          Toybox has :SensorHistory &&
          Toybox.SensorHistory has :getElevationHistory
       ) {
@@ -335,26 +335,26 @@ class AltitudeField extends BaseDataField {
             :order => SensorHistory.ORDER_NEWEST_FIRST,
          }).next();
          if (sample != null && sample.data != null) {
-            altitude = sample.data;
+            elevation = sample.data;
          }
       }
-      if (altitude != null) {
+      if (elevation != null) {
          var unit = "";
          // Metres (no conversion necessary).
          if (settings.elevationUnits == System.UNIT_METRIC) {
             unit = "m";
             // Feet.
          } else {
-            altitude *= /* FT_PER_M */ 3.28084;
+            elevation *= 3.28084; /* FT_PER_M */
             unit = "ft";
          }
 
-         value = altitude.format("%d");
+         value = elevation.format("%d");
          value += unit;
          if (need_minimal) {
             return value;
          } else {
-            var temp = Lang.format("ALTI $1$", [value]);
+            var temp = Lang.format("ELE $1$", [value]);
             if (temp.length() > 10) {
                return Lang.format("$1$", [value]);
             }
@@ -364,7 +364,7 @@ class AltitudeField extends BaseDataField {
          if (need_minimal) {
             return "--";
          } else {
-            return "ALTI --";
+            return "ELE --";
          }
       }
    }

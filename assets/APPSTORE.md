@@ -35,7 +35,7 @@ Please follow the instructions in FAQ 1 above to obtain your free api key and fi
 ⭐️ A customizable digital and analogue watchface, with 6 aesthetically pleasing data fields around the arc of the watch, and two graphical fields around the time display.
 
 ⭐️ Capable of displaying a large range of data on your watch:
-Air quality • Date • Digital time/2nd timezone • Battery • Total/Active calories • Live heart rate • Moved distance (day/weekly) • Move bar • Daily steps • Active minutes • Notification/Alarm/Connection status • Altitude • Temperature (on-device sensor) • Temperature (outside) • Temperature (high/low) • Sunrise/Sunset time • Floor climbed • Barometer data • Countdown to event day • Weather conditions
+Air quality • Date • Digital time/2nd timezone • Battery • Total/Active calories • Live heart rate • Moved distance (day/weekly) • Move bar • Daily steps • Active minutes • Notification/Alarm/Connection status • Elevation (altitude) • Temperature (on-device sensor) • Temperature (outside) • Temperature (high/low) • Sunrise/Sunset time • Floor climbed • Barometer data • Countdown to event day • Weather conditions
 
 -----------------------------
 

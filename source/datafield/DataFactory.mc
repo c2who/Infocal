@@ -15,7 +15,7 @@ enum /* FIELD_TYPES */ {
 
    FIELD_TYPE_NOTIFICATIONS = 10,
    FIELD_TYPE_ALARMS,
-   FIELD_TYPE_ALTITUDE,
+   FIELD_TYPE_ELEVATION,
    FIELD_TYPE_TEMPERATURE,
    FIELD_TYPE_SUNRISE_SUNSET,
    FIELD_TYPE_FLOOR,
@@ -78,8 +78,8 @@ function buildFieldObject(type) {
       return new NotifyField(type);
    } else if (type == FIELD_TYPE_ALARMS) {
       return new AlarmField(type);
-   } else if (type == FIELD_TYPE_ALTITUDE) {
-      return new AltitudeField(type);
+   } else if (type == FIELD_TYPE_ELEVATION) {
+      return new ElevationField(type);
    } else if (type == FIELD_TYPE_TEMPERATURE) {
       return new TemparatureField(type);
    } else if (type == FIELD_TYPE_SUNRISE_SUNSET) {

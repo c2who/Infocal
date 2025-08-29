@@ -67,7 +67,7 @@
     <string scope="settings" id="phonestatus">Phone (connection state)</string>
     <string scope="settings" id="notification">Phone (notification count)</string>
     <string scope="settings" id="groupnoti">Phone (alarm, conn, notification)</string>
-    <string scope="settings" id="altitude">Altitude</string>
+    <string scope="settings" id="elevation">Elevation</string>
     <string scope="settings" id="temperature">Temperature (on-device)</string>
     <string scope="settings" id="temperature_garmin">Temperature (Garmin)</string>
     <string scope="settings" id="temperature_out">Temperature</string>
