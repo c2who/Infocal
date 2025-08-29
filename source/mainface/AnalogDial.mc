@@ -60,17 +60,18 @@ class AnalogDial extends Drawable {
          return;
       }
 
-      dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-
       var clockTime = System.getClockTime();
+
+      dc.setColor(ghour_color, Graphics.COLOR_TRANSPARENT);
       drawHourHands(dc, clockTime);
+      dc.setColor(gmins_color, Graphics.COLOR_TRANSPARENT);
       drawMinuteHands(dc, clockTime);
 
       // Draw seconds hand if enabled, and not in power save mode
       if (  (_secondHandEnabled)
          && (Properties.getValue("power_save_mode") == false)) {
 
-         dc.setColor(gsecondary_color, Graphics.COLOR_TRANSPARENT);
+         dc.setColor(gaccent_color, Graphics.COLOR_TRANSPARENT);
          drawSecondHand(dc, clockTime);
       }
    }
@@ -218,7 +219,7 @@ class AnalogDial extends Drawable {
       var endx = Globals.convertCoorX(radian, minu_radius);
       var endy = Globals.convertCoorY(radian, minu_radius);
 
-      dc.setColor(gsecondary_color, Graphics.COLOR_TRANSPARENT);
+      dc.setColor(gaccent_color, Graphics.COLOR_TRANSPARENT);
       dc.setPenWidth(base_thick);
       dc.drawLine(startx, starty, endx, endy);
    }
