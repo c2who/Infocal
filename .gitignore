@@ -1,5 +1,6 @@
 bin/
 build/
+export/
 *.DS_Store
 .vscode
 *.code-workspace
