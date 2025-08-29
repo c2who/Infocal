@@ -206,9 +206,11 @@
     <string scope="settings" id="red">Red</string>
     <string scope="settings" id="red_dark">Dark Red</string>
     <string scope="settings" id="pink">Pink</string>
+    <string scope="settings" id="purple">Purple</string>
     <string scope="settings" id="cyan">Cyan</string>
     <string scope="settings" id="blue">Blue</string>
     <string scope="settings" id="blue_pale">Pale Blue</string>
+    <string scope="settings" id="blue_soft">Soft Blue</string>
     <string scope="settings" id="blue_dark">Dark Blue</string>
     <string scope="settings" id="green">Green</string>
     <string scope="settings" id="green_lime">Lime Green</string>
