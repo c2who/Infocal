@@ -4,7 +4,7 @@ using Toybox.Time.Gregorian as Date;
 import Toybox.Application;
 import Toybox.Lang;
 
-/* ACTIVE MINUTES */
+/* ACTIVE MINUTES (WEEK) */
 class ActiveField extends BaseDataField {
    function initialize(id) {
       BaseDataField.initialize(id);
@@ -32,7 +32,7 @@ class ActiveField extends BaseDataField {
       return true;
    }
 }
-/* ACTIVE MODERATE MINUTES */
+/* ACTIVE MODERATE MINUTES (WEEK) */
 class ActiveModerateField extends BaseDataField {
    function initialize(id) {
       BaseDataField.initialize(id);
@@ -61,7 +61,7 @@ class ActiveModerateField extends BaseDataField {
    }
 }
 
-/* ACTIVE VIGOROUS MINUTES */
+/* ACTIVE VIGOROUS MINUTES (WEEK) */
 class ActiveVigorousField extends BaseDataField {
    function initialize(id) {
       BaseDataField.initialize(id);
@@ -187,6 +187,46 @@ class CaloField extends BaseDataField {
       var activeCalories = value - nonActiveCalories;
       activeCalories = (activeCalories > 0 ? activeCalories : 0).toNumber();
       return activeCalories;
+   }
+
+   function bar_data() {
+      return true;
+   }
+}
+
+/* FLOORS CLIMBED */
+class FloorField extends BaseDataField {
+   function initialize(id) {
+      BaseDataField.initialize(id);
+   }
+
+   function max_val() {
+      var activityInfo = ActivityMonitor.getInfo();
+      if (activityInfo has :floorsClimbedGoal) {
+         return activityInfo.floorsClimbedGoal.toFloat();
+      } else {
+         return 1.0;
+      }
+   }
+
+   function cur_val() {
+      var activityInfo = ActivityMonitor.getInfo();
+      if (activityInfo has :floorsClimbed) {
+         return activityInfo.floorsClimbed.toFloat();
+      } else {
+         return 0.0;
+      }
+   }
+
+   function max_label(value) {
+      return value.format("%d");
+   }
+
+   function cur_label(value) {
+      if (value == null) {
+         return "FLOOR --";
+      }
+      return Lang.format("FLOOR $1$", [value.format("%d")]);
    }
 
    function bar_data() {
@@ -361,20 +401,23 @@ class WeekDistanceField extends BaseDataField {
    }
 }
 
-/* TIME TO RECOVERY */
-class RecoveryHoursField extends BaseDataField {
+//! TimeToRecovery (API Level 3.3.0)
+//! Time to recovery from the last activity, in hours. Value may be null.
+class TimeToRecoveryField extends BaseDataField {
+   private const _hasTimeToRecovery = (ActivityMonitor.Info has :timeToRecovery) as Boolean;
+
    function initialize(id) {
       BaseDataField.initialize(id);
    }
 
    function max_val() {
-      return 168; // max recovery time
+      return 96; // hours
    }
 
    function cur_val() {
-      var activityInfo = ActivityMonitor.getInfo();
-      var hours = activityInfo.timeToRecovery.toNumber();
-      return hours;
+      // timeToRecovery can return null
+      var time = _hasTimeToRecovery ? ActivityMonitor.getInfo().timeToRecovery : null;
+      return time;
    }
 
    function max_label(value) {
@@ -382,7 +425,11 @@ class RecoveryHoursField extends BaseDataField {
    }
 
    function cur_label(value) {
-      return Lang.format("RCVR $1$", [value]);
+      if (value == null) {
+         return "--";
+      } else {
+         return Lang.format("RCVR $1$", [value.format("%d")]);
+      }
    }
 
    function bar_data() {

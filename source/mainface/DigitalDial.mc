@@ -4,6 +4,9 @@ using Toybox.System;
 
 import Toybox.Application;
 import Toybox.Graphics;
+import Toybox.Lang;
+
+import Settings;
 
 class DigitalDial extends Ui.Drawable {
    ////////////////////////
@@ -101,13 +104,15 @@ class DigitalDial extends Ui.Drawable {
          var big_number_type = Properties.getValue("big_number_type");
          var bignumber = big_number_type == 0 ? minute : hour;
          var smallnumber = big_number_type == 0 ? hour : minute;
+         var big_color = big_number_type == 0 ? gmins_color : ghour_color;
+         var sml_color = big_number_type == 0 ? ghour_color : gmins_color;
 
          var target_center_font = digital_style == 0 ? digitalFont : xdigitalFont;
 
          // Draw center_x number
          var bigText = bignumber.format(number_formater);
          dc.setPenWidth(1);
-         dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
+         dc.setColor(big_color, Graphics.COLOR_TRANSPARENT);
          var h = dc.getFontHeight(target_center_font);
          var w = dc.getTextWidthInPixels(bigText, target_center_font);
          dc.drawText(center_x, center_y - h / 4, target_center_font, bigText, alignment);
@@ -168,7 +173,7 @@ class DigitalDial extends Ui.Drawable {
          dc.setPenWidth(1);
 
          // Draw small number
-         dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
+         dc.setColor(sml_color, Graphics.COLOR_TRANSPARENT);
          var h2 = dc.getFontHeight(midDigitalFont);
          dc.drawText(
             target_info_x + bonus_alignment,
@@ -192,7 +197,7 @@ class DigitalDial extends Ui.Drawable {
          // Draw horizontal line
          var w3 = dc.getTextWidthInPixels(dateText, small_digi_font);
          dc.setPenWidth(2);
-         dc.setColor(gsecondary_color, Graphics.COLOR_TRANSPARENT);
+         dc.setColor(gaccent_color, Graphics.COLOR_TRANSPARENT);
          dc.drawLine(
             target_info_x - bonus_alignment - w3 / 2 + extra_info_alignment,
             center_y * 0.5 + 7,
@@ -221,8 +226,9 @@ class DigitalDial extends Ui.Drawable {
          var left = center_x - width / 2;
 
          // Draw time
-         dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
+         dc.setColor(ghour_color, Graphics.COLOR_TRANSPARENT);
          dc.drawText(left, center_y - y_offset, boldF, hourText, Graphics.TEXT_JUSTIFY_LEFT);
+         dc.setColor(gmins_color, Graphics.COLOR_TRANSPARENT);
          dc.drawText(left + hourW + 6, center_y - y_offset, normF, minuText, Graphics.TEXT_JUSTIFY_LEFT);
 
          // FIXME - Move to InfocalView: Save globals - Calculate Layout of seconds and heart rate (with widest digits)

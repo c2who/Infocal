@@ -14,7 +14,7 @@ class BackgroundView {
 
    public function draw(dc) {
       dc.setPenWidth(4);
-      dc.setColor(gsecondary_color, Graphics.COLOR_TRANSPARENT);
+      dc.setColor(gaccent_color, Graphics.COLOR_TRANSPARENT);
 
       for (var i = 0; i < 6; i += 1) {
          var rad = (i.toFloat() / 6.0) * 2 * Math.PI;

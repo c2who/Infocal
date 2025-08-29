@@ -1,34 +1,36 @@
 A watchface for Garmin devices, available free on the [Garmin App Store](https://apps.garmin.com/apps/f86d1406-8272-4ede-abe5-cc566dd8e2d6)
 
+![Hero Image](assets/hero.png)
+
 # Description
 
 Infocal is a digital and analogue watchface, carefully made with high quality rendering.
 
 It's both customizable and functional. With up to 8 complications on the screen, each complication can show a variety of data:
 
+- Active minutes (total, moderate, vigorous)
 - Air Quality
-- Date
-- Digital time/2nd timezone
-- Battery
-- Total/active calories
-- Live heart rate
-- Distance (day/weekly)
-- Move bar
-- Daily steps
-- Active minutes
-- Notification/alarm/connection status
 - Altitude
+- Barometer (air pressure)
+- Battery (% / time in days)
+- Calories used (total/active)
+- Countdown to event day
+- Custom text
+- Date (various formats)
+- Distance (day/weekly)
+- Floors climbed
+- Heart rate
+- Health (Body Battery, Stress Score, Recovery Time)
+- Move bar
+- Phone Notification/alarm/connection status
+- Steps
+- Sunrise/Sunset time
 - Temperature (on-device sensor)
 - Temperature (Garmin weather)
-- Temperature (outside, OpenWeather)
+- Temperature (OpenWeather)
 - Temperature (high/low, OpenWeather)
-- Sunrise/Sunset time (OpenWeather)
-- Floor climbed
-- Barometer data
-- Countdown to event day
-- Weather condition (OpenWeather)
-- Body battery
-- Stress
+- Time (current, additional timezone, sunrise / sunset)
+- Weather conditions (OpenWeather, Wind)
 
 # Configure Settings
 

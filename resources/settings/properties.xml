@@ -3,6 +3,8 @@
 
     <property id="background_color" type="number">0</property>
     <property id="text_color" type="number">16777215</property>
+    <property id="hour_color" type="number">16711680</property>
+    <property id="mins_color" type="number">16777215</property>
     <property id="accent_color" type="number">16711680</property>
     <property id="ticks_color" type="number">5592405</property>
     <property id="bar_background_color" type="number">5570560</property>
@@ -24,8 +26,7 @@
     <property id="force_date_english" type="boolean">true</property>
     <property id="big_number_type" type="number">0</property>
 
-    <property id="ticks_style" type="number">0</property>
-    <property id="render_arc_line" type="boolean">true</property>
+    <property id="ticks_style" type="number">1</property>
 
     <property id="comp12h" type="number">1</property>
     <property id="comp2h" type="number">38</property>
@@ -44,16 +45,16 @@
 
     <property id="utc_timezone" type="number">0</property>
     <property id="utc_shift" type="boolean">false</property>
-    <property id="date_format" type="number">6</property>
+    <property id="date_format" type="number">0</property>
 
     <property id="battery_format" type="number">0</property>
 
-    <property id="countdown_date" type="number">1546300800</property>
+    <property id="countdown_date" type="number">1767225600</property>
     <property id="enable_buffering" type="boolean">false</property>
 
     <property id="barometer_unit" type="number">0</property>
 
-    <property id="ctext_input" type="string"></property>
+    <property id="ctext_input" type="string">GARMIN</property>
 
     <property id="openweather_api" type="string"></property>
     <property id="iqair_api" type="string"></property>

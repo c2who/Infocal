@@ -4,6 +4,8 @@ import Toybox.Lang;
 import Toybox.System;
 import Toybox.WatchUi;
 
+import Settings;
+
 // Font resources
 var small_digi_font as WatchUi.Resource?;
 var always_on_digi_font as WatchUi.Resource?;
@@ -22,12 +24,14 @@ var second_clip_size as Array<Number>?;
 // theming
 var gbackground_color = 0x000000;
 var gmain_color = 0xffffff;
-var gsecondary_color = 0xff0000;
+var gaccent_color = 0xff0000;
 var garc_color = 0x555555;
 var gbar_color_indi = 0xaaaaaa;
 var gbar_color_back = 0x550000;
 var gbar_color_0 = 0xffff00;
 var gbar_color_1 = 0x0000ff;
+var ghour_color = 0xff0000 as Lang.Number;
+var gmins_color = 0xffffff as Lang.Number;
 
 var gtheme = -1;
 
@@ -374,6 +378,7 @@ class InfocalView extends WatchUi.WatchFace {
       var theme_code = Properties.getValue("theme_code");
       if (gtheme != theme_code || theme_code == 18) {
          if (theme_code == 18) {
+            // Custom colors
             var background_color = Properties.getValue("background_color");
             var text_color = Properties.getValue("text_color");
             var accent_color = Properties.getValue("accent_color");
@@ -382,10 +387,15 @@ class InfocalView extends WatchUi.WatchFace {
             var bar_indicator_color = Properties.getValue("bar_indicator_color");
             var bar_graph_color_top = Properties.getValue("bar_graph_color_top");
             var bar_graph_color_bottom = Properties.getValue("bar_graph_color_bottom");
+            var hour_color = Settings.getOrDefault("hour_color", 0xff0000) as Lang.Number;
+            var mins_color = Settings.getOrDefault("mins_color", 0xffffff) as Lang.Number;
+
             if (
                background_color != gbackground_color ||
                text_color != gmain_color ||
-               accent_color != gsecondary_color ||
+               hour_color != ghour_color ||
+               mins_color != gmins_color ||
+               accent_color != gaccent_color ||
                ticks_color != garc_color ||
                bar_background_color != gbar_color_back ||
                bar_indicator_color != gbar_color_indi ||
@@ -396,8 +406,12 @@ class InfocalView extends WatchUi.WatchFace {
                gbackground_color = background_color;
                // main text
                gmain_color = text_color;
+               // hour_color
+               ghour_color = hour_color;
+               // mins_color
+               gmins_color = mins_color;
                // accent (dividers between complications)
-               gsecondary_color = accent_color;
+               gaccent_color = accent_color;
                // ticks
                garc_color = ticks_color;
                // indicator pointing at the bar
@@ -416,8 +430,12 @@ class InfocalView extends WatchUi.WatchFace {
             gbackground_color = theme[0];
             // main text
             gmain_color = theme[1];
+            // hour_color
+            ghour_color = theme[2];
+            // mins_color
+            gmins_color = theme[1];
             // accent (dividers between complications)
-            gsecondary_color = theme[2];
+            gaccent_color = theme[2];
             // ticks
             garc_color = theme[3];
             // indicator pointing at the bar

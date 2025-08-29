@@ -1,23 +1,11 @@
 <strings>
     <string id="AppName">Infocal</string>
 
-    <!-- Basic settings -->
-    <string scope="settings" id="power_save_mode">Power saving mode (refresh per minute)</string>
+    <!-- Clock group -->
+    <string scope="settings" id="clock_group">Clock Style</string>
+    <string scope="settings" id="clock_group_desc">Choose and customize the main clock style</string>
 
-    <string scope="settings" id="always_on_second">Always-on second (digital only)</string>
-    <string scope="settings" id="always_on_heart">Always-on heart rate (digital only)</string>
-
-    <string scope="settings" id="minimal_data">Do not abbreviate large numbers</string>
-
-    <string scope="settings" id="force_date_english">Force date to English (prevent rectangle on unsupported chars)</string>
-
-    <string scope="settings" id="enable_buffering">Enable screen buffering</string>
-
-    <!-- Custom countdown settings -->
-    <string scope="settings" id="countdown_date">Date for countdown</string>
-    <string scope="settings" id="countdown">Countdown to event</string>
-
-    <!-- Watch face style settings -->
+    <!-- Clock style settings -->
     <string scope="settings" id="zero_leading_digital">Leading zero for digital style</string>
     <string scope="settings" id="big_number_type">Center number</string>
     <string scope="settings" id="minute_major">Minute</string>
@@ -25,7 +13,6 @@
 
     <string scope="settings" id="big_num_stripes">Render stripes on big number</string>
     <string scope="settings" id="left_digital_info">Move digital info to 10h</string>
-    <string scope="settings" id="render_arc_line">Render arc line with curved complication</string>
 
     <string scope="settings" id="use_analog">Analog watch face</string>
     <string scope="settings" id="digital_style">Digital number style</string>
@@ -42,6 +29,13 @@
     <string scope="settings" id="ticks_style_marks_bottom_gap">Mark style (gap at bottom for graph info)</string>
     <string scope="settings" id="ticks_style_marks_top_bottom_gap">Mark style (gap at top and bottom for graph info)</string>
 
+    <string scope="settings" id="always_on_second">Always-on second (digital only)</string>
+    <string scope="settings" id="always_on_heart">Always-on heart rate (digital only)</string>
+
+    <!-- Data group -->
+    <string scope="settings" id="data_group">Data Fields</string>
+    <string scope="settings" id="data_group_desc">Select the data fields to show on the watchface</string>
+
     <!-- Complication settings -->
     <string scope="settings" id="comp12h">12h complication</string>
     <string scope="settings" id="comp2h">2h complication</string>
@@ -56,48 +50,54 @@
     <string scope="settings" id="compgrapht">Top graph complication</string>
     <string scope="settings" id="compgraphb">Bottom graph complication</string>
 
-    <string scope="settings" id="empty">Empty</string>
+    <string scope="settings" id="empty">(Empty)</string>
     <string scope="settings" id="battery">Battery</string>
-    <string scope="settings" id="calories">Calories total-active (experimental)</string>
+    <string scope="settings" id="calories">Calories (total, active)</string>
     <string scope="settings" id="distance">Distance (day)</string>
     <string scope="settings" id="distanceweek">Distance (week)</string>
     <string scope="settings" id="movebar">Move bar</string>
     <string scope="settings" id="steps">Steps</string>
     <string scope="settings" id="active">Active minutes</string>
-    <string scope="settings" id="moderate">Moderate active minutes</string>
-    <string scope="settings" id="vigorous">Vigorous active minutes</string>
+    <string scope="settings" id="moderate">Active minutes (moderate)</string>
+    <string scope="settings" id="vigorous">Active minutes (vigorous)</string>
     <string scope="settings" id="heartrate">Heart rate</string>
     <string scope="settings" id="date">Date</string>
-    <string scope="settings" id="time">Digital time</string>
-    <string scope="settings" id="time_secondary">Digital time (secondary timezone)</string>
-
-    <string scope="settings" id="notification">Notification count</string>
-    <string scope="settings" id="alarm">Alarm count</string>
-    <string scope="settings" id="phonestatus">Phone connection status</string>
+    <string scope="settings" id="dateweek">Date, week number</string>
+    <string scope="settings" id="alarm">Phone (alarm count)</string>
+    <string scope="settings" id="phonestatus">Phone (connection state)</string>
+    <string scope="settings" id="notification">Phone (notification count)</string>
+    <string scope="settings" id="groupnoti">Phone (alarm, conn, notification)</string>
     <string scope="settings" id="altitude">Altitude</string>
-    <string scope="settings" id="temperature">Temperature (on device sensor)</string>
-    <string scope="settings" id="temperature_garmin">Temperature (Garmin weather)</string>
+    <string scope="settings" id="temperature">Temperature (on-device)</string>
+    <string scope="settings" id="temperature_garmin">Temperature (Garmin)</string>
     <string scope="settings" id="temperature_out">Temperature</string>
-    <string scope="settings" id="temperature_hl">Temperature High/Low)</string>
-    <string scope="settings" id="temperature_hl_garmin">Temperature High/Low (Garmin weather)</string>
-    <string scope="settings" id="precipitation_garmin">Precipitation (Garmin weather)</string>
-    <string scope="settings" id="weather_garmin">Weather (Garmin weather)</string>
-    <string scope="settings" id="sunriseset">Sun rise/set time</string>
-    <string scope="settings" id="floorclimbed">Floor climbed</string>
-    <string scope="settings" id="groupnoti">Group notification</string>
+    <string scope="settings" id="temperature_hl">Temperature High/Low</string>
+    <string scope="settings" id="temperature_hl_garmin">Temperature High/Low (Garmin)</string>
+    <string scope="settings" id="precipitation_garmin">Precipitation (Garmin)</string>
+    <string scope="settings" id="time">Time</string>
+    <string scope="settings" id="ampm">Time (am/pm indicator)</string>
+    <string scope="settings" id="time_secondary">Time (secondary timezone)</string>
+    <string scope="settings" id="sunriseset">Time (sunrise/sunset)</string>
+    <string scope="settings" id="floorclimbed">Floors climbed</string>
     <string scope="settings" id="barometer">Barometer</string>
-    <string scope="settings" id="weeknum">Week of year</string>
     <string scope="settings" id="weather">Weather</string>
-    <string scope="settings" id="ampm">AM/PM indicator</string>
+    <string scope="settings" id="weather_garmin">Weather (Garmin)</string>
     <string scope="settings" id="ctext">Custom text</string>
-    <string scope="settings" id="wind">Wind (km/h or mph)</string>
-    <string scope="settings" id="bodybattery">Body Battery</string>
-    <string scope="settings" id="stress">Stress</string>
-    <string scope="settings" id="bodybattstress">Body Battery and Stress Combined</string>
+    <string scope="settings" id="wind">Weather, Wind</string>
+    <string scope="settings" id="bodybattery">Health, Body Battery</string>
+    <string scope="settings" id="stress">Health, Stress Score</string>
+    <string scope="settings" id="bodybattstress">Health, Battery + Stress</string>
+    <string scope="settings" id="timetorecovery">Health, Recovery Time</string>
     <string scope="settings" id="airquality">Air Quality Index</string>
-    <string scope="settings" id="recovery_hours">Time to Recovery</string>
 
-    <!-- Date and time settings -->
+    <!-- Formats group -->
+    <string scope="settings" id="format_group">Formats</string>
+    <string scope="settings" id="format_group_desc">Select preferred data field formats / units</string>
+
+    <string scope="settings" id="minimal_data">Do not abbreviate large numbers</string>
+    <string scope="settings" id="force_date_english">Force date to English (prevent rectangle on unsupported chars)</string>
+
+    <!-- Date and time format -->
     <string scope="settings" id="date_format">Date format</string>
     <string scope="settings" id="datef1">ddd d (TUE 2)</string>
     <string scope="settings" id="datef11">ddd d mmm (TUE 2 OCT)</string>
@@ -107,6 +107,24 @@
     <string scope="settings" id="datef31">mm.dd.yy (9.2.19)</string>
     <string scope="settings" id="datef4">dd mmm (2 OCT)</string>
     <string scope="settings" id="datef41">mmm dd (OCT 2)</string>
+
+    <!-- Unit settings -->
+    <string scope="settings" id="battery_format">Battery format</string>
+    <string scope="settings" id="battery_format_1">Percent</string>
+    <string scope="settings" id="battery_format_2">Days left</string>
+    <string scope="settings" id="battery_format_3">Days left (short)</string>
+
+    <string scope="settings" id="barometer_unit">Barometer Unit</string>
+    <string scope="settings" id="barometer_unit_0">Hector Pascal (Pa)</string>
+    <string scope="settings" id="barometer_unit_1">Inches of Mercury (inHg)</string>
+
+    <!-- Custom group -->
+    <string scope="settings" id="custom_group">Custom Data</string>
+    <string scope="settings" id="custom_group_desc">Enter custom data (see FAQ in Description for details)</string>
+
+    <!-- Custom countdown settings -->
+    <string scope="settings" id="countdown_date">Event date for countdown</string>
+    <string scope="settings" id="countdown">Countdown to event</string>
 
     <string scope="settings" id="utc_timezone">Secondary timezone</string>
     <string scope="settings" id="utc_shift">Shift timezone for +30min</string>
@@ -136,47 +154,49 @@
     <string scope="settings" id="utc11m">UTC -11</string>
     <string scope="settings" id="utc12m">UTC -12</string>
 
-    <!-- Unit settings -->
-    <string scope="settings" id="battery_format">Battery format</string>
-    <string scope="settings" id="battery_format_1">Percent</string>
-    <string scope="settings" id="battery_format_2">Days left</string>
-    <string scope="settings" id="battery_format_3">Days left (short)</string>
-
-    <string scope="settings" id="barometer_unit">Barometer Unit</string>
-    <string scope="settings" id="barometer_unit_0">Hector Pascal (Pa)</string>
-    <string scope="settings" id="barometer_unit_1">Inches of Mercury (inHg)</string>
-
     <!-- Openweather Key -->
-    <string scope="settings" id="openweather_api">OpenWeather API key, read FAQs section for more info</string>
+    <string scope="settings" id="openweather_api">OpenWeather API key (see FAQ)</string>
 
     <!-- IQAir (Air Quality) API Key -->
-    <string scope="settings" id="iqair_api">IQAir (Air Quality) API key, read FAQs section for more info</string>
+    <string scope="settings" id="iqair_api">IQAir (Air Quality) API key (see FAQ)</string>
+
+    <!-- Advanced group -->
+    <string scope="settings" id="advanced_group">Advanced Settings</string>
+    <string scope="settings" id="advanced_group_desc">Leave at default settings to avoid issues</string>
+
+    <string scope="settings" id="power_save_mode">Refresh screen once per minute (legacy devices only)</string>
+    <string scope="settings" id="enable_buffering">Enable screen buffering (higher memory devices only)</string>
+
+    <!-- Color group -->
+    <string scope="settings" id="color_group">Colors</string>
+    <string scope="settings" id="color_group_desc">Choose a color theme, or set theme to 'Custom' to manually set colors</string>
 
     <!-- Theme settings -->
-    <string scope="settings" id="theme_code">Theme (overrides custom colors)</string>
-    <string scope="settings" id="theme_dark">Dark</string>
-    <string scope="settings" id="theme_light">Light</string>
+    <string scope="settings" id="theme_code">Color Theme</string>
+    <string scope="settings" id="theme_red">Classic red</string>
+    <string scope="settings" id="theme_dark_blue">Classic blue</string>
+    <string scope="settings" id="theme_green">Classic green</string>
+    <string scope="settings" id="theme_solar">Classic solar</string>
+    <string scope="settings" id="theme_night">Night Vision</string>
+    <string scope="settings" id="theme_dcontrast">High contrast (Dark)</string>
+    <string scope="settings" id="theme_lcontrast">High contrast (Light)</string>
     <string scope="settings" id="theme_ocean">Ocean</string>
     <string scope="settings" id="theme_orange">Orange</string>
     <string scope="settings" id="theme_radioactive">Radioactive</string>
-    <string scope="settings" id="theme_flashlight">Flash light</string>
-    <string scope="settings" id="theme_dusk">Dusk</string>
-    <string scope="settings" id="theme_dark_blue">Dark blue</string>
     <string scope="settings" id="theme_light_blue">Light blue</string>
     <string scope="settings" id="theme_gray">Gray</string>
     <string scope="settings" id="theme_lgray">Light gray</string>
     <string scope="settings" id="theme_pink">Pink</string>
     <string scope="settings" id="theme_deep_ocean">Deep ocean</string>
-    <string scope="settings" id="theme_dcontrast">High contrast (Dark)</string>
-    <string scope="settings" id="theme_lcontrast">High contrast (Light)</string>
-    <string scope="settings" id="theme_camo">Camo</string>
-    <string scope="settings" id="theme_solar">Solar</string>
-    <string scope="settings" id="theme_lime">Lime</string>
+    <string scope="settings" id="theme_camo">Camoflauge</string>
+    <string scope="settings" id="theme_light">Flashlight</string>
     <string scope="settings" id="theme_custom">Custom</string>
 
-    <!-- New theme settings -->
+    <!-- Custom color settings -->
     <string scope="settings" id="background_color">Background color</string>
     <string scope="settings" id="text_color">Text color</string>
+    <string scope="settings" id="hour_color">Clock hour color</string>
+    <string scope="settings" id="mins_color">Clock minute color</string>
     <string scope="settings" id="accent_color">Accent color</string>
     <string scope="settings" id="ticks_color">Ticks color</string>
     <string scope="settings" id="bar_background_color">Bar background color</string>
@@ -189,9 +209,11 @@
     <string scope="settings" id="red">Red</string>
     <string scope="settings" id="red_dark">Dark Red</string>
     <string scope="settings" id="pink">Pink</string>
+    <string scope="settings" id="purple">Purple</string>
     <string scope="settings" id="cyan">Cyan</string>
     <string scope="settings" id="blue">Blue</string>
     <string scope="settings" id="blue_pale">Pale Blue</string>
+    <string scope="settings" id="blue_soft">Soft Blue</string>
     <string scope="settings" id="blue_dark">Dark Blue</string>
     <string scope="settings" id="green">Green</string>
     <string scope="settings" id="green_lime">Lime Green</string>

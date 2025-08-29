@@ -37,7 +37,7 @@ class BatteryField extends BaseDataField {
    //! Format hours as days/hours string
    private function format_hours(total_hours as Float) {
       if (total_hours < 24) {
-         return Lang.format("$1$ HRS", [total_hours.format("%0.1f")]);
+         return Lang.format("$1$ HRS", [Math.round(total_hours).format("%d")]);
       } else if (total_hours >= 99 * 24) {
          return "99+ DAYS";
       } else {
@@ -420,46 +420,6 @@ class AlarmField extends BaseDataField {
       var settings = System.getDeviceSettings();
       value = settings.alarmCount;
       return Lang.format("ALAR $1$", [value.format("%d")]);
-   }
-}
-
-/* FLOORS CLIMBED */
-class FloorField extends BaseDataField {
-   function initialize(id) {
-      BaseDataField.initialize(id);
-   }
-
-   function max_val() {
-      var activityInfo = ActivityMonitor.getInfo();
-      if (activityInfo has :floorsClimbedGoal) {
-         return activityInfo.floorsClimbedGoal.toFloat();
-      } else {
-         return 1.0;
-      }
-   }
-
-   function cur_val() {
-      var activityInfo = ActivityMonitor.getInfo();
-      if (activityInfo has :floorsClimbed) {
-         return activityInfo.floorsClimbed.toFloat();
-      } else {
-         return 0.0;
-      }
-   }
-
-   function max_label(value) {
-      return value.format("%d");
-   }
-
-   function cur_label(value) {
-      if (value == null) {
-         return "FLOOR --";
-      }
-      return Lang.format("FLOOR $1$", [value.format("%d")]);
-   }
-
-   function bar_data() {
-      return true;
    }
 }
 

@@ -28,6 +28,7 @@ class BarComplication extends Ui.Drawable {
 
       if (position == 0) {
          // up
+         // calculate weather icon position
          if (center_x == 120) {
             position_y_draw = 52; //center_y - 36 - 18 - 14; // font height 14
             position_y_draw_bonus = -13;
@@ -72,8 +73,8 @@ class BarComplication extends Ui.Drawable {
          // up
          font = Ui.loadResource(Rez.Fonts.cur_up);
          arrFont = Ui.loadResource(Rez.Fonts.arr_up);
-         fontInfo = Ui.loadResource(Rez.JsonData.bar_font_top);
-         arrInfo = Ui.loadResource(Rez.JsonData.bar_pos_top);
+         fontInfo = Ui.loadResource(Rez.JsonData.bar_font_top);   // bar tiles pos
+         arrInfo = Ui.loadResource(Rez.JsonData.bar_pos_top);     // bar arrow pos
       } else {
          // down
          font = Ui.loadResource(Rez.Fonts.cur_bo);
@@ -152,7 +153,9 @@ class BarComplication extends Ui.Drawable {
       if (is_bar_data) {
          var mi = min_val().toFloat(); // 0
          var ma = max_val().toFloat(); // 5
-         var cu = cur_val().toFloat(); // 1
+         // support current value is null (for no-computed-data)
+         var val = cur_val();
+         var cu = (val != null) ? val.toFloat() : mi; // 1
 
          var i = 0;
          if (cu >= ma) {
