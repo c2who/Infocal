@@ -10,6 +10,7 @@
                 <listEntry value="16">@Strings.theme_solar</listEntry>
                 <listEntry value="13">@Strings.theme_dcontrast</listEntry>
                 <listEntry value="14">@Strings.theme_lcontrast</listEntry>
+                <listEntry value="2">@Strings.theme_night</listEntry>
                 <listEntry value="15">@Strings.theme_camo</listEntry>
                 <listEntry value="12">@Strings.theme_deep_ocean</listEntry>
                 <listEntry value="4">@Strings.theme_radioactive</listEntry>

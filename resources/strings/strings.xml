@@ -175,6 +175,7 @@
     <string scope="settings" id="theme_dark_blue">Classic blue</string>
     <string scope="settings" id="theme_green">Classic green</string>
     <string scope="settings" id="theme_solar">Classic solar</string>
+    <string scope="settings" id="theme_night">Night Vision</string>
     <string scope="settings" id="theme_dcontrast">High contrast (Dark)</string>
     <string scope="settings" id="theme_lcontrast">High contrast (Light)</string>
     <string scope="settings" id="theme_ocean">Ocean</string>
