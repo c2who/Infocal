@@ -775,8 +775,7 @@
             <settingConfig type="boolean" />
         </setting>
         <setting propertyKey="@Properties.countdown_date" title="@Strings.countdown_date">
-            <settingConfig type="date" min="1754028000">
-            </settingConfig>
+            <settingConfig type="date" min="1754028000"/>
         </setting>
         <setting propertyKey="@Properties.ctext_input" title="@Strings.ctext">
             <settingConfig type="alphaNumeric" maxLength="10"/>
