@@ -104,7 +104,10 @@ import Toybox.Time;
     }
 
     private function update_state(state as State, bat_pcnt as Float, time_now as Number) {
-        debug_print(:bms, "[$1$] $2$%", [state, bat_pcnt.format("%0.1f")]);
+        // print debug message only on change - to avoid duplicate entries every minute when 'charging'
+        if ((_bat_state != state) || (_bat_last_pcnt != bat_pcnt)) {
+            debug_print(:bms, "[$1$] $2$%", [state, bat_pcnt.format("%0.1f")]);
+        }
 
         _bat_state = state;
         _bat_last_pcnt = bat_pcnt;
