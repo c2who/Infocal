@@ -66,6 +66,7 @@ class ArcTextComplication extends Ui.Drawable {
          // small digital
          return dt_field.need_draw();
       }
+      // FIXME: So many double negatives!
       if (Properties.getValue("left_digital_info")) {
          var can_draw = !(
             angle == 10 && !Properties.getValue("use_analog")
