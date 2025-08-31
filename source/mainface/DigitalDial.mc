@@ -142,7 +142,7 @@ class DigitalDial extends Ui.Drawable {
 
          // FIXME - Move to InfocalView: Calculate seconds/hr global offsets
          var f_align = digital_style == 0 ? 62 : 71;
-         if (center_x == 195) {
+         if ((center_x == 195) || (center_x == 208)) {
             f_align = f_align + 40;
          }
          var second_x_l = center_x + w / 2 + 3;

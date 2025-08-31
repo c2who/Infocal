@@ -10,7 +10,7 @@ class BackgroundView {
 
    function initialize(params as Dictionary?) {
       radius = center_x - ((10 * center_x) / 120).toNumber(); // r - 1/12.r
-      mark_length = (center_x == 195) ? 20 : 10;
+      mark_length = ((center_x == 195) || (center_x == 208)) ? 20 : 10;
    }
 
    public function draw(dc) {
@@ -72,7 +72,7 @@ class BackgroundView {
             bonus = 3;
          } else if (center_x == 109) {
             bonus = -2;
-         } else if (center_x == 195) {
+         } else if ((center_x == 195) || (center_x == 208)) {
             bonus = 8;
          }
 

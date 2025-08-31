@@ -32,7 +32,7 @@ class BarComplication extends Ui.Drawable {
          // calculate weather icon position
          if (center_x == 120) {
             position_y_draw = 52; //center_y - 36 - 18 - 14; // font height 14
-            position_y_draw_bonus = -13;
+            position_y_draw_bonus = -13; // Weather Icon to Text offset
          } else if (center_x == 130) {
             position_y_draw = 58; //center_y - 36 - 18 - 14 - 4; // font height 14
             position_y_draw_bonus = -18;
@@ -43,7 +43,12 @@ class BarComplication extends Ui.Drawable {
             position_y_draw = 89; //center_y - 36 - 18 - 14 - 8; // font height 14
             position_y_draw_bonus = -36;
             factor = 2;
+         } else if (center_x == 208) {
+            position_y_draw = 89+13; //center_y - 36 - 18 - 14 - 8; // font height 14
+            position_y_draw_bonus = -36;
+            factor = 2;
          } else {
+            // center_x == 109
             position_y_draw = 44; //center_y - 36 - 18 - 14 + 5; // font height 14
             position_y_draw_bonus = -13;
          }
@@ -58,11 +63,16 @@ class BarComplication extends Ui.Drawable {
          } else if (center_x == 140) {
             position_y_draw = 184; //center_y + 36 + 8;
             position_y_draw_bonus = 33;
-         } else if (center_x == 195) {
+         } else if (center_x == 195)  {
             position_y_draw = 256; //center_y - 36 - 18 - 14 - 8; // font height 14
             position_y_draw_bonus = 48;
             factor = 2;
+         } else if (center_x == 208) {
+            position_y_draw = 256+13; //center_y - 36 - 18 - 14 - 8; // font height 14
+            position_y_draw_bonus = 48;
+            factor = 2;
          } else {
+            // center_x == 109
             position_y_draw = 140; //center_y + 36 - 5;
             position_y_draw_bonus = 29;
          }
@@ -239,6 +249,15 @@ class BarComplication extends Ui.Drawable {
    //! - Each JsonData number represents an image part (tile) with byte encoding:
    //!   [ flags|char|xpos|ypos ]
    function drawTiles(packed_array as Array<Number>, font, dc) {
+
+      // Hack: re-use 360x390 tiles json on 416x416
+      var x_offset =0;
+      var y_offset =0;
+      if (center_x == 208) {
+         x_offset = 13;
+         y_offset = 13;
+      }
+
       for (var i = 0; i < packed_array.size(); i++) {
          var val = packed_array[i];
          var flag = (val >> 24) & 255;
@@ -248,8 +267,8 @@ class BarComplication extends Ui.Drawable {
          var xpos_bonus = (flag & 0x01) == 0x01 ? 1 : 0;
          var ypos_bonus = (flag & 0x10) == 0x10 ? 1 : 0;
          dc.drawText(
-            (xpos * factor + xpos_bonus).toNumber(),
-            (ypos * factor + ypos_bonus).toNumber(),
+            (xpos * factor + xpos_bonus + x_offset).toNumber(),
+            (ypos * factor + ypos_bonus + y_offset).toNumber(),
             font,
             code.toChar().toString(),
             Graphics.TEXT_JUSTIFY_LEFT

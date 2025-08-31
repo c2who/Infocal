@@ -34,7 +34,7 @@ class ArcTextComplication extends Ui.Drawable {
          barRadius = center_x - 11;
       } else if (center_x == 130) {
          kerning = 0.95;
-      } else if (center_x == 195) {
+      } else if ((center_x == 195) || (center_x == 208)) {
          kerning = 0.95;
          barRadius = barRadius + 4;
       }
