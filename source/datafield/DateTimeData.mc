@@ -1,7 +1,8 @@
-using Toybox.System;
 using Toybox.Time.Gregorian;
 
 import Toybox.Application;
+import Toybox.Lang;
+import Toybox.System;
 
 /* AM/PM INDICATOR */
 class AMPMField extends BaseDataField {
@@ -127,13 +128,28 @@ class CountdownField extends BaseDataField {
    }
 
    function cur_label(value) {
-      var set_end_date = new Time.Moment(Properties.getValue("countdown_date"));
-      var now_d = new Time.Moment(Time.today().value());
-      var dif_e_n = -now_d.compare(set_end_date) / 86400;
-      if (dif_e_n > 1 || dif_e_n < -1) {
-         return Lang.format("$1$ days", [dif_e_n.toString()]);
+      var countdown_date = Properties.getValue("countdown_date") as Lang.Number?;
+
+      // BUG: Garmin ConnectIQ App Settings reset Date Picker to "" when using Groups and re-enter/save group
+      //      Work-around: save a local copy when valid
+      if (!(countdown_date instanceof Number)) {
+         countdown_date = Storage.getValue("countdown_date") as Lang.Number?;
       } else {
-         return Lang.format("$1$ day", [dif_e_n.toString()]);
+         Storage.setValue("countdown_date", countdown_date);
+      }
+
+      if (!(countdown_date instanceof Number)) {
+         return "NOT SET";
+      } else {
+         var timeZoneOffset = System.getClockTime().timeZoneOffset;
+         var today_utc = Time.today().value() + timeZoneOffset;
+         var diff = (countdown_date - today_utc) / 86400;
+         if (diff == 0) {
+            return "TODAY";
+         } else {
+            var days_str = diff.abs() > 1 ? "days" : "day";
+            return Lang.format("$1$ $2$", [diff.toString(), days_str]);
+         }
       }
    }
 }
