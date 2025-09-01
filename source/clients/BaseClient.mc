@@ -69,10 +69,11 @@ class BaseClientHelper {
             // new system, no data is valid
             return true;
 
-        } else if (retries != null) {
-            // Request encountered error(s) - use exponential back-off to avoid more errors [5..60 minutes]
-            var backoffTime = min(5 + Math.pow(2, retries) as Number, 60) * Gregorian.SECONDS_PER_MINUTE;
-            return (Time.now().value() - lastTime) > backoffTime;
+        } else if ((retries != null) && (error != null) && (error["clientTs"] != null)) {
+            // Request encountered error(s) - use linear back-off to avoid more errors [5..60 minutes]
+            var lastErrorTs = error["clientTs"] as Number;
+            var backoffTime = min(5 * retries, 60) * Gregorian.SECONDS_PER_MINUTE;
+            return (Time.now().value() - lastErrorTs) > backoffTime;
 
         } else if ((data == null) || (data["clientTs"] as Number < (Time.now().value() - update_interval_secs))) {
             // (No Valid data) or (Valid Data age is > update interval)
