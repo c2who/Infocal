@@ -1,87 +1,93 @@
 using Toybox.WatchUi;
 using Toybox.Math;
-using Toybox.Graphics;
-using Toybox.SensorHistory;
 using Toybox.System;
 
 import Toybox.Application;
+import Toybox.Graphics;
+import Toybox.Lang;
+import Toybox.SensorHistory;
+
+typedef DrawableInitOptions as { :identifier as Object, :locX as Numeric, :locY as Numeric, :width as Numeric, :height as Numeric, :visible as Boolean };
 
 class GraphComplication extends WatchUi.Drawable {
-   private var position_x, position_y;
-   private var graph_width, graph_height;
-   private var settings;
+   private var position_x as Number, position_y as Number;
+   private var graph_width as Number, graph_height as Number;
 
-   //layout
-   protected var position;
+   private var _elevationUnits as Number = System.UNIT_METRIC;
+   private var _temperatureUnits as Number = System.UNIT_METRIC;
 
-   function initialize(params) {
-      Drawable.initialize(params);
+   // layout
+   protected var position as Number;
 
-      position = params.get(:position);
+   function initialize(options as DrawableInitOptions) {
+      Drawable.initialize(options);
+
+      position = options.get(:position) as Number;
       if (position == 0) {
          // top
          position_x = center_x;
-         position_y = 0.5 * center_y;
+         position_y = center_y / 2;
       } else {
          // bottom
          position_x = center_x;
-         position_y = 1.45 * center_y;
+         position_y = (center_y * 1.45).toNumber();
       }
 
-      graph_width = 90;
-      graph_height = Math.round(0.25 * center_x);
+      graph_width =  (0.8 * center_x).toNumber();
+      graph_height = (0.3 * center_y).toNumber();
    }
 
-   function get_data_type() {
+   function get_data_type() as Number {
       if (position == 0) {
-         return Properties.getValue("compgrapht");
+         return Settings.getOrDefault("compgrapht", 0) as Number;
       } else {
-         return Properties.getValue("compgraphb");
+         return Settings.getOrDefault("compgraphb", 0) as Number;
       }
    }
 
-   function get_data_interator(type) {
+   //! Get Sensor History Iterator
+   function get_data_iterator(type as Number) as SensorHistoryIterator? {
       if (type == 1) {
          if (
             Toybox has :SensorHistory &&
-            Toybox.SensorHistory has :getHeartRateHistory
+            SensorHistory has :getHeartRateHistory
          ) {
-            return Toybox.SensorHistory.getHeartRateHistory({});
+            return SensorHistory.getHeartRateHistory({});
          }
       } else if (type == 2) {
          if (
             Toybox has :SensorHistory &&
-            Toybox.SensorHistory has :getElevationHistory
+            SensorHistory has :getElevationHistory
          ) {
-            return Toybox.SensorHistory.getElevationHistory({});
+            return SensorHistory.getElevationHistory({});
          }
       } else if (type == 3) {
          if (
             Toybox has :SensorHistory &&
-            Toybox.SensorHistory has :getPressureHistory
+            SensorHistory has :getPressureHistory
          ) {
-            return Toybox.SensorHistory.getPressureHistory({});
+            return SensorHistory.getPressureHistory({});
          }
       } else if (type == 4) {
          if (
             Toybox has :SensorHistory &&
-            Toybox.SensorHistory has :getTemperatureHistory
+            SensorHistory has :getTemperatureHistory
          ) {
-            return Toybox.SensorHistory.getTemperatureHistory({});
+            return SensorHistory.getTemperatureHistory({});
          }
       } else if (type == 5) {
          if (
             Toybox has :SensorHistory &&
-            Toybox.SensorHistory has :getBodyBatteryHistory
+            SensorHistory has :getBodyBatteryHistory
          ) {
-            return Toybox.SensorHistory.getBodyBatteryHistory({});
+            return SensorHistory.getBodyBatteryHistory({});
          }
       } else if (type == 6) {
          if (
             Toybox has :SensorHistory &&
-            Toybox.SensorHistory has :getStressHistory
+            SensorHistory has :getStressHistory
          ) {
-            return Toybox.SensorHistory.getStressHistory({});
+            return SensorHistory.getStressHistory({});
          }
       } else {
          return null;
@@ -89,15 +95,16 @@ class GraphComplication extends WatchUi.Drawable {
       return null;
    }
 
-   function need_draw() {
-      return get_data_type() > 0;
+   function need_draw() as Boolean {
+      return (get_data_type() > 0);
    }
 
-   function parse_data_value(type, value) {
+   //! Perform units conversion on value
+   function parse_data_value(type as Number, value as Numeric) as Numeric {
       if (type == 1) {
          return value;
       } else if (type == 2) {
-         if (settings.elevationUnits == System.UNIT_METRIC) {
+         if (_elevationUnits == System.UNIT_METRIC) {
             // Metres (no conversion necessary).
             return value;
          } else {
@@ -107,7 +114,7 @@ class GraphComplication extends WatchUi.Drawable {
       } else if (type == 3) {
          return value / 100.0;
       } else if (type == 4) {
-         if (settings.temperatureUnits == System.UNIT_STATUTE) {
+         if (_temperatureUnits == System.UNIT_STATUTE) {
             return value * (9.0 / 5) + 32; // Convert to Farenheit: ensure floating point division.
          } else {
             return value;
@@ -117,73 +124,80 @@ class GraphComplication extends WatchUi.Drawable {
       }
    }
 
-   function draw(dc) {
+   //! Draw
+   function draw(dc as Dc) as Void {
       if (!need_draw()) {
+         return;
+      }
+      var font = small_digi_font;
+      if (font == null) {
          return;
       }
 
       try {
-         settings = System.getDeviceSettings();
+         // Refresh system settings
+         var settings = System.getDeviceSettings();
+         _elevationUnits = settings.elevationUnits;
+         _temperatureUnits = settings.temperatureUnits;
 
          var primaryColor = position == 1 ? gbar_color_1 : gbar_color_0;
 
          //Calculation
          var targetdatatype = get_data_type();
-         var HistoryIter = get_data_interator(targetdatatype);
+         var historyIter = get_data_iterator(targetdatatype);
 
-         if (HistoryIter == null) {
+         if (historyIter == null) {
             dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
             dc.drawText(
                position_x,
                position_y,
-               small_digi_font,
+               font,
                "--",
                Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
             );
             return;
          }
 
-         var HistoryMin = HistoryIter.getMin();
-         var HistoryMax = HistoryIter.getMax();
+         var min = historyIter.getMin();
+         var max = historyIter.getMax();
 
          // Fixed: Prevent divide by zero if diff=0 (min==max)
-         if (   (HistoryMin == null || HistoryMax == null)
-             || (HistoryMin == HistoryMax) ) {
+         if ( (min == null || max == null) || (min == max) ) {
             dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
             dc.drawText(
                position_x,
                position_y,
-               small_digi_font,
+               font,
                "--",
                Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
             );
             return;
          }
 
-         var minMaxDiff = (HistoryMax - HistoryMin).toFloat();
+         var minMaxDiff = (max - min).toFloat();
 
          var xStep = graph_width;
          var height = graph_height;
          var HistoryPresent = 0;
 
-         var HistoryNew = 0;
-         var lastyStep = 0;
-         //var step_max = -1;
-         //var step_min = -1;
+         var lastPoint = null;
+         var firstPoint = null;
 
-         var latest_sample = HistoryIter.next();
+         // FIXME: should read current sample from Activity/Sensor - not history
+         // Find first point lastyStep
+         var latest_sample = historyIter.next();
          if (latest_sample != null) {
             HistoryPresent = latest_sample.data;
             if (HistoryPresent != null) {
                // draw diagram
                // Fixed: Divide by zero checked above
-               var historyDifPers = (HistoryPresent - HistoryMin) / minMaxDiff;
+               var historyDifPers = (HistoryPresent - min) / minMaxDiff;
                var yStep = historyDifPers * height;
                yStep = yStep > height ? height : yStep;
                yStep = yStep < 0 ? 0 : yStep;
-               lastyStep = yStep;
+               lastPoint = [xStep, yStep];
             } else {
-               lastyStep = null;
+               lastPoint = null;
             }
          }
 
@@ -191,38 +205,28 @@ class GraphComplication extends WatchUi.Drawable {
          dc.setColor(primaryColor, Graphics.COLOR_TRANSPARENT);
 
          //Build and draw Iteration
-         for (var i = 90; i > 0; i--) {
-            var sample = HistoryIter.next();
+         for (var i = graph_width; i > 0; i--) {
+            var sample = historyIter.next();
 
-            if (sample != null) {
-               HistoryNew = sample.data;
-               if (HistoryNew == HistoryMax) {
-                  //step_max = xStep;
-               } else if (HistoryNew == HistoryMin) {
-                  //step_min = xStep;
-               }
-               if (HistoryNew == null) {
-                  // ignore
+            if ((sample != null) && (sample.data != null)) {
+               // draw graph
+               var historyDifPers = (sample.data - min) / minMaxDiff;
+               var yStep = historyDifPers * height;
+               yStep = yStep > height ? height : yStep;
+               yStep = yStep < 0 ? 0 : yStep;
+
+               if (lastPoint == null) {
+                  // this is our first valid point
                } else {
                   // draw diagram
-                  var historyDifPers = (HistoryNew - HistoryMin) / minMaxDiff;
-                  var yStep = historyDifPers * height;
-                  yStep = yStep > height ? height : yStep;
-                  yStep = yStep < 0 ? 0 : yStep;
-
-                  if (lastyStep == null) {
-                     // ignore
-                  } else {
-                     // draw diagram
-                     dc.drawLine(
-                        position_x + (xStep - graph_width / 2),
-                        position_y - (lastyStep - graph_height / 2),
-                        position_x + (xStep - graph_width / 2),
-                        position_y - (yStep - graph_height / 2)
-                     );
-                  }
-                  lastyStep = yStep;
+                  dc.drawLine(
+                     position_x - graph_width/2  + lastPoint[0],
+                     position_y + graph_height/2 - lastPoint[1],
+                     position_x - graph_width/2  + xStep,
+                     position_y + graph_height/2 - yStep
+                  );
                }
+               lastPoint = [xStep, yStep];
             }
             xStep--;
          }
@@ -232,11 +236,8 @@ class GraphComplication extends WatchUi.Drawable {
          if (HistoryPresent == null) {
             dc.drawText(
                position_x,
-               position_y +
-                  (position == 1
-                     ? graph_height / 2 + 10
-                     : -graph_height / 2 - 16),
-               small_digi_font,
+               position_y + (position == 1 ? graph_height/2 + 10 : -graph_height/2 - 16),
+               font,
                "--",
                Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
             );
@@ -246,21 +247,19 @@ class GraphComplication extends WatchUi.Drawable {
          var labelll = value_label.format("%d");
          dc.drawText(
             position_x,
-            position_y +
-               (position == 1 ? graph_height / 2 + 10 : -graph_height / 2 - 16),
-            small_digi_font,
+            position_y + (position == 1 ? graph_height/2 + 10 : -graph_height/2 - 16),
+            font,
             labelll,
             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
          );
 
-         settings = null;
       } catch (ex) {
          // currently unknown, weird bug
          dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
          dc.drawText(
             position_x,
             position_y,
-            small_digi_font,
+            font,
             "--",
             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
          );
