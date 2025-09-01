@@ -223,6 +223,8 @@ class InfocalView extends WatchUi.WatchFace {
    //!
    //! @internal Calls to System.println() and System.print() will not execute on devices when this function is being
    //!           invoked, but can be used in the device *simulator*.
+   //! @note     Any system I/O in partial updates (e.g. Properties, Storage, Resources) will cause time budget to be
+   //!           exceeded - sometimes in weird ways (like showing Graphics Time taking 1700000 usec)
    public function onPartialUpdate(dc as Dc) as Void {
 
       // FIXME: Support seconds on Analog by painting circular mask in centre of dial
