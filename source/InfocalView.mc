@@ -130,7 +130,6 @@ class InfocalView extends WatchUi.WatchFace {
       _always_on_style = Properties.getValue("always_on_style");
    }
 
-
    // Called when this View is brought to the foreground. Restore
    // the state of this View and prepare it to be shown. This includes
    // loading resources into memory.
@@ -229,7 +228,7 @@ class InfocalView extends WatchUi.WatchFace {
          return;
       }
 
-      if (_always_on_second && (_always_on_digi_font != null)) {
+      if (_always_on_second && _always_on_digi_font != null) {
          var clockTime = System.getClockTime();
          var second_text = clockTime.sec.format("%02d");
 
@@ -237,16 +236,10 @@ class InfocalView extends WatchUi.WatchFace {
          dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
          dc.clear();
          dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-         dc.drawText(
-            second_x,
-            second_y,
-            _always_on_digi_font,
-            second_text,
-            Graphics.TEXT_JUSTIFY_LEFT
-         );
+         dc.drawText(second_x, second_y, _always_on_digi_font, second_text, Graphics.TEXT_JUSTIFY_LEFT);
       }
 
-      if (_always_on_heart && (_always_on_digi_font != null)) {
+      if (_always_on_heart && _always_on_digi_font != null) {
          var width = second_clip_size[0];
          dc.setClip(heart_x - width - 1, second_y, width + 2, second_clip_size[1]);
          dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
@@ -254,17 +247,11 @@ class InfocalView extends WatchUi.WatchFace {
 
          // fix: remove (and do not draw) heart rate if invalid
          var hr = _retrieveHeartrate();
-         if ((hr != null) && (hr > 0)) {
+         if (hr != null && hr > 0) {
             var heart_text = hr.format("%d");
 
             dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(
-               heart_x - 1,
-               second_y,
-               _always_on_digi_font,
-               heart_text,
-               Graphics.TEXT_JUSTIFY_RIGHT
-            );
+            dc.drawText(heart_x - 1, second_y, _always_on_digi_font, heart_text, Graphics.TEXT_JUSTIFY_RIGHT);
          }
       }
    }
@@ -500,9 +487,9 @@ class InfocalView extends WatchUi.WatchFace {
    function calcAlwaysOnLayout(dc as Dc) as Void {
       // Measure clipping area for seconds and heart rate, range [XX..2XX]
       if (_always_on_digi_font != null) {
-         var width  = dc.getTextWidthInPixels("200", _always_on_digi_font) + 2;
+         var width = dc.getTextWidthInPixels("200", _always_on_digi_font) + 2;
          var height = Graphics.getFontHeight(_always_on_digi_font);
-         second_font_height_half = height/2;
+         second_font_height_half = height / 2;
          second_clip_size = [width, height];
 
          if (_use_analog) {

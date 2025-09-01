@@ -139,17 +139,15 @@ const HAS_HEART_RATE_HISTORY = (ActivityMonitor has :getHeartRateHistory) as Boo
 
 function _retrieveHeartrate() as Number {
    var activityInfo = Activity.getActivityInfo();
-   if ((activityInfo != null) && (activityInfo.currentHeartRate != null)) {
+   if (activityInfo != null && activityInfo.currentHeartRate != null) {
       return activityInfo.currentHeartRate;
-
    } else if (HAS_HEART_RATE_HISTORY) {
       var sample = ActivityMonitor.getHeartRateHistory(1, true).next();
-      if ((sample != null) && (sample.heartRate != ActivityMonitor.INVALID_HR_SAMPLE)) {
+      if (sample != null && sample.heartRate != ActivityMonitor.INVALID_HR_SAMPLE) {
          return sample.heartRate;
       } else {
          return 0; // sample invalid
       }
-
    } else {
       return 0; // no data
    }
