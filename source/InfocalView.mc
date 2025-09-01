@@ -569,6 +569,7 @@ class InfocalView extends WatchUi.WatchFace {
          if (isAnyDataFieldsInUse( [FIELD_TYPE_AIR_QUALITY] )) {
             if (IQAirClientHelper.needsDataUpdate()) {
                pendingWebRequests[IQAirClient.DATA_TYPE] = true;
+               debug_print(:background, "need:$1$", IQAirClient.DATA_TYPE);
             }
          }
 
@@ -579,6 +580,7 @@ class InfocalView extends WatchUi.WatchFace {
                                     FIELD_TYPE_WIND ] )) {
             if (OpenWeatherClientHelper.needsDataUpdate()) {
                pendingWebRequests[OpenWeatherClient.DATA_TYPE] = true;
+               debug_print(:background, "need:$1$", OpenWeatherClient.DATA_TYPE);
             }
          }
 
