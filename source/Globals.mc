@@ -112,3 +112,7 @@ public class Globals {
         return valK.format("%0.1f");
     }
 }
+
+function min(a as Numeric, b as Numeric) as Numeric {
+   return (a < b) ? a : b;
+}

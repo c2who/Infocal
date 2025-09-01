@@ -153,9 +153,5 @@ import Toybox.Time;
 
         debug_print(:bms, "a=$1$, $2$sec/% > $3$sec/%", [alpha.format("%0.4f"), x, y]);
     }
-
-    private function min(a as Number or Float, b as Number or Float) as Number or Float {
-        return (a < b) ? a : b;
-    }
 }
 
