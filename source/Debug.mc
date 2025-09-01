@@ -11,7 +11,7 @@ import Toybox.Time;
 //! @note debug messages filtered in release build to limit log file overhead
 (:release, :background) function is_debug_print_allowed(scope as Symbol) as Boolean {
    // TODO: Edit for the scope you want to debug in release builds
-   return (scope == :bms);
+   return (scope == :bms) || (scope == :client);
 }
 
 //! Print debug messages.

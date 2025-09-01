@@ -85,11 +85,11 @@ class BaseClientHelper {
 
     //! Persist (store) the data received from a client
     public static function storeData(data as Dictionary<PropertyKeyType, PropertyValueType>) as Void {
-        var responseCdoe = data["code"] as Number;
+        var responseCode = data["code"] as Number;
         var type = data["type"] as String;
         data.put("clientTs", Time.now().value());
 
-        if (responseCdoe == 200) {
+        if (responseCode == 200) {
             // Valid data
             Storage.setValue(type, data);
             Storage.deleteValue(type + Globals.DATA_TYPE_ERROR_SUFFIX);
@@ -101,6 +101,8 @@ class BaseClientHelper {
 
             Storage.setValue(type + Globals.DATA_TYPE_ERROR_SUFFIX, data);
             Storage.setValue(type + Globals.DATA_TYPE_RETRIES_SUFFIX, retries);
+
+            debug_print(:client, "$1$: $2$, retry=$3$", [type, responseCode, retries]);
         }
     }
 
@@ -124,8 +126,8 @@ class BaseClientHelper {
             }
 
         } catch (ex) {
-            debug_print(:exception, "ex: $1$", ex.getErrorMessage());
-            return "ERR";
+            debug_print(:client, "ex: $1$", ex.getErrorMessage());
+            return "ERR EX";
         }
     }
 }
