@@ -135,23 +135,24 @@ class HRField extends BaseDataField {
    }
 }
 
-function doesDeviceSupportHeartrate() {
-   return ActivityMonitor has :INVALID_HR_SAMPLE;
-}
+const HAS_HEART_RATE_HISTORY = (ActivityMonitor has :getHeartRateHistory) as Boolean;
 
-function _retrieveHeartrate() {
-   var currentHeartrate = 0.0;
+function _retrieveHeartrate() as Number {
    var activityInfo = Activity.getActivityInfo();
-   var sample = activityInfo.currentHeartRate;
-   if (sample != null) {
-      currentHeartrate = sample;
-   } else if (ActivityMonitor has :getHeartRateHistory) {
-      sample = ActivityMonitor.getHeartRateHistory(1, /* newestFirst */ true).next();
-      if (sample != null && sample.heartRate != ActivityMonitor.INVALID_HR_SAMPLE) {
-         currentHeartrate = sample.heartRate;
+   if ((activityInfo != null) && (activityInfo.currentHeartRate != null)) {
+      return activityInfo.currentHeartRate;
+
+   } else if (HAS_HEART_RATE_HISTORY) {
+      var sample = ActivityMonitor.getHeartRateHistory(1, true).next();
+      if ((sample != null) && (sample.heartRate != ActivityMonitor.INVALID_HR_SAMPLE)) {
+         return sample.heartRate;
+      } else {
+         return 0; // sample invalid
       }
+
+   } else {
+      return 0; // no data
    }
-   return currentHeartrate.toFloat();
 }
 
 /* BODY BATTERY */

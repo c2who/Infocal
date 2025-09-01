@@ -6,9 +6,8 @@ import Toybox.WatchUi;
 
 import Settings;
 
-// Font resources
+// Global font resources
 var small_digi_font as WatchUi.Resource?;
-var always_on_digi_font as WatchUi.Resource?;
 
 var second_x = 160;
 var second_y = 140;
@@ -47,12 +46,21 @@ class InfocalView extends WatchUi.WatchFace {
    private const _hasServiceDelegate = (System has :ServiceDelegate) as Boolean; // background service
 
    private var _partialUpdatesAllowed = (WatchUi.WatchFace has :onPartialUpdate) as Boolean;
-   private var _settings_changed as Boolean = false;
-   private var _isAwake as Boolean = true;
-   private var last_draw_minute = -1;
-   private var restore_from_resume = false;
-   private var restore_from_sleep = false;
+   private var _settings_changed = false as Boolean;
+   private var _isAwake = true as Boolean;
+   private var last_draw_minute = -1 as Number;
+   private var restore_from_resume = false as Boolean;
+   private var restore_from_sleep = false as Boolean;
    private var face_radius;
+
+   // Cached settings
+   private var _use_analog = false as Boolean;
+   private var _always_on_second = false as Boolean;
+   private var _always_on_heart = false as Boolean;
+   private var _always_on_style = 0 as Lang.Number;
+
+   // Cached fonts
+   private var _always_on_digi_font as WatchUi.Resource?;
 
    //! Battery Monitor Client.
    //! Used on watches that do not have Stats.batteryInDays (API 3.3.0)
@@ -91,6 +99,7 @@ class InfocalView extends WatchUi.WatchFace {
       setLayout(Rez.Layouts.WatchFace(dc));
       loadDrawables(dc);
 
+      readSettings();
       updateColorsInUse();
       updateCurrentFieldIdsInUse();
       loadAlwaysOnFonts(dc);
@@ -104,12 +113,23 @@ class InfocalView extends WatchUi.WatchFace {
       last_draw_minute = -1;
       _settings_changed = true;
 
+      readSettings();
       updateColorsInUse();
       updateCurrentFieldIdsInUse();
 
       // update the view to reflect changes
       WatchUi.requestUpdate();
    }
+
+   //! Read (cache) settings
+   //! Used to avoid expensive Properties reads in low-power mode (eg. onPartialUpdate)
+   function readSettings() as Void {
+      _use_analog = Properties.getValue("use_analog");
+      _always_on_second = Properties.getValue("always_on_second");
+      _always_on_heart = Properties.getValue("always_on_heart");
+      _always_on_style = Properties.getValue("always_on_style");
+   }
+
 
    // Called when this View is brought to the foreground. Restore
    // the state of this View and prepare it to be shown. This includes
@@ -130,7 +150,7 @@ class InfocalView extends WatchUi.WatchFace {
    function onHide() {
       // Unload fonts
       small_digi_font = null;
-      always_on_digi_font = null;
+      _always_on_digi_font = null;
    }
 
    //! Update the View.
@@ -204,12 +224,12 @@ class InfocalView extends WatchUi.WatchFace {
    //!           invoked, but can be used in the device *simulator*.
    public function onPartialUpdate(dc as Dc) as Void {
       // FIXME: Support seconds on Analog by painting circular mask in centre of dial
-      if (Properties.getValue("use_analog")) {
+      if (_use_analog) {
          // not supported
          return;
       }
 
-      if (always_on_digi_font != null && Properties.getValue("always_on_second")) {
+      if (_always_on_second && (_always_on_digi_font != null)) {
          var clockTime = System.getClockTime();
          var second_text = clockTime.sec.format("%02d");
 
@@ -217,22 +237,34 @@ class InfocalView extends WatchUi.WatchFace {
          dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
          dc.clear();
          dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-         dc.drawText(second_x, second_y, always_on_digi_font, second_text, Graphics.TEXT_JUSTIFY_LEFT);
+         dc.drawText(
+            second_x,
+            second_y,
+            _always_on_digi_font,
+            second_text,
+            Graphics.TEXT_JUSTIFY_LEFT
+         );
       }
 
-      if (always_on_digi_font != null && Properties.getValue("always_on_heart")) {
+      if (_always_on_heart && (_always_on_digi_font != null)) {
          var width = second_clip_size[0];
          dc.setClip(heart_x - width - 1, second_y, width + 2, second_clip_size[1]);
          dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
          dc.clear();
 
          // fix: remove (and do not draw) heart rate if invalid
-         var h = _retrieveHeartrate();
-         if (h != null && h > 0) {
-            var heart_text = h.format("%d");
+         var hr = _retrieveHeartrate();
+         if ((hr != null) && (hr > 0)) {
+            var heart_text = hr.format("%d");
 
             dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(heart_x - 1, second_y, always_on_digi_font, heart_text, Graphics.TEXT_JUSTIFY_RIGHT);
+            dc.drawText(
+               heart_x - 1,
+               second_y,
+               _always_on_digi_font,
+               heart_text,
+               Graphics.TEXT_JUSTIFY_RIGHT
+            );
          }
       }
    }
@@ -263,11 +295,9 @@ class InfocalView extends WatchUi.WatchFace {
       _isAwake = false;
 
       // If the analog dial is used then disable the seconds hand.
-      if (Properties.getValue("use_analog")) {
-         var dialDisplay = View.findDrawableById("analog") as AnalogDial;
-         if (dialDisplay != null) {
-            dialDisplay.disableSecondHand();
-         }
+      var dialDisplay = View.findDrawableById("analog") as AnalogDial;
+      if (dialDisplay != null) {
+         dialDisplay.disableSecondHand();
       }
       WatchUi.requestUpdate();
    }
@@ -366,8 +396,7 @@ class InfocalView extends WatchUi.WatchFace {
       bgraph1.draw(dc);
       bgraph2.draw(dc);
 
-      // XXX: Set/Use View.isVisible instead
-      if (Properties.getValue("use_analog")) {
+      if (_use_analog) {
          View.findDrawableById("analog").draw(dc);
       } else {
          View.findDrawableById("digital").draw(dc);
@@ -452,33 +481,31 @@ class InfocalView extends WatchUi.WatchFace {
       }
    }
 
+   //! @note must have called readSettings() before calling this method
    function loadAlwaysOnFonts(dc as Graphics.Dc) {
-      var always_on_second = Properties.getValue("always_on_second") as Lang.Boolean;
-      var always_on_heart = Properties.getValue("always_on_heart") as Lang.Boolean;
-      var always_on_style = Properties.getValue("always_on_style") as Lang.Number;
-
-      if (always_on_second || always_on_heart) {
+      if (_always_on_second || _always_on_heart) {
          // Loads always on (seconds/hr) Font
-         if (always_on_style == 0) {
-            always_on_digi_font = WatchUi.loadResource(Rez.Fonts.secodigi);
+         if (_always_on_style == 0) {
+            _always_on_digi_font = WatchUi.loadResource(Rez.Fonts.secodigi);
          } else {
-            always_on_digi_font = WatchUi.loadResource(Rez.Fonts.xsecodigi);
+            _always_on_digi_font = WatchUi.loadResource(Rez.Fonts.xsecodigi);
          }
       } else {
          // Unload
-         always_on_digi_font = null;
+         _always_on_digi_font = null;
       }
    }
 
+   //! @note must have called readSettings() and loadAlwaysOnFonts() before this method
    function calcAlwaysOnLayout(dc as Dc) as Void {
       // Measure clipping area for seconds and heart rate, range [XX..2XX]
-      if (always_on_digi_font != null) {
-         var width = dc.getTextWidthInPixels("200", always_on_digi_font) + 2;
-         var height = Graphics.getFontHeight(always_on_digi_font);
-         second_font_height_half = height / 2;
+      if (_always_on_digi_font != null) {
+         var width  = dc.getTextWidthInPixels("200", _always_on_digi_font) + 2;
+         var height = Graphics.getFontHeight(_always_on_digi_font);
+         second_font_height_half = height/2;
          second_clip_size = [width, height];
 
-         if (Properties.getValue("use_analog")) {
+         if (_use_analog) {
             // Analog Watchface
             second_x = center_x;
             second_y = center_y - second_font_height_half * 2;

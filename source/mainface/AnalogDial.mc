@@ -26,16 +26,12 @@ class AnalogDial extends Drawable {
    private var minu_5 as Array<Array<Number> >?;
    private var minu_6 as Array<Array<Number> >?;
 
-   var offset_x = 0;
-   var offset_y = 0;
-   var offset_rad = 0;
-
    private var factor = 1;
 
    function initialize(params) {
       Drawable.initialize(params);
 
-      if (center_x == 195) {
+      if ((center_x == 195) || (center_x == 208)) {
          factor = 2;
       }
    }
@@ -219,7 +215,16 @@ class AnalogDial extends Drawable {
    //! - Each JsonData number represents an image part (tile) with byte encoding:
    //!   [ flags|char|xpos|ypos ]
    private function drawTiles(packed_array as Array<Number>, font, dc, index) {
+      // Hack: re-use 390x390 tiles json on 416x416
+      var x_offset =0;
+      var y_offset =0;
+      if (center_x == 208) {
+         x_offset = 13;
+         y_offset = 13;
+      }
+
       var radian = (index.toFloat() / 60.0) * (2 * 3.1415) - 0.5 * 3.1415;
+      var offset_rad = 0;
       var offset_rad_x = Globals.convertCoorX(radian, offset_rad) - center_x;
       var offset_rad_y = Globals.convertCoorY(radian, offset_rad) - center_y;
       for (var i = 0; i < packed_array.size(); i++) {
@@ -231,8 +236,8 @@ class AnalogDial extends Drawable {
          var xpos_bonus = (flag & 0x01) == 0x01 ? 1 : 0;
          var ypos_bonus = (flag & 0x10) == 0x10 ? 1 : 0;
          dc.drawText(
-            (xpos * factor + xpos_bonus + offset_x - offset_rad_x).toNumber(),
-            (ypos * factor + ypos_bonus + offset_y - offset_rad_y).toNumber(),
+            (xpos * factor + xpos_bonus - offset_rad_x + x_offset).toNumber(),
+            (ypos * factor + ypos_bonus - offset_rad_y + y_offset).toNumber(),
             font,
             code.toChar().toString(),
             Graphics.TEXT_JUSTIFY_LEFT

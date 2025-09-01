@@ -50,6 +50,19 @@ The Garmin Simulator does not implent all of the device behaviors, here are some
 
 # Fonts
 
+## Sizes
+To match different screen sizes, many of the custom Fonts are created at different Point Sizes.
+The table below shows the relationship between screen size and font size.
+
+|  Font         | Weather     | arc-text(e) | Bar(cur/arr)   | digi clock | seconds | hour/minu_hand |
+|---------------|-------------|-------------|----------------|------------|---------|----------------|
+| round-218x218 | (19pt) 39px |     32px    |  _sm  18px     |            |         |  24px 33 chars |
+| round-240x240 | (19pt) 39px |     32px    |  _    18px     |            |         |  28px 33 chars |
+| round-260x260 | (22pt) 44px |     35px    |  _big 18px 13ch|            |         |  28px 38 chars |
+| round-280x280 |    "     "  |     37px    | _xbig 18px 15ch|            |         |  28px 41 chars |
+| round-390x390 | (36pt 71px) |     52px    | _xbig 26px 13ch|            |         |  32px 49 chars |
+
+
 ## DigitalDial Fonts
 The seconds and heart rate digit fonts are stored in:
   - secodigi.fntc (Samll size)

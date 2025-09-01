@@ -34,7 +34,7 @@ class ArcTextComplication extends Ui.Drawable {
          barRadius = center_x - 11;
       } else if (center_x == 130) {
          kerning = 0.95;
-      } else if (center_x == 195) {
+      } else if ((center_x == 195) || (center_x == 208)) {
          kerning = 0.95;
          barRadius = barRadius + 4;
       }
@@ -66,6 +66,7 @@ class ArcTextComplication extends Ui.Drawable {
          // small digital
          return dt_field.need_draw();
       }
+      // FIXME: So many double negatives!
       if (Properties.getValue("left_digital_info")) {
          var can_draw = !(angle == 10 && !Properties.getValue("use_analog"));
          return dt_field.need_draw() && can_draw;
