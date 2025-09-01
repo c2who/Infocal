@@ -2,10 +2,11 @@ using Toybox.Background;
 using Toybox.Communications;
 using Toybox.System;
 using Toybox.Time;
-using Toybox.Time.Gregorian;
 
 import Toybox.Application;
+import Toybox.Time.Gregorian;
 import Toybox.Lang;
+import Toybox.Math;
 
 //! Base (Background) Client
 //!
@@ -13,22 +14,24 @@ import Toybox.Lang;
 //! bloating the background service memory usage.
 (:background)
 class BaseClient {
+    typedef CommunicationCallbackMethod as Method(responseCode as Number, data as Dictionary?) as Void;
+    typedef ClientCallbackMethod as Method(type as String, responseCode as Number, data as Dictionary<String, PropertyValueType>) as Void;
 
     //! Consumer callback for returning formatted data
-    protected var _callback as Method(type as String, responseCode as Number, data as Dictionary<String, PropertyValueType>) as Void?;
+    protected var _callback as ClientCallbackMethod?;
 
     //! Public entry method to make background request to get data from remote service
     //! @param  callback    Consumer callback for returning formatted data
     //! @note   Override in concrete class to build web request(s)
-    public function requestData(cb as Method(type as String, responseCode as Number, data as Dictionary<String, PropertyValueType>) as Void) as Void {
+    public function requestData(callback as ClientCallbackMethod) as Void {
         // Save callback method
-        self._callback = cb;
+        self._callback = callback;
     }
 
     //! Make HTTP request (over phone bluetooth connection)
     //!
     //! @see https://developer.garmin.com/connect-iq/api-docs/Toybox/Communications.html#makeWebRequest-instance_function
-    protected function makeWebRequest(url, params, callback) as Void {
+    protected function makeWebRequest(url as String, params as Dictionary<Object,Object>, callback as CommunicationCallbackMethod) as Void {
       var options = {
          :method => Communications.HTTP_REQUEST_METHOD_GET,
          :headers => {
@@ -48,9 +51,7 @@ class BaseClient {
 //!         "code"        HTTP response code
 class BaseClientHelper {
 
-    // Defaults
-    private static var _max_retries as Number = 3;
-    private static var _retry_backoff_minutes as Number = 30;
+    static const  DEFAULT_UPDATE_INTERVAL_SECS = 30 * Gregorian.SECONDS_PER_MINUTE;
 
     //! Determines if the current data needs to be updated
     //! @internal This method _must_ be called every minute to avoid missing the retry remain=0 roll-over
@@ -62,19 +63,18 @@ class BaseClientHelper {
         var retries = Storage.getValue(type + Globals.DATA_TYPE_RETRIES_SUFFIX) as Number?;
 
         // Find the last data response time (valid or error)
-        var lastTime = (data != null) ? data["clientTs"] : (error != null) ? error["clientTs"] : null;
+        var lastTime = ((data != null) ? data["clientTs"] : (error != null) ? error["clientTs"] : null) as Number?;
 
         if  (lastTime == null) {
             // new system, no data is valid
             return true;
 
-        } else if ((retries != null) && (retries > _max_retries)) {
-            // FIXED: If API is not responding after retries, back off (retry every 30 minutes)
-            // Note: Calculation must be performed in minutes (not seconds) as we only evaluate this every minute
-            var remain = ((Time.now().value() - lastTime) / Gregorian.SECONDS_PER_MINUTE) % _retry_backoff_minutes;
-            return (remain == 0);
+        } else if (retries != null) {
+            // Request encountered error(s) - use exponential back-off to avoid more errors [5..60 minutes]
+            var backoffTime = min(5 + Math.pow(2, retries) as Number, 60) * Gregorian.SECONDS_PER_MINUTE;
+            return (Time.now().value() - lastTime) > backoffTime;
 
-        } else if ((data == null) || (data["clientTs"] < (Time.now().value() - update_interval_secs))) {
+        } else if ((data == null) || (data["clientTs"] as Number < (Time.now().value() - update_interval_secs))) {
             // (No Valid data) or (Valid Data age is > update interval)
             return true;
         } else {
@@ -118,7 +118,9 @@ class BaseClientHelper {
                     return "API KEY";
 
                 default:
-                    return Lang.format("ERR $1$", [responseCode]);
+                    // Because updates are slower without an API KEY, tell user
+                    // to get an api key if they start encountering errors
+                    return Lang.format("API KEY/$1$", [responseCode]);
             }
 
         } catch (ex) {
