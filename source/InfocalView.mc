@@ -7,6 +7,8 @@ import Toybox.WatchUi;
 
 import Settings;
 
+typedef DrawableInitOptions as { :identifier as Object, :locX as Numeric, :locY as Numeric, :width as Numeric, :height as Numeric, :visible as Boolean };
+
 // Global font resources
 var small_digi_font as FontType?;
 

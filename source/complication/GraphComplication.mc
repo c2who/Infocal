@@ -7,8 +7,6 @@ import Toybox.Graphics;
 import Toybox.Lang;
 import Toybox.SensorHistory;
 
-typedef DrawableInitOptions as { :identifier as Object, :locX as Numeric, :locY as Numeric, :width as Numeric, :height as Numeric, :visible as Boolean };
-
 class GraphComplication extends WatchUi.Drawable {
    private var position_x as Number, position_y as Number;
    private var graph_width as Number, graph_height as Number;
