@@ -205,9 +205,9 @@ class AnalogDial extends Drawable {
    }
 
    private function drawSecondHand(dc as Dc, clockTime as System.ClockTime) as Void {
-      var base_radius = center_x == 109 ? 0.0 : 11.0;
-      var minu_radius = center_x - 23.0;
-      var base_thick = 3.0;
+      var base_radius = center_x == 109 ? 0 : 11;
+      var minu_radius = center_x - 23;
+      var base_thick = 3;
       var radian = 2 * (clockTime.sec / 60.0) * Math.PI - 0.5 * Math.PI;
 
       var startx = Globals.convertCoorX(radian, base_radius);

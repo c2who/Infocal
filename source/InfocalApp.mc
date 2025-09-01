@@ -12,14 +12,15 @@ import Toybox.WatchUi;
 // Previously persisted in App.Storage, but now persisted in Object Store due to #86 workaround for App.Storage firmware bug.
 // Persistence allows weather and sunrise/sunset features to be used after watch face restart, even if watch no longer has current
 // location available.
-var gLocationLat = null;
-var gLocationLon = null;
+var gLocationLat as Float?;
+var gLocationLon as Float?;
 
-// FIXME: Move all code not required for (:background) runtime out of InfocalApp class
-//        - background runtime is *very* memory limited, so must avoid issues on smaller devices
+//! Watchface Application entry point
+//! @note App class is used in (:background) context; class should only contain
+//!       code necessary to start foreground and background instances.
 (:background)
 class InfocalApp extends AppBase {
-   var _View;
+   private var _View as InfocalView?;
    function initialize() {
       AppBase.initialize();
    }
@@ -41,13 +42,15 @@ class InfocalApp extends AppBase {
 
    //! Override to provide the initial View and Input Delegate of the application.
    //! @note This method must be overridden in derived classes. If called, this function will cause the application to crash.
+   (:typecheck(disableBackgroundCheck))
    function getInitialView() as [Views] or [Views, InputDelegates] {
-      _View = new InfocalView();
+      var view = new InfocalView();
+      _View = view;
 
       if( Toybox.WatchUi.WatchFace has :onPartialUpdate ) {
-         return [ _View, new InfocalViewDelegate(_View) ];
+         return [ view, new InfocalViewDelegate(view) ];
       } else {
-         return [ _View ];
+         return [ view ];
       }
    }
 
@@ -55,8 +58,9 @@ class InfocalApp extends AppBase {
    //!
    //! Override this method to change app behavior when settings change.
    //! @note This is typically used to call for an update to the WatchUi.requestUpdate()
+   (:typecheck(disableBackgroundCheck))
    function onSettingsChanged() {
-      _View.onSettingsChanged();
+      if (_View != null) { _View.onSettingsChanged(); }
    }
 
    //! Get a ServiceDelegate to run background tasks for this app.
@@ -83,22 +87,22 @@ class InfocalApp extends AppBase {
    //!
    //! @see  https://developer.garmin.com/connect-iq/core-topics/backgrounding/
    //! @see  https://developer.garmin.com/connect-iq/connect-iq-faq/how-do-i-create-a-connect-iq-background-service/
-   function onBackgroundData(data as PersistableType) {
-      debug_print(:background, "Data: $1$", data);
-
-      var type = (data as Dictionary<String, PropertyValueType>)["type"];
+   (:typecheck(disableBackgroundCheck))
+   function onBackgroundData(pt as PersistableType) {
+      debug_print(:background, "Data: $1$", pt);
+      var data = pt as Dictionary<PropertyKeyType, PropertyValueType>;
+      var type = data["type"] as String?;
 
       // DEFECT 2025.8.11: Background Data from previous version (schema) is nested dictionary
       // (This is a one-off error for delayed background data delivery after upgrade, and can be discarded)
       if (type != null) {
          // New data received: clear pendingWebRequests flag for the received data type
-         // Save list of any remaining background requests
-         var pendingWebRequests = Storage.getValue("PendingWebRequests") as Dictionary<String, PropertyValueType>?;
-         if (pendingWebRequests == null) {
-            pendingWebRequests = {};
+         // (Save list of any remaining background requests)
+         var pendingWebRequests = Storage.getValue("PendingWebRequests") as Dictionary<PropertyKeyType, PropertyValueType>?;
+         if (pendingWebRequests != null) {
+            pendingWebRequests.remove(type);
+            Storage.setValue("PendingWebRequests", pendingWebRequests);
          }
-         pendingWebRequests.remove(type);
-         Storage.setValue("PendingWebRequests", pendingWebRequests);
 
          BaseClientHelper.storeData(data);
       }

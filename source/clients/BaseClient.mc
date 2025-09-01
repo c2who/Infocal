@@ -49,17 +49,17 @@ class BaseClient {
 class BaseClientHelper {
 
     // Defaults
-    private static var _max_retries = 3;
-    private static var _retry_backoff_minutes = 30;
+    private static var _max_retries as Number = 3;
+    private static var _retry_backoff_minutes as Number = 30;
 
     //! Determines if the current data needs to be updated
     //! @internal This method _must_ be called every minute to avoid missing the retry remain=0 roll-over
     public static function calcNeedsDataUpdate(type as String, update_interval_secs as Number) as Boolean {
         // Check data valid and recent (within last 30 minutes)
         // Note: We use clientTs as we do not *know* how often weather data is updated (typically hourly)
-        var data = Storage.getValue(type) as Dictionary<String, Number>;
-        var error = Storage.getValue(type + Globals.DATA_TYPE_ERROR_SUFFIX);
-        var retries = Storage.getValue(type + Globals.DATA_TYPE_RETRIES_SUFFIX);
+        var data = Storage.getValue(type) as Dictionary<String, PropertyValueType>?;
+        var error = Storage.getValue(type + Globals.DATA_TYPE_ERROR_SUFFIX) as Dictionary<String, PropertyValueType>?;
+        var retries = Storage.getValue(type + Globals.DATA_TYPE_RETRIES_SUFFIX) as Number?;
 
         // Find the last data response time (valid or error)
         var lastTime = (data != null) ? data["clientTs"] : (error != null) ? error["clientTs"] : null;
@@ -84,9 +84,9 @@ class BaseClientHelper {
     }
 
     //! Persist (store) the data received from a client
-    public static function storeData(data as Dictionary<String, Number>) as Void {
-        var responseCdoe = data["code"];
-        var type = data["type"];
+    public static function storeData(data as Dictionary<PropertyKeyType, PropertyValueType>) as Void {
+        var responseCdoe = data["code"] as Number;
+        var type = data["type"] as String;
         data.put("clientTs", Time.now().value());
 
         if (responseCdoe == 200) {
@@ -96,7 +96,7 @@ class BaseClientHelper {
             Storage.deleteValue(type + Globals.DATA_TYPE_RETRIES_SUFFIX);
         } else {
             // return error to the caller, and update retries count
-            var retries = Storage.getValue(type + Globals.DATA_TYPE_RETRIES_SUFFIX);
+            var retries = Storage.getValue(type + Globals.DATA_TYPE_RETRIES_SUFFIX) as Number?;
             retries = (retries == null) ? 1 : (retries+1);
 
             Storage.setValue(type + Globals.DATA_TYPE_ERROR_SUFFIX, data);
