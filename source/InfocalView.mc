@@ -1,5 +1,6 @@
 import Toybox.Application;
 import Toybox.Graphics;
+import Toybox.Time.Gregorian;
 import Toybox.Lang;
 import Toybox.System;
 import Toybox.WatchUi;
@@ -587,8 +588,14 @@ class InfocalView extends WatchUi.WatchFace {
             var lastTime = Background.getLastTemporalEventTime();
 
             if (lastTime != null) {
+               var FIVE_MINUTES = 5 * Gregorian.SECONDS_PER_MINUTE;
+
+               // Add a random jitter time to this client to avoid client-synchronization load issues
+               // (e.g. at every top-of minute all clients send their request to server)
+               var jitterTime = Math.rand() % (FIVE_MINUTES);
+
                // Events scheduled for a time in the past trigger immediately.
-               var nextTime = lastTime.add(new Time.Duration(5 * 60));
+               var nextTime = lastTime.add(new Time.Duration(FIVE_MINUTES + jitterTime));
                Background.registerForTemporalEvent(nextTime);
             } else {
                Background.registerForTemporalEvent(Time.now());
