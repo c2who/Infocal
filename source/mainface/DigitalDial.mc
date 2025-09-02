@@ -12,28 +12,24 @@ class DigitalDial extends Ui.Drawable {
    ////////////////////////
    /// common variables ///
    ////////////////////////
-   private var digitalFont, xdigitalFont;
-   private var midDigitalFont;
-   private var midBoldFont;
-   private var midSemiFont;
-   private var xmidBoldFont;
-   private var xmidSemiFont;
-   private var barRadius;
+   private var digitalFont as FontType?, xdigitalFont as FontType?;
+   private var midDigitalFont as FontType?;
+   private var midBoldFont as FontType?;
+   private var midSemiFont as FontType?;
+   private var xmidBoldFont as FontType?;
+   private var xmidSemiFont as FontType?;
 
-   ///////////////////////////////
-   /// non-antialias variables ///
-   ///////////////////////////////
+   private var barRadius as Number;
+   private var alignment as Number;
 
-   private var alignment;
-
-   function initialize(params) {
+   function initialize(params as DrawableInitOptions) {
       Drawable.initialize(params);
 
       barRadius = center_x - 10;
       alignment = Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER;
    }
 
-   private function unloadFonts() {
+   private function unloadFonts() as Void {
       midBoldFont = null;
       midSemiFont = null;
       xmidBoldFont = null;
@@ -44,24 +40,24 @@ class DigitalDial extends Ui.Drawable {
    }
 
    // TODO: Simplify font handling (remove duplicate vars)
-   private function loadFonts() {
-      var digital_style = Properties.getValue("digital_style");
+   private function loadFonts() as Void {
+      var digital_style = Properties.getValue("digital_style") as Number?;
       if (digital_style == 0) {
          // big
-         digitalFont = Ui.loadResource(Rez.Fonts.bigdigi);
-         midDigitalFont = Ui.loadResource(Rez.Fonts.middigi);
+         digitalFont = Ui.loadResource(Rez.Fonts.bigdigi) as FontType?;
+         midDigitalFont = Ui.loadResource(Rez.Fonts.middigi) as FontType?;
       } else if (digital_style == 1) {
          // small
-         midBoldFont = Ui.loadResource(Rez.Fonts.midbold);
-         midSemiFont = Ui.loadResource(Rez.Fonts.midsemi);
+         midBoldFont = Ui.loadResource(Rez.Fonts.midbold) as FontType?;
+         midSemiFont = Ui.loadResource(Rez.Fonts.midsemi) as FontType?;
       } else if (digital_style == 2) {
          // extra big
-         xdigitalFont = Ui.loadResource(Rez.Fonts.xbigdigi);
-         midDigitalFont = Ui.loadResource(Rez.Fonts.middigi);
+         xdigitalFont = Ui.loadResource(Rez.Fonts.xbigdigi) as FontType?;
+         midDigitalFont = Ui.loadResource(Rez.Fonts.middigi) as FontType?;
       } else {
          // medium
-         xmidBoldFont = Ui.loadResource(Rez.Fonts.xmidbold);
-         xmidSemiFont = Ui.loadResource(Rez.Fonts.xmidsemi);
+         xmidBoldFont = Ui.loadResource(Rez.Fonts.xmidbold) as FontType?;
+         xmidSemiFont = Ui.loadResource(Rez.Fonts.xmidsemi) as FontType?;
       }
    }
 
@@ -70,7 +66,7 @@ class DigitalDial extends Ui.Drawable {
    //! This method assumes that the device context has already been configured to the proper options.
    //! Derived classes should check the isVisible property, if it exists, before trying to draw.
    function draw(dc as Dc) as Void {
-      if (Properties.getValue("use_analog") == true) {
+      if (Properties.getValue("use_analog") as Boolean?) {
          return;
       }
 
@@ -93,15 +89,15 @@ class DigitalDial extends Ui.Drawable {
       }
       var minute = clockTime.min;
 
-      var leading_zeros = Properties.getValue("zero_leading_digital");
+      var leading_zeros = Properties.getValue("zero_leading_digital") as Boolean?;
       var number_formater = leading_zeros ? "%02d" : "%d";
 
-      var digital_style = Properties.getValue("digital_style");
-      var alwayon_style = Properties.getValue("always_on_style");
+      var digital_style = Properties.getValue("digital_style") as Number?;
+      var alwayon_style = Properties.getValue("always_on_style") as Number?;
 
       if (digital_style == 0 || digital_style == 2) {
          // Big number in center_x style
-         var big_number_type = Properties.getValue("big_number_type");
+         var big_number_type = Properties.getValue("big_number_type") as Number?;
          var bignumber = big_number_type == 0 ? minute : hour;
          var smallnumber = big_number_type == 0 ? hour : minute;
          var big_color = big_number_type == 0 ? gmins_color : ghour_color;
@@ -126,7 +122,7 @@ class DigitalDial extends Ui.Drawable {
 
          // FIXME - Move to InfocalView: Calculate seconds/hr global offsets
          var f_align = digital_style == 0 ? 62 : 71;
-         if ((center_x == 195) || (center_x == 208)) {
+         if (center_x == 195 || center_x == 208) {
             f_align = f_align + 40;
          }
          var second_x_l = center_x + w / 2 + 3;

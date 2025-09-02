@@ -21,16 +21,14 @@ class IQAirClient extends BaseClient {
    //! (GPS coordinates) http://api.airvisual.com/v2/nearest_city?lat={{LATITUDE}}&lon={{LONGITUDE}}&key={{YOUR_API_KEY}}
    const API_NEAREST_CITY_URL = "https://api.airvisual.com/v2/nearest_city";
 
-   function initialize() {
-      BaseClient.initialize();
+   function initialize(callback as BaseClient.ClientCallbackMethod) {
+      BaseClient.initialize(callback);
    }
 
    //! Public entry method to make background request to get data from remote service
    //! @param callback     Consumer callback for returning formatted data
-   function requestData(callback as (Method(type as String, responseCode as Number, data as Dictionary<String, PropertyValueType>) as Void)) as Void {
-      BaseClient.requestData(callback);
-
-      var api_key = Storage.getValue("iqair_api_key");
+   function requestData() as Void {
+      var api_key = Storage.getValue("iqair_api_key") as String?;
       var location = Storage.getValue("LastLocation") as Array<Float>?;
 
       var params = {
@@ -43,7 +41,7 @@ class IQAirClient extends BaseClient {
          params["lon"] = location[1];
       }
 
-      BaseClient.makeWebRequest(API_NEAREST_CITY_URL, params, method(:onReceiveAirQualityData));
+      BaseClient.makeWebRequest(API_NEAREST_CITY_URL, params as Dictionary<Object, Object>, method(:onReceiveAirQualityData));
    }
 
    //! onReceiveAirQualityData
@@ -56,7 +54,7 @@ class IQAirClient extends BaseClient {
    //!       It is imperative that the code/data size of background task is kept
    //!       as small as possible!
    //! @see  https://developer.garmin.com/connect-iq/api-docs/Toybox/Communications.html
-   function onReceiveAirQualityData(responseCode as Number, data as Dictionary?) {
+   function onReceiveAirQualityData(responseCode as Number, data as Dictionary?) as Void {
       var result;
 
       // Useful data only available if result was successful.
@@ -87,7 +85,7 @@ class IQAirClient extends BaseClient {
       }
 
       // Send formatted result to registered callback
-      _callback.invoke(DATA_TYPE, responseCode, result);
+      _callback.invoke(DATA_TYPE, responseCode, result as Dictionary<PropertyKeyType, PropertyValueType>);
    }
 }
 
@@ -98,7 +96,7 @@ class IQAirClient extends BaseClient {
 public class IQAirClientHelper {
    public static function needsDataUpdate() as Boolean {
       var update_interval_secs;
-      var user_key = Properties.getValue("iqair_api");
+      var user_key = Properties.getValue("iqair_api") as String?;
 
       // Set the api key used by the service client (user key, or default key for new users)
       // Set the update interval based on if user has their own api key (more quota)
@@ -109,7 +107,7 @@ public class IQAirClientHelper {
          // Set the default api key for new users
          var default_key = Keys.getIQAirDefaultKey();
          Storage.setValue("iqair_api_key", default_key);
-         update_interval_secs = 6 * Gregorian.SECONDS_PER_HOUR; // 6 hours
+         update_interval_secs = 4 * Gregorian.SECONDS_PER_HOUR; // 4 hours
       }
 
       return BaseClientHelper.calcNeedsDataUpdate(IQAirClient.DATA_TYPE, update_interval_secs);

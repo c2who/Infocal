@@ -9,10 +9,20 @@ import Toybox.System;
 import Toybox.WatchUi;
 
 class AnalogDial extends Drawable {
-   private var _secondHandEnabled = false;
+   private var _secondHandEnabled as Boolean = false;
 
-   private var hour_font_1, hour_font_2, hour_font_3, hour_font_4, hour_font_5, hour_font_6;
-   private var minu_font_1, minu_font_2, minu_font_3, minu_font_4, minu_font_5, minu_font_6;
+   private var hour_font_1 as FontType?,
+      hour_font_2 as FontType?,
+      hour_font_3 as FontType?,
+      hour_font_4 as FontType?,
+      hour_font_5 as FontType?,
+      hour_font_6 as FontType?;
+   private var minu_font_1 as FontType?,
+      minu_font_2 as FontType?,
+      minu_font_3 as FontType?,
+      minu_font_4 as FontType?,
+      minu_font_5 as FontType?,
+      minu_font_6 as FontType?;
    private var hour_1 as Array<Array<Number> >?;
    private var hour_2 as Array<Array<Number> >?;
    private var hour_3 as Array<Array<Number> >?;
@@ -26,12 +36,12 @@ class AnalogDial extends Drawable {
    private var minu_5 as Array<Array<Number> >?;
    private var minu_6 as Array<Array<Number> >?;
 
-   private var factor = 1;
+   private var factor as Number = 1;
 
-   function initialize(params) {
+   function initialize(params as DrawableInitOptions) {
       Drawable.initialize(params);
 
-      if ((center_x == 195) || (center_x == 208)) {
+      if (center_x == 195 || center_x == 208) {
          factor = 2;
       }
    }
@@ -40,8 +50,8 @@ class AnalogDial extends Drawable {
    //!
    //! This method assumes that the device context has already been configured to the proper options.
    //! Derived classes should check the isVisible property, if it exists, before trying to draw.
-   public function draw(dc as Dc) {
-      if (Properties.getValue("use_analog") == false) {
+   public function draw(dc as Dc) as Void {
+      if ((Properties.getValue("use_analog") as Boolean?) == false) {
          return;
       }
 
@@ -53,21 +63,21 @@ class AnalogDial extends Drawable {
       drawMinuteHands(dc, clockTime);
 
       // Draw seconds hand if enabled, and not in power save mode
-      if (_secondHandEnabled && Properties.getValue("power_save_mode") == false) {
+      if (_secondHandEnabled && (Properties.getValue("power_save_mode") as Boolean?) == false) {
          dc.setColor(gaccent_color, Graphics.COLOR_TRANSPARENT);
          drawSecondHand(dc, clockTime);
       }
    }
 
-   public function disableSecondHand() {
+   public function disableSecondHand() as Void {
       _secondHandEnabled = false;
    }
 
-   public function enableSecondHand() {
+   public function enableSecondHand() as Void {
       _secondHandEnabled = true;
    }
 
-   private function unloadFontsHour() {
+   private function unloadFontsHour() as Void {
       hour_font_1 = null;
       hour_1 = null;
       hour_font_2 = null;
@@ -82,7 +92,7 @@ class AnalogDial extends Drawable {
       hour_6 = null;
    }
 
-   private function unloadFontsMinute() {
+   private function unloadFontsMinute() as Void {
       minu_font_1 = null;
       minu_1 = null;
       minu_font_2 = null;
@@ -99,45 +109,45 @@ class AnalogDial extends Drawable {
 
    private function loadFontsHour(hour_i as Number) as Void {
       if (hour_i >= 50) {
-         hour_font_6 = loadResource(Rez.Fonts.hour_6);
-         hour_6 = loadResource(Rez.JsonData.hour_6_data);
+         hour_font_6 = loadResource(Rez.Fonts.hour_6) as FontType?;
+         hour_6 = loadResource(Rez.JsonData.hour_6_data) as Array<Array<Number> >?;
       } else if (hour_i >= 40) {
-         hour_font_5 = loadResource(Rez.Fonts.hour_5);
-         hour_5 = loadResource(Rez.JsonData.hour_5_data);
+         hour_font_5 = loadResource(Rez.Fonts.hour_5) as FontType?;
+         hour_5 = loadResource(Rez.JsonData.hour_5_data) as Array<Array<Number> >?;
       } else if (hour_i >= 30) {
-         hour_font_4 = loadResource(Rez.Fonts.hour_4);
-         hour_4 = loadResource(Rez.JsonData.hour_4_data);
+         hour_font_4 = loadResource(Rez.Fonts.hour_4) as FontType?;
+         hour_4 = loadResource(Rez.JsonData.hour_4_data) as Array<Array<Number> >?;
       } else if (hour_i >= 20) {
-         hour_font_3 = loadResource(Rez.Fonts.hour_3);
-         hour_3 = loadResource(Rez.JsonData.hour_3_data);
+         hour_font_3 = loadResource(Rez.Fonts.hour_3) as FontType?;
+         hour_3 = loadResource(Rez.JsonData.hour_3_data) as Array<Array<Number> >?;
       } else if (hour_i >= 10) {
-         hour_font_2 = loadResource(Rez.Fonts.hour_2);
-         hour_2 = loadResource(Rez.JsonData.hour_2_data);
+         hour_font_2 = loadResource(Rez.Fonts.hour_2) as FontType?;
+         hour_2 = loadResource(Rez.JsonData.hour_2_data) as Array<Array<Number> >?;
       } else {
-         hour_font_1 = loadResource(Rez.Fonts.hour_1);
-         hour_1 = loadResource(Rez.JsonData.hour_1_data);
+         hour_font_1 = loadResource(Rez.Fonts.hour_1) as FontType?;
+         hour_1 = loadResource(Rez.JsonData.hour_1_data) as Array<Array<Number> >?;
       }
    }
 
    private function loadFontsMinute(minu_i as Number) as Void {
       if (minu_i >= 50) {
-         minu_font_6 = loadResource(Rez.Fonts.minu_6);
-         minu_6 = loadResource(Rez.JsonData.minu_6_data);
+         minu_font_6 = loadResource(Rez.Fonts.minu_6) as FontType?;
+         minu_6 = loadResource(Rez.JsonData.minu_6_data) as Array<Array<Number> >?;
       } else if (minu_i >= 40) {
-         minu_font_5 = loadResource(Rez.Fonts.minu_5);
-         minu_5 = loadResource(Rez.JsonData.minu_5_data);
+         minu_font_5 = loadResource(Rez.Fonts.minu_5) as FontType?;
+         minu_5 = loadResource(Rez.JsonData.minu_5_data) as Array<Array<Number> >?;
       } else if (minu_i >= 30) {
-         minu_font_4 = loadResource(Rez.Fonts.minu_4);
-         minu_4 = loadResource(Rez.JsonData.minu_4_data);
+         minu_font_4 = loadResource(Rez.Fonts.minu_4) as FontType?;
+         minu_4 = loadResource(Rez.JsonData.minu_4_data) as Array<Array<Number> >?;
       } else if (minu_i >= 20) {
-         minu_font_3 = loadResource(Rez.Fonts.minu_3);
-         minu_3 = loadResource(Rez.JsonData.minu_3_data);
+         minu_font_3 = loadResource(Rez.Fonts.minu_3) as FontType?;
+         minu_3 = loadResource(Rez.JsonData.minu_3_data) as Array<Array<Number> >?;
       } else if (minu_i >= 10) {
-         minu_font_2 = loadResource(Rez.Fonts.minu_2);
-         minu_2 = loadResource(Rez.JsonData.minu_2_data);
+         minu_font_2 = loadResource(Rez.Fonts.minu_2) as FontType?;
+         minu_2 = loadResource(Rez.JsonData.minu_2_data) as Array<Array<Number> >?;
       } else {
-         minu_font_1 = loadResource(Rez.Fonts.minu_1);
-         minu_1 = loadResource(Rez.JsonData.minu_1_data);
+         minu_font_1 = loadResource(Rez.Fonts.minu_1) as FontType?;
+         minu_1 = loadResource(Rez.JsonData.minu_1_data) as Array<Array<Number> >?;
       }
    }
 
@@ -150,18 +160,20 @@ class AnalogDial extends Drawable {
 
       try {
          loadFontsHour(hour_i);
-         if (hour_i >= 50) {
+         if (hour_i >= 50 && hour_6 != null) {
             drawTiles(hour_6[(hour_i - 50).toNumber()], hour_font_6, dc, hour_i);
-         } else if (hour_i >= 40) {
+         } else if (hour_i >= 40 && hour_5 != null) {
             drawTiles(hour_5[(hour_i - 40).toNumber()], hour_font_5, dc, hour_i);
-         } else if (hour_i >= 30) {
+         } else if (hour_i >= 30 && hour_4 != null) {
             drawTiles(hour_4[(hour_i - 30).toNumber()], hour_font_4, dc, hour_i);
-         } else if (hour_i >= 20) {
+         } else if (hour_i >= 20 && hour_3 != null) {
             drawTiles(hour_3[(hour_i - 20).toNumber()], hour_font_3, dc, hour_i);
-         } else if (hour_i >= 10) {
+         } else if (hour_i >= 10 && hour_2 != null) {
             drawTiles(hour_2[(hour_i - 10).toNumber()], hour_font_2, dc, hour_i);
-         } else {
+         } else if (hour_1 != null) {
             drawTiles(hour_1[hour_i.toNumber()], hour_font_1, dc, hour_i);
+         } else {
+            // Not valid
          }
       } finally {
          unloadFontsHour();
@@ -173,18 +185,20 @@ class AnalogDial extends Drawable {
       try {
          loadFontsMinute(minu_i);
 
-         if (minu_i >= 50) {
+         if (minu_i >= 50 && minu_6 != null) {
             drawTiles(minu_6[(minu_i - 50).toNumber()], minu_font_6, dc, minu_i);
-         } else if (minu_i >= 40) {
+         } else if (minu_i >= 40 && minu_5 != null) {
             drawTiles(minu_5[(minu_i - 40).toNumber()], minu_font_5, dc, minu_i);
-         } else if (minu_i >= 30) {
+         } else if (minu_i >= 30 && minu_4 != null) {
             drawTiles(minu_4[(minu_i - 30).toNumber()], minu_font_4, dc, minu_i);
-         } else if (minu_i >= 20) {
+         } else if (minu_i >= 20 && minu_3 != null) {
             drawTiles(minu_3[(minu_i - 20).toNumber()], minu_font_3, dc, minu_i);
-         } else if (minu_i >= 10) {
+         } else if (minu_i >= 10 && minu_2 != null) {
             drawTiles(minu_2[(minu_i - 10).toNumber()], minu_font_2, dc, minu_i);
-         } else {
+         } else if (minu_1 != null) {
             drawTiles(minu_1[minu_i.toNumber()], minu_font_1, dc, minu_i);
+         } else {
+            // Not valid
          }
       } finally {
          unloadFontsMinute();
@@ -192,9 +206,9 @@ class AnalogDial extends Drawable {
    }
 
    private function drawSecondHand(dc as Dc, clockTime as System.ClockTime) as Void {
-      var base_radius = center_x == 109 ? 0.0 : 11.0;
-      var minu_radius = center_x - 23.0;
-      var base_thick = 3.0;
+      var base_radius = center_x == 109 ? 0 : 11;
+      var minu_radius = center_x - 23;
+      var base_thick = 3;
       var radian = 2 * (clockTime.sec / 60.0) * Math.PI - 0.5 * Math.PI;
 
       var startx = Globals.convertCoorX(radian, base_radius);
@@ -214,13 +228,17 @@ class AnalogDial extends Drawable {
    //!   the full image from the font characters.
    //! - Each JsonData number represents an image part (tile) with byte encoding:
    //!   [ flags|char|xpos|ypos ]
-   private function drawTiles(packed_array as Array<Number>, font, dc, index) {
+   private function drawTiles(packed_array as Array<Number>, font as FontType?, dc as Dc, index as Number) as Void {
       // Hack: re-use 390x390 tiles json on 416x416
-      var x_offset =0;
-      var y_offset =0;
+      var x_offset = 0;
+      var y_offset = 0;
       if (center_x == 208) {
          x_offset = 13;
          y_offset = 13;
+      }
+
+      if (font == null) {
+         return;
       }
 
       var radian = (index.toFloat() / 60.0) * (2 * 3.1415) - 0.5 * 3.1415;

@@ -1,5 +1,5 @@
-using Toybox.Application as App;
 using Toybox.System;
+using Toybox.Time.Gregorian;
 
 import Toybox.Application;
 import Toybox.Lang;
@@ -112,30 +112,43 @@ class WeatherField extends BaseDataField {
       }
    }
 
-   function cur_label(value) {
+   function cur_label(value) as String {
       // WEATHER
       //var need_minimal = Properties.getValue("minimal_data");
-      var weather_data = Storage.getValue("Weather") as Dictionary<String, PropertyValueType>?;
-      if (weather_data != null) {
+      var data = Storage.getValue(OpenWeatherClient.DATA_TYPE) as Dictionary<String, PropertyValueType>?;
+
+      // Check if data is Invalid, or too old (> 6 hours)
+      if (data == null || data.get("clientTs") == null || data["clientTs"] < Time.now().value() - 6 * Gregorian.SECONDS_PER_HOUR) {
+         // Display error(if any) or no-computed-data
+         var error = Storage.getValue(OpenWeatherClient.DATA_TYPE + Globals.DATA_TYPE_ERROR_SUFFIX) as Dictionary<String, PropertyValueType>?;
+
+         if (gLocationLat == null || gLocationLon == null) {
+            return "NO LOCN";
+         } else if (error != null) {
+            var responseCode = error.get("code") as Number;
+            return BaseClientHelper.getCommunicationsErrorCodeText(responseCode);
+         } else {
+            // No Data
+            return "--";
+         }
+      } else {
          var settings = System.getDeviceSettings();
-         var temp = weather_data["temp"];
+         var temp = data["temp"];
          var unit = "°C";
+
+         // Convert to Farenheit: ensure floating point division.
          if (settings.temperatureUnits == System.UNIT_STATUTE) {
-            temp = temp * (9.0 / 5) + 32; // Convert to Farenheit: ensure floating point division.
+            temp = temp * (9.0 / 5.0) + 32;
             unit = "°F";
          }
          value = temp.format("%d") + unit;
 
-         var description = weather_data.get("des");
+         var description = data.get("des");
          if (description != null) {
             return description + " " + value;
          } else {
             return value;
          }
-      } else if (gLocationLat == null || gLocationLon == null) {
-         return "NO LOCN";
-      } else {
-         return "--";
       }
    }
 }

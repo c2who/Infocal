@@ -21,16 +21,14 @@ class OpenWeatherClient extends BaseClient {
    //! https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
    const API_CURRENT_WEATHER = "https://api.openweathermap.org/data/2.5/weather";
 
-   function initialize() {
-      BaseClient.initialize();
+   function initialize(callback as BaseClient.ClientCallbackMethod) {
+      BaseClient.initialize(callback);
    }
 
    //! Public entry method to make background request to get data from remote service
    //! @param callback     Consumer callback for returning formatted data
-   function requestData(callback as (Method(type as String, responseCode as Number, data as Dictionary<String, PropertyValueType>) as Void)) as Void {
-      BaseClient.requestData(callback);
-
-      var api_key = Storage.getValue("owm_api_key");
+   function requestData() as Void {
+      var api_key = Storage.getValue("owm_api_key") as String?;
       var location = Storage.getValue("LastLocation") as Array<Float>?;
 
       var params = {
@@ -40,7 +38,7 @@ class OpenWeatherClient extends BaseClient {
          "units" => "metric", // Celsius.
       };
 
-      BaseClient.makeWebRequest(API_CURRENT_WEATHER, params, method(:onReceiveOpenWeatherData));
+      BaseClient.makeWebRequest(API_CURRENT_WEATHER, params as Dictionary<Object, Object>, method(:onReceiveOpenWeatherData));
    }
 
    //! Callback handler for makeWebRequest. Decodes response and flatten (extract) data we need.
@@ -53,7 +51,7 @@ class OpenWeatherClient extends BaseClient {
    //!       It is imperative that the code/data size of background task is kept
    //!       as small as possible!
    //! @see  https://developer.garmin.com/connect-iq/api-docs/Toybox/Communications.html
-   function onReceiveOpenWeatherData(responseCode as Number, data as Dictionary?) {
+   function onReceiveOpenWeatherData(responseCode as Number, data as Dictionary?) as Void {
       var result;
 
       // Useful data only available if result was successful.
@@ -84,7 +82,7 @@ class OpenWeatherClient extends BaseClient {
       }
 
       // Send formatted result to registered callback
-      _callback.invoke(DATA_TYPE, responseCode, result);
+      _callback.invoke(DATA_TYPE, responseCode, result as Dictionary<PropertyKeyType, PropertyValueType>);
    }
 }
 
@@ -100,8 +98,7 @@ public class OpenWeatherClientHelper {
          return false;
       }
 
-      var update_interval_secs = 30 * Gregorian.SECONDS_PER_MINUTE; // 30 minutes
-      var user_key = Properties.getValue("openweather_api");
+      var user_key = Properties.getValue("openweather_api") as String?;
 
       // Set the api key used by the service client (user key, or default key for new users)
       if (user_key != null && user_key.length() > 0) {
@@ -113,6 +110,6 @@ public class OpenWeatherClientHelper {
       }
 
       // Check based on default behavior with retries
-      return BaseClientHelper.calcNeedsDataUpdate(OpenWeatherClient.DATA_TYPE, update_interval_secs);
+      return BaseClientHelper.calcNeedsDataUpdate(OpenWeatherClient.DATA_TYPE, BaseClientHelper.DEFAULT_UPDATE_INTERVAL_SECS);
    }
 }

@@ -2,10 +2,11 @@ using Toybox.Background;
 using Toybox.Communications;
 using Toybox.System;
 using Toybox.Time;
-using Toybox.Time.Gregorian;
 
 import Toybox.Application;
+import Toybox.Time.Gregorian;
 import Toybox.Lang;
+import Toybox.Math;
 
 //! Base (Background) Client
 //!
@@ -13,21 +14,28 @@ import Toybox.Lang;
 //! bloating the background service memory usage.
 (:background)
 class BaseClient {
+   typedef CommunicationCallbackMethod as (Method(responseCode as Number, data as Dictionary?) as Void);
+   typedef ClientCallbackMethod as (Method(type as String, responseCode as Number, data as Dictionary<PropertyKeyType, PropertyValueType>) as Void);
+
    //! Consumer callback for returning formatted data
-   protected var _callback as (Method(type as String, responseCode as Number, data as Dictionary<String, PropertyValueType>) as Void)?;
+   protected var _callback as ClientCallbackMethod;
+
+   //! Constructor.
+   //! @param  callback    Consumer callback for returning formatted data
+   function initialize(callback as ClientCallbackMethod) {
+      self._callback = callback;
+   }
 
    //! Public entry method to make background request to get data from remote service
-   //! @param  callback    Consumer callback for returning formatted data
    //! @note   Override in concrete class to build web request(s)
-   public function requestData(cb as (Method(type as String, responseCode as Number, data as Dictionary<String, PropertyValueType>) as Void)) as Void {
-      // Save callback method
-      self._callback = cb;
+   public function requestData() as Void {
+      // Override in concrete class
    }
 
    //! Make HTTP request (over phone bluetooth connection)
    //!
    //! @see https://developer.garmin.com/connect-iq/api-docs/Toybox/Communications.html#makeWebRequest-instance_function
-   protected function makeWebRequest(url, params, callback) as Void {
+   protected function makeWebRequest(url as String, params as Dictionary<Object, Object>, callback as CommunicationCallbackMethod) as Void {
       var options = {
          :method => Communications.HTTP_REQUEST_METHOD_GET,
          :headers => {
@@ -46,31 +54,29 @@ class BaseClient {
 //!         "clientTs"    Client response time
 //!         "code"        HTTP response code
 class BaseClientHelper {
-   // Defaults
-   private static var _max_retries = 3;
-   private static var _retry_backoff_minutes = 30;
+   static const DEFAULT_UPDATE_INTERVAL_SECS = 30 * Gregorian.SECONDS_PER_MINUTE;
 
    //! Determines if the current data needs to be updated
    //! @internal This method _must_ be called every minute to avoid missing the retry remain=0 roll-over
    public static function calcNeedsDataUpdate(type as String, update_interval_secs as Number) as Boolean {
       // Check data valid and recent (within last 30 minutes)
       // Note: We use clientTs as we do not *know* how often weather data is updated (typically hourly)
-      var data = Storage.getValue(type) as Dictionary<String, Number>;
-      var error = Storage.getValue(type + Globals.DATA_TYPE_ERROR_SUFFIX);
-      var retries = Storage.getValue(type + Globals.DATA_TYPE_RETRIES_SUFFIX);
+      var data = Storage.getValue(type) as Dictionary<String, PropertyValueType>?;
+      var error = Storage.getValue(type + Globals.DATA_TYPE_ERROR_SUFFIX) as Dictionary<String, PropertyValueType>?;
+      var retries = Storage.getValue(type + Globals.DATA_TYPE_RETRIES_SUFFIX) as Number?;
 
       // Find the last data response time (valid or error)
-      var lastTime = data != null ? data["clientTs"] : error != null ? error["clientTs"] : null;
+      var lastTime = (data != null ? data["clientTs"] : error != null ? error["clientTs"] : null) as Number?;
 
       if (lastTime == null) {
          // new system, no data is valid
          return true;
-      } else if (retries != null && retries > _max_retries) {
-         // FIXED: If API is not responding after retries, back off (retry every 30 minutes)
-         // Note: Calculation must be performed in minutes (not seconds) as we only evaluate this every minute
-         var remain = ((Time.now().value() - lastTime) / Gregorian.SECONDS_PER_MINUTE) % _retry_backoff_minutes;
-         return remain == 0;
-      } else if (data == null || data["clientTs"] < Time.now().value() - update_interval_secs) {
+      } else if (retries != null && error != null && error["clientTs"] != null) {
+         // Request encountered error(s) - use linear back-off to avoid more errors [5..60 minutes]
+         var lastErrorTs = error["clientTs"] as Number;
+         var backoffTime = min(5 * retries, 60) * Gregorian.SECONDS_PER_MINUTE;
+         return Time.now().value() - lastErrorTs > backoffTime;
+      } else if (data == null || (data["clientTs"] as Number) < Time.now().value() - update_interval_secs) {
          // (No Valid data) or (Valid Data age is > update interval)
          return true;
       } else {
@@ -80,23 +86,25 @@ class BaseClientHelper {
    }
 
    //! Persist (store) the data received from a client
-   public static function storeData(data as Dictionary<String, Number>) as Void {
-      var responseCdoe = data["code"];
-      var type = data["type"];
+   public static function storeData(data as Dictionary<PropertyKeyType, PropertyValueType>) as Void {
+      var responseCode = data["code"] as Number;
+      var type = data["type"] as String;
       data.put("clientTs", Time.now().value());
 
-      if (responseCdoe == 200) {
+      if (responseCode == 200) {
          // Valid data
          Storage.setValue(type, data);
          Storage.deleteValue(type + Globals.DATA_TYPE_ERROR_SUFFIX);
          Storage.deleteValue(type + Globals.DATA_TYPE_RETRIES_SUFFIX);
       } else {
          // return error to the caller, and update retries count
-         var retries = Storage.getValue(type + Globals.DATA_TYPE_RETRIES_SUFFIX);
+         var retries = Storage.getValue(type + Globals.DATA_TYPE_RETRIES_SUFFIX) as Number?;
          retries = retries == null ? 1 : retries + 1;
 
          Storage.setValue(type + Globals.DATA_TYPE_ERROR_SUFFIX, data);
          Storage.setValue(type + Globals.DATA_TYPE_RETRIES_SUFFIX, retries);
+
+         debug_print(:client, "$1$: $2$, retry=$3$", [type, responseCode, retries]);
       }
    }
 
@@ -114,11 +122,13 @@ class BaseClientHelper {
                return "API KEY";
 
             default:
-               return Lang.format("ERR $1$", [responseCode]);
+               // Because updates are slower without an API KEY, tell user
+               // to get an api key if they start encountering errors
+               return Lang.format("API KEY/$1$", [responseCode]);
          }
       } catch (ex) {
-         debug_print(:exception, "ex: $1$", ex.getErrorMessage());
-         return "ERR";
+         debug_print(:client, "ex: $1$", ex.getErrorMessage());
+         return "ERR EX";
       }
    }
 }

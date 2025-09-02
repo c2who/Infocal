@@ -1,38 +1,39 @@
 import Toybox.Application;
 import Toybox.Graphics;
+import Toybox.Time.Gregorian;
 import Toybox.Lang;
 import Toybox.System;
 import Toybox.WatchUi;
 
 import Settings;
 
+typedef DrawableInitOptions as { :identifier as Object, :locX as Numeric, :locY as Numeric, :width as Numeric, :height as Numeric, :visible as Boolean };
+
 // Global font resources
-var small_digi_font as WatchUi.Resource?;
+var small_digi_font as FontType?;
 
-var second_x = 160;
-var second_y = 140;
-var heart_x = 80;
-var center_x;
-var center_y;
+var second_x as Number = 160;
+var second_y as Number = 140;
+var heart_x as Number = 80;
+var center_x as Number = 0;
+var center_y as Number = 0;
 
-var second_font_height_half = 7;
-var second_background_color = 0x000000;
-var second_font_color = 0xffffff;
-var second_clip_size as Array<Number>?;
+var second_font_height_half as Number = 7;
+var second_clip_size as [Number, Number] = [0, 0];
 
 // theming
-var gbackground_color = 0x000000;
-var gmain_color = 0xffffff;
-var gaccent_color = 0xff0000;
-var garc_color = 0x555555;
-var gbar_color_indi = 0xaaaaaa;
-var gbar_color_back = 0x550000;
-var gbar_color_0 = 0xffff00;
-var gbar_color_1 = 0x0000ff;
-var ghour_color = 0xff0000 as Lang.Number;
-var gmins_color = 0xffffff as Lang.Number;
+var gbackground_color as Number = 0x000000;
+var gmain_color as Number = 0xffffff;
+var gaccent_color as Number = 0xff0000;
+var garc_color as Number = 0x555555;
+var gbar_color_indi as Number = 0xaaaaaa;
+var gbar_color_back as Number = 0x550000;
+var gbar_color_0 as Number = 0xffff00;
+var gbar_color_1 as Number = 0x0000ff;
+var ghour_color as Number = 0xff0000;
+var gmins_color as Number = 0xffffff;
 
-var gtheme = -1;
+var gtheme as Number = -1;
 
 // Views
 var _backgroundView as BackgroundView?;
@@ -45,29 +46,29 @@ class InfocalView extends WatchUi.WatchFace {
    private const _hasBatteryInDays = (System.Stats has :batteryInDays) as Boolean; // API 3.3.0
    private const _hasServiceDelegate = (System has :ServiceDelegate) as Boolean; // background service
 
-   private var _partialUpdatesAllowed = (WatchUi.WatchFace has :onPartialUpdate) as Boolean;
-   private var _settings_changed = false as Boolean;
-   private var _isAwake = true as Boolean;
-   private var last_draw_minute = -1 as Number;
-   private var restore_from_resume = false as Boolean;
-   private var restore_from_sleep = false as Boolean;
-   private var face_radius;
+   private var _partialUpdatesAllowed as Boolean = WatchUi.WatchFace has :onPartialUpdate;
+   private var _settings_changed as Boolean = false;
+   private var _isAwake as Boolean = true;
+   private var last_draw_minute as Number = -1;
+   private var restore_from_resume as Boolean = false;
+   private var restore_from_sleep as Boolean = false;
+   private var face_radius as Number = 0;
 
    // Cached settings
-   private var _use_analog = false as Boolean;
-   private var _always_on_second = false as Boolean;
-   private var _always_on_heart = false as Boolean;
-   private var _always_on_style = 0 as Lang.Number;
+   private var _use_analog as Boolean = false;
+   private var _always_on_second as Boolean = false;
+   private var _always_on_heart as Boolean = false;
+   private var _always_on_style as Lang.Number = 0;
 
    // Cached fonts
-   private var _always_on_digi_font as WatchUi.Resource?;
+   private var _always_on_digi_font as FontType?;
 
    //! Battery Monitor Client.
    //! Used on watches that do not have Stats.batteryInDays (API 3.3.0)
    private var _batteryMonitor as BatteryMonitor?;
 
    //! List of Field Ids currently displayed on screen (in use)
-   var _currentFieldsIdsInUse = [] as Array<Number>;
+   var _currentFieldsIdsInUse as Array<Number> = [];
 
    //! Screen buffer stores a copy of the bitmap rendered to the screen.
    //! This avoids having to fully redraw the screen each update, improving battery life
@@ -90,26 +91,22 @@ class InfocalView extends WatchUi.WatchFace {
       center_y = dc.getHeight() / 2;
       face_radius = center_x - ((18 * center_x) / 120).toNumber();
 
-      // Load global fonts
-      if (small_digi_font == null) {
-         small_digi_font = WatchUi.loadResource(Rez.Fonts.smadigi);
-      }
+      readSettings();
 
       // Load Watchface drawables from layout.xml (creates all Ui.Drawable classes)
       setLayout(Rez.Layouts.WatchFace(dc));
       loadDrawables(dc);
 
-      readSettings();
+      loadFonts();
       updateColorsInUse();
       updateCurrentFieldIdsInUse();
-      loadAlwaysOnFonts(dc);
       calcAlwaysOnLayout(dc);
 
       setupScreenBuffer(dc);
    }
 
    //! Handle view updates from settings changed
-   function onSettingsChanged() {
+   function onSettingsChanged() as Void {
       last_draw_minute = -1;
       _settings_changed = true;
 
@@ -124,20 +121,17 @@ class InfocalView extends WatchUi.WatchFace {
    //! Read (cache) settings
    //! Used to avoid expensive Properties reads in low-power mode (eg. onPartialUpdate)
    function readSettings() as Void {
-      _use_analog = Properties.getValue("use_analog");
-      _always_on_second = Properties.getValue("always_on_second");
-      _always_on_heart = Properties.getValue("always_on_heart");
-      _always_on_style = Properties.getValue("always_on_style");
+      _use_analog = Properties.getValue("use_analog") as Boolean;
+      _always_on_second = Properties.getValue("always_on_second") as Boolean;
+      _always_on_heart = Properties.getValue("always_on_heart") as Boolean;
+      _always_on_style = Properties.getValue("always_on_style") as Number;
    }
 
    // Called when this View is brought to the foreground. Restore
    // the state of this View and prepare it to be shown. This includes
    // loading resources into memory.
    function onShow() {
-      // Load global fonts
-      if (small_digi_font == null) {
-         small_digi_font = WatchUi.loadResource(Rez.Fonts.smadigi);
-      }
+      loadFonts();
 
       last_draw_minute = -1;
       restore_from_resume = true;
@@ -180,7 +174,7 @@ class InfocalView extends WatchUi.WatchFace {
       //       - do not need to perform full redraw on every update as screen is not cleared
       //       - you just need to do full redraw on: onLayout, onShow and onExitSleep
       //         (and for this app minute_changed to print a new hh:mm time)
-      var power_save_mode = Properties.getValue("power_save_mode");
+      var power_save_mode = Properties.getValue("power_save_mode") as Boolean;
       if (power_save_mode == false || _settings_changed || restore_from_resume || restore_from_sleep || minute_changed) {
          // Clear screen clip region (may be set after onPartialUpdate/onPowerBudgetExceeded on some devices)
          screenDc.clearClip();
@@ -221,14 +215,16 @@ class InfocalView extends WatchUi.WatchFace {
    //!
    //! @internal Calls to System.println() and System.print() will not execute on devices when this function is being
    //!           invoked, but can be used in the device *simulator*.
+   //! @note     Any system I/O in partial updates (e.g. Properties, Storage, Resources) will cause time budget to be
+   //!           exceeded - sometimes in weird ways (like showing Graphics Time taking 1700000 usec)
    public function onPartialUpdate(dc as Dc) as Void {
       // FIXME: Support seconds on Analog by painting circular mask in centre of dial
       if (_use_analog) {
          // not supported
          return;
       }
-
-      if (_always_on_second && _always_on_digi_font != null) {
+      var font = _always_on_digi_font;
+      if (_always_on_second && font != null) {
          var clockTime = System.getClockTime();
          var second_text = clockTime.sec.format("%02d");
 
@@ -236,10 +232,10 @@ class InfocalView extends WatchUi.WatchFace {
          dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
          dc.clear();
          dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-         dc.drawText(second_x, second_y, _always_on_digi_font, second_text, Graphics.TEXT_JUSTIFY_LEFT);
+         dc.drawText(second_x, second_y, font, second_text, Graphics.TEXT_JUSTIFY_LEFT);
       }
 
-      if (_always_on_heart && _always_on_digi_font != null) {
+      if (_always_on_heart && font != null) {
          var width = second_clip_size[0];
          dc.setClip(heart_x - width - 1, second_y, width + 2, second_clip_size[1]);
          dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
@@ -251,7 +247,7 @@ class InfocalView extends WatchUi.WatchFace {
             var heart_text = hr.format("%d");
 
             dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(heart_x - 1, second_y, _always_on_digi_font, heart_text, Graphics.TEXT_JUSTIFY_RIGHT);
+            dc.drawText(heart_x - 1, second_y, font, heart_text, Graphics.TEXT_JUSTIFY_RIGHT);
          }
       }
    }
@@ -295,9 +291,9 @@ class InfocalView extends WatchUi.WatchFace {
    //! @note Includes a runtime check to permanently disable memory-intensive
    //!       operations that have previously caused an application crash!
    //!       (out-of-memory errors are fatal so cannot be handled)
-   function setupScreenBuffer(dc) as Void {
-      var enable_buffering = Properties.getValue("enable_buffering");
-      var err_runtime_oom = Application.Storage.getValue("err_runtime_oom");
+   function setupScreenBuffer(dc as Dc) as Void {
+      var enable_buffering = Properties.getValue("enable_buffering") as Boolean;
+      var err_runtime_oom = Application.Storage.getValue("err_runtime_oom") as Boolean?;
       var stats = System.getSystemStats();
       var free_mem = stats.freeMemory;
 
@@ -317,7 +313,7 @@ class InfocalView extends WatchUi.WatchFace {
                :height => dc.getHeight(),
             };
             if (Toybox.Graphics has :createBufferedBitmap) {
-               _screen_buffer = Graphics.createBufferedBitmap(params).get();
+               _screen_buffer = Graphics.createBufferedBitmap(params).get() as BufferedBitmap;
             } else if (Toybox.Graphics has :BufferedBitmap) {
                _screen_buffer = new Graphics.BufferedBitmap(params);
             } else {
@@ -348,21 +344,21 @@ class InfocalView extends WatchUi.WatchFace {
 
    //! Draw Drawables using our own device context (potentially a screen buffer)
    //! Used instead of View.onUpdate() to draw drawables
-   function mainDrawComponents(dc) {
+   function mainDrawComponents(dc as Dc) as Void {
       // XXX: Why is this clearing the background twice?
       dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
       dc.clear();
       dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
       dc.fillRectangle(0, 0, center_x * 2, center_y * 2);
 
-      var bar1 = View.findDrawableById("aBarDisplay");
-      var bar2 = View.findDrawableById("bBarDisplay");
-      var bar3 = View.findDrawableById("cBarDisplay");
-      var bar4 = View.findDrawableById("dBarDisplay");
-      var bar5 = View.findDrawableById("eBarDisplay");
-      var bar6 = View.findDrawableById("fBarDisplay");
-      var bbar1 = View.findDrawableById("bUBarDisplay");
-      var bbar2 = View.findDrawableById("tUBarDisplay");
+      var bar1 = View.findDrawableById("aBarDisplay") as Drawable;
+      var bar2 = View.findDrawableById("bBarDisplay") as Drawable;
+      var bar3 = View.findDrawableById("cBarDisplay") as Drawable;
+      var bar4 = View.findDrawableById("dBarDisplay") as Drawable;
+      var bar5 = View.findDrawableById("eBarDisplay") as Drawable;
+      var bar6 = View.findDrawableById("fBarDisplay") as Drawable;
+      var bbar1 = View.findDrawableById("bUBarDisplay") as Drawable;
+      var bbar2 = View.findDrawableById("tUBarDisplay") as Drawable;
 
       bar1.draw(dc);
       bar2.draw(dc);
@@ -374,35 +370,37 @@ class InfocalView extends WatchUi.WatchFace {
       dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
       dc.fillCircle(center_x, center_y, face_radius);
       // XXX: Move to call _backgroundView first
-      _backgroundView.draw(dc);
+      if (_backgroundView != null) {
+         _backgroundView.draw(dc);
+      }
       bbar1.draw(dc);
       bbar2.draw(dc);
 
-      var bgraph1 = View.findDrawableById("tGraphDisplay");
-      var bgraph2 = View.findDrawableById("bGraphDisplay");
+      var bgraph1 = View.findDrawableById("tGraphDisplay") as Drawable;
+      var bgraph2 = View.findDrawableById("bGraphDisplay") as Drawable;
       bgraph1.draw(dc);
       bgraph2.draw(dc);
 
       if (_use_analog) {
-         View.findDrawableById("analog").draw(dc);
+         (View.findDrawableById("analog") as Drawable).draw(dc);
       } else {
-         View.findDrawableById("digital").draw(dc);
+         (View.findDrawableById("digital") as Drawable).draw(dc);
       }
    }
 
-   function updateColorsInUse() {
-      var theme_code = Properties.getValue("theme_code");
+   function updateColorsInUse() as Void {
+      var theme_code = Properties.getValue("theme_code") as Number;
       if (gtheme != theme_code || theme_code == 18) {
          if (theme_code == 18) {
             // Custom colors
-            var background_color = Properties.getValue("background_color");
-            var text_color = Properties.getValue("text_color");
-            var accent_color = Properties.getValue("accent_color");
-            var ticks_color = Properties.getValue("ticks_color");
-            var bar_background_color = Properties.getValue("bar_background_color");
-            var bar_indicator_color = Properties.getValue("bar_indicator_color");
-            var bar_graph_color_top = Properties.getValue("bar_graph_color_top");
-            var bar_graph_color_bottom = Properties.getValue("bar_graph_color_bottom");
+            var background_color = Properties.getValue("background_color") as Number;
+            var text_color = Properties.getValue("text_color") as Number;
+            var accent_color = Properties.getValue("accent_color") as Number;
+            var ticks_color = Properties.getValue("ticks_color") as Number;
+            var bar_background_color = Properties.getValue("bar_background_color") as Number;
+            var bar_indicator_color = Properties.getValue("bar_indicator_color") as Number;
+            var bar_graph_color_top = Properties.getValue("bar_graph_color_top") as Number;
+            var bar_graph_color_bottom = Properties.getValue("bar_graph_color_bottom") as Number;
             var hour_color = Settings.getOrDefault("hour_color", 0xff0000) as Lang.Number;
             var mins_color = Settings.getOrDefault("mins_color", 0xffffff) as Lang.Number;
 
@@ -442,26 +440,28 @@ class InfocalView extends WatchUi.WatchFace {
          } else {
             var theme_pallete = WatchUi.loadResource(Rez.JsonData.theme_pallete) as Dictionary<String, Array<Number> >;
             var theme = theme_pallete[theme_code.toString()];
-            // background
-            gbackground_color = theme[0];
-            // main text
-            gmain_color = theme[1];
-            // hour_color
-            ghour_color = theme[2];
-            // mins_color
-            gmins_color = theme[1];
-            // accent (dividers between complications)
-            gaccent_color = theme[2];
-            // ticks
-            garc_color = theme[3];
-            // indicator pointing at the bar
-            gbar_color_indi = theme[4];
-            // bar background
-            gbar_color_back = theme[5];
-            // bar foreground/graph (top)
-            gbar_color_0 = theme[6];
-            // bar foreground/graph (bottom)
-            gbar_color_1 = theme[7];
+            if (theme != null) {
+               // background
+               gbackground_color = theme[0];
+               // main text
+               gmain_color = theme[1];
+               // hour_color
+               ghour_color = theme[2];
+               // mins_color
+               gmins_color = theme[1];
+               // accent (dividers between complications)
+               gaccent_color = theme[2];
+               // ticks
+               garc_color = theme[3];
+               // indicator pointing at the bar
+               gbar_color_indi = theme[4];
+               // bar background
+               gbar_color_back = theme[5];
+               // bar foreground/graph (top)
+               gbar_color_0 = theme[6];
+               // bar foreground/graph (bottom)
+               gbar_color_1 = theme[7];
+            }
          }
          // set the global theme
          gtheme = theme_code;
@@ -469,13 +469,18 @@ class InfocalView extends WatchUi.WatchFace {
    }
 
    //! @note must have called readSettings() before calling this method
-   function loadAlwaysOnFonts(dc as Graphics.Dc) {
+   function loadFonts() as Void {
+      // Load global fonts
+      if (small_digi_font == null) {
+         small_digi_font = WatchUi.loadResource(Rez.Fonts.smadigi) as FontType;
+      }
+
       if (_always_on_second || _always_on_heart) {
          // Loads always on (seconds/hr) Font
          if (_always_on_style == 0) {
-            _always_on_digi_font = WatchUi.loadResource(Rez.Fonts.secodigi);
+            _always_on_digi_font = WatchUi.loadResource(Rez.Fonts.secodigi) as FontType;
          } else {
-            _always_on_digi_font = WatchUi.loadResource(Rez.Fonts.xsecodigi);
+            _always_on_digi_font = WatchUi.loadResource(Rez.Fonts.xsecodigi) as FontType;
          }
       } else {
          // Unload
@@ -483,12 +488,13 @@ class InfocalView extends WatchUi.WatchFace {
       }
    }
 
-   //! @note must have called readSettings() and loadAlwaysOnFonts() before this method
+   //! @note must have called readSettings() and loadFonts() before this method
    function calcAlwaysOnLayout(dc as Dc) as Void {
       // Measure clipping area for seconds and heart rate, range [XX..2XX]
-      if (_always_on_digi_font != null) {
-         var width = dc.getTextWidthInPixels("200", _always_on_digi_font) + 2;
-         var height = Graphics.getFontHeight(_always_on_digi_font);
+      var font = _always_on_digi_font; // remove type-checker ambiguity (ie. globals can be modified in diff thread)
+      if (font != null) {
+         var height = Graphics.getFontHeight(font);
+         var width = dc.getTextWidthInPixels("200", font) + 2;
          second_font_height_half = height / 2;
          second_clip_size = [width, height];
 
@@ -505,7 +511,7 @@ class InfocalView extends WatchUi.WatchFace {
 
    //! Update Client Data
    //! Called by onUpdate(): on show; on settings changed; and every minute
-   function updateClientData() {
+   function updateClientData() as Void {
       var settings = System.getDeviceSettings();
 
       // Update last known location
@@ -516,7 +522,9 @@ class InfocalView extends WatchUi.WatchFace {
          if (_batteryMonitor == null) {
             _batteryMonitor = new BatteryMonitor();
          }
-         _batteryMonitor.update();
+         if (_batteryMonitor != null) {
+            _batteryMonitor.update();
+         }
       } else {
          _batteryMonitor = null;
       }
@@ -533,6 +541,7 @@ class InfocalView extends WatchUi.WatchFace {
          if (isAnyDataFieldsInUse([FIELD_TYPE_AIR_QUALITY])) {
             if (IQAirClientHelper.needsDataUpdate()) {
                pendingWebRequests[IQAirClient.DATA_TYPE] = true;
+               debug_print(:background, "need:$1$", IQAirClient.DATA_TYPE);
             }
          }
 
@@ -540,10 +549,11 @@ class InfocalView extends WatchUi.WatchFace {
          if (isAnyDataFieldsInUse([FIELD_TYPE_TEMPERATURE_OUT, FIELD_TYPE_TEMPERATURE_HL, FIELD_TYPE_WEATHER, FIELD_TYPE_WIND])) {
             if (OpenWeatherClientHelper.needsDataUpdate()) {
                pendingWebRequests[OpenWeatherClient.DATA_TYPE] = true;
+               debug_print(:background, "need:$1$", OpenWeatherClient.DATA_TYPE);
             }
          }
 
-         Storage.setValue("PendingWebRequests", pendingWebRequests);
+         Storage.setValue("PendingWebRequests", pendingWebRequests as Dictionary<PropertyKeyType, PropertyValueType>);
 
          // If there are any pending data requests (and phone is connected)
          if (pendingWebRequests.keys().size() > 0) {
@@ -551,8 +561,14 @@ class InfocalView extends WatchUi.WatchFace {
             var lastTime = Background.getLastTemporalEventTime();
 
             if (lastTime != null) {
+               var FIVE_MINUTES = 5 * Gregorian.SECONDS_PER_MINUTE;
+
+               // Add a random jitter time to this client to avoid client-synchronization load issues
+               // (e.g. at every top-of minute all clients send their request to server)
+               var jitterTime = Math.rand() % FIVE_MINUTES;
+
                // Events scheduled for a time in the past trigger immediately.
-               var nextTime = lastTime.add(new Time.Duration(5 * 60));
+               var nextTime = lastTime.add(new Time.Duration(FIVE_MINUTES + jitterTime));
                Background.registerForTemporalEvent(nextTime);
             } else {
                Background.registerForTemporalEvent(Time.now());
@@ -561,25 +577,25 @@ class InfocalView extends WatchUi.WatchFace {
       }
    }
 
-   function getArcComplicationSettingFieldId(angle) {
-      return Properties.getValue("comp" + angle + "h");
+   function getArcComplicationSettingFieldId(angle as Number) as Number {
+      return Properties.getValue("comp" + angle + "h") as Number;
    }
 
-   function getBarDataComplicationSettingFieldId(position) {
+   function getBarDataComplicationSettingFieldId(position as Number) as Number {
       if (position == 0) {
          // upper
-         return Properties.getValue("compbart");
+         return Properties.getValue("compbart") as Number;
       } else {
          // lower
-         return Properties.getValue("compbarb");
+         return Properties.getValue("compbarb") as Number;
       }
    }
 
-   function getGraphComplicationFieldId(position) {
+   function getGraphComplicationFieldId(position as Number) as Number {
       if (position == 0) {
-         return Properties.getValue("compgrapht");
+         return Properties.getValue("compgrapht") as Number;
       } else {
-         return Properties.getValue("compgraphb");
+         return Properties.getValue("compgraphb") as Number;
       }
    }
 
@@ -602,7 +618,7 @@ class InfocalView extends WatchUi.WatchFace {
       _currentFieldsIdsInUse = fieldIds;
    }
 
-   function isAnyDataFieldsInUse(fieldIds as Array<Number>) {
+   function isAnyDataFieldsInUse(fieldIds as Array<Number>) as Boolean {
       for (var i = 0; i < fieldIds.size(); i++) {
          var id = fieldIds[i];
          if (_currentFieldsIdsInUse.indexOf(id) != -1) {
@@ -618,10 +634,10 @@ class InfocalView extends WatchUi.WatchFace {
    function updateLastLocation() as Void {
       // Attempt to update current location, to be used by Sunrise/Sunset, Weather, Air Quality.
       // If current location available from current activity, save it in case it goes "stale" and can not longer be retrieved.
-      var location = Activity.getActivityInfo().currentLocation;
-      if (location != null) {
+      var activityInfo = Activity.getActivityInfo();
+      if (activityInfo != null && activityInfo.currentLocation != null) {
          // Save current location to globals
-         var degrees = location.toDegrees(); // Array of Doubles.
+         var degrees = activityInfo.currentLocation.toDegrees(); // Array of Doubles.
          gLocationLat = degrees[0].toFloat();
          gLocationLon = degrees[1].toFloat();
 

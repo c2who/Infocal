@@ -27,10 +27,6 @@ import Toybox.Lang;
 //! @seealso  https://forums.garmin.com/developer/connect-iq/b/news-announcements/posts/optimal-monkey-c
 (:background)
 class BackgroundService extends System.ServiceDelegate {
-   // Clients
-   private var _iqAirClient as IQAirClient?;
-   private var _weatherClient as OpenWeatherClient?;
-
    function initialize() {
       System.ServiceDelegate.initialize();
    }
@@ -60,15 +56,9 @@ class BackgroundService extends System.ServiceDelegate {
          var type = pendingWebRequests.keys()[i];
 
          if (OpenWeatherClient.DATA_TYPE.equals(type)) {
-            if (_weatherClient == null) {
-               _weatherClient = new OpenWeatherClient();
-            }
-            _weatherClient.requestData(method(:onReceiveClientData));
+            (new OpenWeatherClient(method(:onReceiveClientData))).requestData();
          } else if (IQAirClient.DATA_TYPE.equals(type)) {
-            if (_iqAirClient == null) {
-               _iqAirClient = new IQAirClient();
-            }
-            _iqAirClient.requestData(method(:onReceiveClientData));
+            (new IQAirClient(method(:onReceiveClientData))).requestData();
          } else {
             debug_print(:background, "Unknown: $1$", pendingWebRequests);
             Background.exit(null);
@@ -86,11 +76,7 @@ class BackgroundService extends System.ServiceDelegate {
    //!       "Data provided to Background.exit() is too large", and
    //!       App.onBackgroundData() is never called!
    //! @see  https://forums.garmin.com/developer/connect-iq/f/discussion/7550/data-too-large-for-background-process
-   function onReceiveClientData(type as String, responseCode as Number, data as Dictionary<String, PropertyValueType>) as Void {
-      // Avoid circular references
-      _weatherClient = null;
-      _iqAirClient = null;
-
+   function onReceiveClientData(type as String, responseCode as Number, data as Dictionary<PropertyKeyType, PropertyValueType>) as Void {
       debug_print(:background, "Bkgd: $1$", data);
       Background.exit(data);
    }

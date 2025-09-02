@@ -15,84 +15,79 @@ public class Globals {
    static function getFormattedDate() as String {
       var now = Time.now();
       var date = Gregorian.info(now, Time.FORMAT_SHORT);
-      var date_formatter = Properties.getValue("date_format");
+      var day = date.day as Number;
+      var month = date.month as Number;
+      var day_of_week = date.day_of_week as Number;
+      var date_formatter = Properties.getValue("date_format") as Number;
 
       var DAYS_OF_THE_WEEK = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
       var MONTHS_OF_THE_YEAR = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 
-      if (date_formatter == 0 || date_formatter == 1) {
+      if (date_formatter == 0) {
          // ddd d
-         var day = null;
-         var day_of_week = null;
-         var month = null;
          if (Properties.getValue("force_date_english")) {
-            day = date.day.format("%d");
-            day_of_week = DAYS_OF_THE_WEEK[date.day_of_week - 1];
-            month = MONTHS_OF_THE_YEAR[date.month - 1];
+            return Lang.format("$1$ $2$", [DAYS_OF_THE_WEEK[day_of_week - 1], day]);
          } else {
             var medium_date = Gregorian.info(now, Time.FORMAT_MEDIUM);
-            day = date.day.format("%d");
-            day_of_week = medium_date.day_of_week.toUpper();
-            month = medium_date.month;
+            var day_str = medium_date.day_of_week as String;
+            return Lang.format("$1$ $2$", [day_str.toUpper(), day]);
          }
-         if (date_formatter == 0) {
-            // ddd d
-            return Lang.format("$1$ $2$", [day_of_week, day]);
+      } else if (date_formatter == 1) {
+         // ddd d mmm
+         if (Properties.getValue("force_date_english")) {
+            return Lang.format("$1$ $2$ $3$", [DAYS_OF_THE_WEEK[day_of_week - 1], day, MONTHS_OF_THE_YEAR[month - 1]]);
          } else {
-            // ddd d mmm
-            return Lang.format("$1$ $2$ $3$", [day_of_week, day, month]);
+            var medium_date = Gregorian.info(now, Time.FORMAT_MEDIUM);
+            var day_str = medium_date.day_of_week as String;
+            var month_str = medium_date.month as String;
+            return Lang.format("$1$ $2$ $3$", [day_str.toUpper(), day, month_str.toUpper()]);
          }
       } else if (date_formatter == 2) {
          // dd.mm
-         return Lang.format("$1$.$2$", [date.day.format("%d"), date.month.format("%d")]);
+         return Lang.format("$1$.$2$", [day, month]);
       } else if (date_formatter == 3) {
          // mm.dd
-         return Lang.format("$1$.$2$", [date.month.format("%d"), date.day.format("%d")]);
+         return Lang.format("$1$.$2$", [month, day]);
       } else if (date_formatter == 4) {
-         // dd.mm.yyyy
-         var year = date.year;
-         var yy = year / 100.0;
-         yy = Math.round((yy - yy.toNumber()) * 100.0);
-         return Lang.format("$1$.$2$.$3$", [date.day.format("%d"), date.month.format("%d"), yy.format("%d")]);
+         // dd.mm.yy
+         var yy = date.year % 100;
+         return Lang.format("$1$.$2$.$3$", [day, month, yy]);
       } else if (date_formatter == 5) {
-         // mm.dd.yyyy
-         var year = date.year;
-         var yy = year / 100.0;
-         yy = Math.round((yy - yy.toNumber()) * 100.0);
-         return Lang.format("$1$.$2$.$3$", [date.month.format("%d"), date.day.format("%d"), yy.format("%d")]);
+         // mm.dd.yy
+         var yy = date.year % 100;
+         return Lang.format("$1$.$2$.$3$", [month, day, yy]);
       } else if (date_formatter == 6 || date_formatter == 7) {
-         // dd mmm
-         var day = null;
-         var month = null;
+         // dd mmm / mmm dd
+         var month_str = "";
          if (Properties.getValue("force_date_english")) {
-            day = date.day;
-            month = MONTHS_OF_THE_YEAR[date.month - 1];
+            month_str = MONTHS_OF_THE_YEAR[month - 1];
          } else {
             var medium_date = Gregorian.info(now, Time.FORMAT_MEDIUM);
-            day = date.day;
-            month = medium_date.month;
+            month_str = medium_date.month;
          }
          if (date_formatter == 6) {
-            return Lang.format("$1$ $2$", [day.format("%d"), month]);
+            // dd mmm
+            return Lang.format("$1$ $2$", [day, month_str]);
          } else {
-            return Lang.format("$1$ $2$", [month, day.format("%d")]);
+            // mmm dd
+            return Lang.format("$1$ $2$", [month_str, day]);
          }
       } else {
          // Invalid use format 0: "ddd d"
-         return Lang.format("$1$ $2$", [DAYS_OF_THE_WEEK[date.day_of_week - 1], date.day.format("%d")]);
+         return Lang.format("$1$ $2$", [DAYS_OF_THE_WEEK[day_of_week - 1], day]);
       }
    }
 
-   static function convertCoorX(radians, radius) {
-      return center_x + radius * Math.cos(radians);
+   static function convertCoorX(radians as Float, radius as Number) as Float {
+      return (center_x + radius * Math.cos(radians)) as Float;
    }
 
-   static function convertCoorY(radians, radius) {
-      return center_y + radius * Math.sin(radians);
+   static function convertCoorY(radians as Float, radius as Number) as Float {
+      return (center_y + radius * Math.sin(radians)) as Float;
    }
 
-   static function toKValue(value, alwaysConvert as Boolean) {
+   static function toKValue(value as Float, alwaysConvert as Boolean) as String {
       if (!alwaysConvert and value <= 10000) {
          return value.format("%d");
       } else {
@@ -108,4 +103,8 @@ public class Globals {
          return "K";
       }
    }
+}
+
+function min(a as Numeric, b as Numeric) as Numeric {
+   return a < b ? a : b;
 }

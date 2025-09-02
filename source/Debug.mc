@@ -13,14 +13,14 @@ function is_debug_print_allowed(scope as Symbol) as Boolean {
 (:release,:background)
 function is_debug_print_allowed(scope as Symbol) as Boolean {
    // TODO: Edit for the scope you want to debug in release builds
-   return scope == :bms;
+   return scope == :bms || scope == :client;
 }
 
 //! Print debug messages.
 //! (:debug)    print messages to Console
 //! (:release)  Print debug messages to APPS/LOGS/<APPNAME>.txt
 (:background)
-public function debug_print(scope as Symbol, format as String, params as Object or Array) as Void {
+public function debug_print(scope as Symbol, format as String, params as Object or Array or Null) as Void {
    if (is_debug_print_allowed(scope)) {
       var time_info = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
       System.print(Lang.format("$1$:$2$:$3$ ", [time_info.hour, time_info.min, time_info.sec]));
