@@ -22,14 +22,13 @@ class OpenWeatherClient extends BaseClient {
     //! https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
     const API_CURRENT_WEATHER = "https://api.openweathermap.org/data/2.5/weather";
 
-    function initialize() {
-        BaseClient.initialize();
+    function initialize(callback as BaseClient.ClientCallbackMethod) {
+        BaseClient.initialize(callback);
     }
 
     //! Public entry method to make background request to get data from remote service
     //! @param callback     Consumer callback for returning formatted data
-    function requestData(callback as BaseClient.ClientCallbackMethod) as Void {
-        BaseClient.requestData(callback);
+    function requestData() as Void {
 
         var api_key = Storage.getValue("owm_api_key") as String?;
         var location = Storage.getValue("LastLocation") as Array<Float>?;
@@ -89,9 +88,7 @@ class OpenWeatherClient extends BaseClient {
         }
 
         // Send formatted result to registered callback
-        if (_callback != null) {
-            _callback.invoke(DATA_TYPE, responseCode, result as Dictionary<String, PropertyValueType>);
-        }
+        _callback.invoke(DATA_TYPE, responseCode, result as Dictionary<PropertyKeyType, PropertyValueType>);
     }
 }
 

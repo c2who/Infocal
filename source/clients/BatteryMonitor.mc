@@ -43,20 +43,24 @@ import Toybox.Time;
     }
 
     // Self battery consumption monitoring (shared across all battery fields)
-    private var _bat_state as State?;        //< state
-    private var _bat_last_pcnt as Float?;    //< percent
-    private var _bat_last_time as Number?;   //< seconds since epoch
+    private var _bat_state as State;        //< state
+    private var _bat_last_pcnt as Float;    //< percent
+    private var _bat_last_time as Number;   //< seconds since epoch
 
     function initialize() {
         // Reload values on app launch/restart
-        _bat_state = Storage.getValue("bat_state");
-        _bat_last_pcnt = Storage.getValue("bat_last_pcnt");
-        _bat_last_time = Storage.getValue("bat_last_time");
+        var bat_state = Storage.getValue("bat_state") as State?;
+        var bat_last_pcnt = Storage.getValue("bat_last_pcnt") as Float?;
+        var bat_last_time = Storage.getValue("bat_last_time") as Number?;
+
+        _bat_state = (bat_state != null) ? bat_state : INIT;
+        _bat_last_pcnt = (bat_last_pcnt != null) ? bat_last_pcnt : -1.0;
+        _bat_last_time = (bat_last_time != null) ? bat_last_time : 0;
     }
 
     //! Update method.
     //! Call approx every minute, to provide measurment accuracy
-    public function update() {
+    public function update() as Void {
         var stats = System.getSystemStats();
         var bat_pcnt = stats.battery;       // %
         var time_now = Time.now().value();  // seconds since epoch
@@ -103,7 +107,7 @@ import Toybox.Time;
         }
     }
 
-    private function update_state(state as State, bat_pcnt as Float, time_now as Number) {
+    private function update_state(state as State, bat_pcnt as Float, time_now as Number) as Void {
         // print debug message only on change - to avoid duplicate entries every minute when 'charging'
         if ((_bat_state != state) || (_bat_last_pcnt != bat_pcnt)) {
             debug_print(:bms, "[$1$] $2$%", [state, bat_pcnt.format("%0.1f")]);
@@ -124,7 +128,7 @@ import Toybox.Time;
     //!         y[n] = x[n]*alpha + y[n-1] * (1-alpha)
     //! @note We use a 'ramped-alpha' to remove early sample noise (over first T samples)
     //!         alpha[t] = 2 / ( min(t + 2, WINDOW_SIZE) + 1)
-    private function update_discharge_rate(bat_pcnt as Float, time_now as Number) {
+    private function update_discharge_rate(bat_pcnt as Float, time_now as Number) as Void {
         // target alpha for averaging the discharge rate over 100% discharge
         var WINDOW_SIZE = 100; // (target alpha = 0.0198)
 

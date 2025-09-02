@@ -15,17 +15,21 @@ import Toybox.Math;
 (:background)
 class BaseClient {
     typedef CommunicationCallbackMethod as Method(responseCode as Number, data as Dictionary?) as Void;
-    typedef ClientCallbackMethod as Method(type as String, responseCode as Number, data as Dictionary<String, PropertyValueType>) as Void;
+    typedef ClientCallbackMethod as Method(type as String, responseCode as Number, data as Dictionary<PropertyKeyType, PropertyValueType>) as Void;
 
     //! Consumer callback for returning formatted data
-    protected var _callback as ClientCallbackMethod?;
+    protected var _callback as ClientCallbackMethod;
+
+    //! Constructor.
+    //! @param  callback    Consumer callback for returning formatted data
+    function initialize(callback as ClientCallbackMethod) {
+        self._callback = callback;
+    }
 
     //! Public entry method to make background request to get data from remote service
-    //! @param  callback    Consumer callback for returning formatted data
     //! @note   Override in concrete class to build web request(s)
-    public function requestData(callback as ClientCallbackMethod) as Void {
-        // Save callback method
-        self._callback = callback;
+    public function requestData() as Void {
+        // Override in concrete class
     }
 
     //! Make HTTP request (over phone bluetooth connection)
