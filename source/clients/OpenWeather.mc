@@ -29,10 +29,8 @@ class OpenWeatherClient extends BaseClient {
     //! Public entry method to make background request to get data from remote service
     //! @param callback     Consumer callback for returning formatted data
     function requestData() as Void {
-
         var api_key = Storage.getValue("owm_api_key") as String?;
         var location = Storage.getValue("LastLocation") as Array<Float>?;
-
         var params = {
             "lat" => (location != null) ? location[0] : null,
             "lon" => (location != null) ? location[1] : null,
@@ -40,10 +38,11 @@ class OpenWeatherClient extends BaseClient {
             "units" => "metric", // Celsius.
         };
 
-        BaseClient.makeWebRequest(
+        BaseClient.makeGetRequest(
             API_CURRENT_WEATHER,
-            params as Dictionary<Object,Object>,
-            method(:onReceiveOpenWeatherData)
+            params,
+            null, // headers
+            method(:onCurrentWeatherResponse)
         );
     }
 
@@ -57,7 +56,7 @@ class OpenWeatherClient extends BaseClient {
    //!       It is imperative that the code/data size of background task is kept
    //!       as small as possible!
    //! @see  https://developer.garmin.com/connect-iq/api-docs/Toybox/Communications.html
-   function onReceiveOpenWeatherData(responseCode as Number, data as Dictionary?) as Void {
+   function onCurrentWeatherResponse(responseCode as Number, data as Dictionary?) as Void {
         var result;
 
         // Useful data only available if result was successful.
@@ -118,6 +117,6 @@ public class OpenWeatherClientHelper {
         }
 
         // Check based on default behavior with retries
-        return BaseClientHelper.calcNeedsDataUpdate(OpenWeatherClient.DATA_TYPE, BaseClientHelper.DEFAULT_UPDATE_INTERVAL_SECS);
+        return BaseClientHelper.calcNeedsDataUpdate(OpenWeatherClient.DATA_TYPE, 30 * Gregorian.SECONDS_PER_MINUTE);
     }
 }

@@ -32,20 +32,72 @@ class BaseClient {
         // Override in concrete class
     }
 
-    //! Make HTTP request (over phone bluetooth connection)
+    //! Make HTTP GET request (over phone bluetooth connection)
+    //!
+    //! @param url      host url
+    //! @param params   search parameters, to append to the full url
+    //! @param headers  header parameters
     //!
     //! @see https://developer.garmin.com/connect-iq/api-docs/Toybox/Communications.html#makeWebRequest-instance_function
-    protected function makeWebRequest(url as String, params as Dictionary<Object,Object>, callback as CommunicationCallbackMethod) as Void {
-      var options = {
-         :method => Communications.HTTP_REQUEST_METHOD_GET,
-         :headers => {
-            "Content-Type" => Communications.REQUEST_CONTENT_TYPE_URL_ENCODED,
-         },
-         :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON,
-      };
+    protected function makeGetRequest(
+        url as String,
+        params as Dictionary?,
+        headers as Dictionary?,
+        callback as CommunicationCallbackMethod) as Void {
 
-      Communications.makeWebRequest(url, params, options, callback);
+        // If no headers, assume url encoded request
+        if ((headers == null) || (headers.size() == 0)) {
+            headers = {
+                "Content-Type" => Communications.REQUEST_CONTENT_TYPE_URL_ENCODED,
+            };
+        }
+
+        var options = {
+            :method => Communications.HTTP_REQUEST_METHOD_GET,
+            :headers => headers as Dictionary<Object,Object>,
+            :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON,
+        };
+        Communications.makeWebRequest(url, params as Dictionary<Object,Object> or Null, options, callback);
+    }
+
+    //! Make HTTP POST request (over phone bluetooth connection)
+    //!
+    //! @note POST parameters go in the body
+    //! @see https://developer.garmin.com/connect-iq/api-docs/Toybox/Communications.html#makeWebRequest-instance_function
+    protected function makePostRequest(
+        url as String,
+        params as Dictionary?,
+        headers as Dictionary?,
+        callback as CommunicationCallbackMethod) as Void {
+
+        // If no headers, assume url encoded request
+        if ((headers == null) || (headers.size() == 0)) {
+            headers = {
+                "Content-Type" => Communications.REQUEST_CONTENT_TYPE_URL_ENCODED,
+            };
+        }
+
+        var options = {
+            :method => Communications.HTTP_REQUEST_METHOD_POST,
+            :headers => headers,
+            :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON,
+        };
+
+        debug_print(:client, "$1$: params=$2$, options=$3$", [url, params, options]);
+        Communications.makeWebRequest(url, params as Dictionary<Object,Object> or Null, options, callback);
    }
+
+   protected function encodeParams(params as Dictionary<String,String>) as String {
+    var str = "?";
+    var keys =  params.keys();
+    for (var i=0; i < keys.size(); i++) {
+        var key = keys[i];
+        var val = params.get(key) as String;
+        var join = (i==0) ? "" : "&";
+        str += join + Communications.encodeURL(key) + "=" + Communications.encodeURL(val);
+    }
+    return str;
+    }
 }
 
 //! Base Client (Foreground) Helper
@@ -54,8 +106,6 @@ class BaseClient {
 //!         "clientTs"    Client response time
 //!         "code"        HTTP response code
 class BaseClientHelper {
-
-    static const  DEFAULT_UPDATE_INTERVAL_SECS = 30 * Gregorian.SECONDS_PER_MINUTE;
 
     //! Determines if the current data needs to be updated
     //! @internal This method _must_ be called every minute to avoid missing the retry remain=0 roll-over

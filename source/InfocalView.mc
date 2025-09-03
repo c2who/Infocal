@@ -569,7 +569,6 @@ class InfocalView extends WatchUi.WatchFace {
          if (isAnyDataFieldsInUse( [FIELD_TYPE_AIR_QUALITY] )) {
             if (IQAirClientHelper.needsDataUpdate()) {
                pendingWebRequests[IQAirClient.DATA_TYPE] = true;
-               debug_print(:background, "need:$1$", IQAirClient.DATA_TYPE);
             }
          }
 
@@ -580,14 +579,23 @@ class InfocalView extends WatchUi.WatchFace {
                                     FIELD_TYPE_WIND ] )) {
             if (OpenWeatherClientHelper.needsDataUpdate()) {
                pendingWebRequests[OpenWeatherClient.DATA_TYPE] = true;
-               debug_print(:background, "need:$1$", OpenWeatherClient.DATA_TYPE);
             }
          }
 
+         // Heartbeat
+         if (HeartbeatHelper.needsDataUpdate()) {
+            pendingWebRequests[HeartbeatClient.DATA_TYPE] = true;
+         }
+
+         // debug
+         var keys = pendingWebRequests.keys();
+         for (var i=0; i < keys.size(); i++) {
+            debug_print(:background, "need:$1$", keys[i]);
+         }
          Storage.setValue("PendingWebRequests", pendingWebRequests as Dictionary<PropertyKeyType, PropertyValueType>);
 
          // If there are any pending data requests (and phone is connected)
-         if (pendingWebRequests.keys().size() > 0) {
+         if (keys.size() > 0) {
             // Register for background temporal event as soon as possible.
             var lastTime = Background.getLastTemporalEventTime();
 

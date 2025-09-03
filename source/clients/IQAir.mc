@@ -29,28 +29,27 @@ class IQAirClient extends BaseClient {
     //! Public entry method to make background request to get data from remote service
     //! @param callback     Consumer callback for returning formatted data
     function requestData() as Void {
-
         var api_key = Storage.getValue("iqair_api_key")  as String?;
-        var location = Storage.getValue("LastLocation") as Array<Float>?;
-
         var params = {
             "key" => api_key
         };
 
         // Use location data (else uses IP geolocation)
+        var location = Storage.getValue("LastLocation") as Array<Float>?;
         if (location != null) {
             params["lat"] = location[0];
             params["lon"] = location[1];
         }
 
-        BaseClient.makeWebRequest(
+        BaseClient.makeGetRequest(
             API_NEAREST_CITY_URL,
-            params as Dictionary<Object,Object>,
-            method(:onReceiveAirQualityData)
+            params,
+            null, // headers
+            method(:onNearestCityResponse)
         );
     }
 
-    //! onReceiveAirQualityData
+    //! onNearestCityResponse
     //!
     //! @param  responseCode   the server response code or a BLE_* error type
     //! @param  data           the content if the request was successful, or null
@@ -60,7 +59,7 @@ class IQAirClient extends BaseClient {
     //!       It is imperative that the code/data size of background task is kept
     //!       as small as possible!
     //! @see  https://developer.garmin.com/connect-iq/api-docs/Toybox/Communications.html
-    function onReceiveAirQualityData(responseCode as Number, data as Dictionary?) as Void {
+    function onNearestCityResponse(responseCode as Number, data as Dictionary?) as Void {
         var result;
 
         // Useful data only available if result was successful.

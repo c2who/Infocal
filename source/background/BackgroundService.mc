@@ -64,6 +64,9 @@ class BackgroundService extends System.ServiceDelegate {
          } else if (IQAirClient.DATA_TYPE.equals(type)) {
             new IQAirClient(method(:onReceiveClientData)).requestData();
 
+         } else if (HeartbeatClient.DATA_TYPE.equals(type)) {
+            new HeartbeatClient(method(:onReceiveClientData)).requestData();
+
          } else {
             debug_print(:background, "Unknown: $1$", pendingWebRequests);
             Background.exit(null);
