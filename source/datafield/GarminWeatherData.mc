@@ -82,7 +82,18 @@ class TemperatureHLGarminField extends BaseDataField {
 /* WEATHER GARMIN */
 //! @since API Level 3.2.0
 class WeatherGarminField extends BaseDataField {
-   private const weather_condition_mapper = [
+
+   function initialize(id) {
+      BaseDataField.initialize(id);
+   }
+
+   function cur_label(value) {
+      if (Toybox has :Weather) {
+         var garmin_weather = Weather.getCurrentConditions();
+         var label = "WTHR --";
+
+      // PERF: moved to function-local, saves 800 bytes foreground memory (0.78kB)
+      var weather_condition_mapper = [
          "CLR",  // 0
          "CLDY",
          "CLDY",
@@ -139,14 +150,6 @@ class WeatherGarminField extends BaseDataField {
          "WTHR"
       ] as Array<String>;
 
-   function initialize(id) {
-      BaseDataField.initialize(id);
-   }
-
-   function cur_label(value) {
-      if (Toybox has :Weather) {
-         var garmin_weather = Weather.getCurrentConditions();
-         var label = "WTHR --";
          if (garmin_weather != null) {
             var settings = System.getDeviceSettings();
             var unit = "°C";
