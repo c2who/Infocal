@@ -83,7 +83,14 @@ class TemparatureOutField extends BaseDataField {
 
 /* WEATHER */
 class WeatherField extends BaseDataField {
-   private const weather_icon_mapper  = {
+
+   function initialize(id) {
+      BaseDataField.initialize(id);
+   }
+
+   function cur_icon() {
+      var weather_data = Storage.getValue("Weather") as Dictionary<String, PropertyValueType>?;
+      var weather_icon_mapper  = {
          "01d" => "",
          "02d" => "",
          "03d" => "",
@@ -105,12 +112,6 @@ class WeatherField extends BaseDataField {
          "50n" => "",
       } as Dictionary<String, String>;
 
-   function initialize(id) {
-      BaseDataField.initialize(id);
-   }
-
-   function cur_icon() {
-      var weather_data = Storage.getValue("Weather") as Dictionary<String, PropertyValueType>?;
       if (weather_data != null) {
          return weather_icon_mapper[weather_data["icon"]];
       } else {
