@@ -83,7 +83,7 @@ class BaseClient {
             :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON,
         };
 
-        debug_print(:client, "$1$: params=$2$, options=$3$", [url, params, options]);
+        debug_print(:trace_client, "$1$: params=$2$, options=$3$", [url, params, options]);
         Communications.makeWebRequest(url, params as Dictionary<Object,Object> or Null, options, callback);
    }
 
