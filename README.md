@@ -91,9 +91,10 @@ This project is free and will remain free under the MIT License.
 
 
 # Privacy & GDPR Compliant
-* This watchface sends a periodic 'heartbeat' message, containing anonymized product/version information.
-* The heartbeat message contains: anonymized unique id, device part number,
-  firmware version, software version, connect iq version, language and country.
+
+* This app sends a periodic 'heartbeat' message, containing anonymized product/version information.
+* The heartbeat message contains: anonymized unique id, device part number, firmware version,
+  software version, connect iq version, language and country code, and recently-used features.
 * No peronallly-identifiable information or IP addresses are ever collected or stored.
 * Data is processed and retained only for the purpose of anonymized product usage,
   product health, and service availability monitoring.

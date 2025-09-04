@@ -127,8 +127,22 @@ class InfocalView extends WatchUi.WatchFace {
       _always_on_second = Properties.getValue("always_on_second") as Boolean;
       _always_on_heart = Properties.getValue("always_on_heart") as Boolean;
       _always_on_style = Properties.getValue("always_on_style") as Number;
-   }
 
+      var digital_style = Properties.getValue("digital_style") as Number;
+      var force_date_english = Properties.getValue("force_date_english") as Boolean;
+      var iqair_api = Properties.getValue(("iqair_api")) as String?;
+
+      // Save used features as short string
+      var features = "F"
+         + ( _use_analog ? "A" : "a" )
+         + ( digital_style.toString() )
+         + ( _always_on_second ? "S" : "s" )
+         + ( _always_on_heart ? "H" : "h" )
+         + ( force_date_english ? "E" : "e" )
+         + ( (iqair_api != null) && (iqair_api.length() > 0) ? "Q" : "q" )
+      ;
+      Storage.setValue("features", features);
+   }
 
    // Called when this View is brought to the foreground. Restore
    // the state of this View and prepare it to be shown. This includes

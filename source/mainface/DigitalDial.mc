@@ -257,13 +257,13 @@ class DigitalDial extends Ui.Drawable {
          var boldF = digital_style == 3 ? xmidBoldFont : midBoldFont;
          var normF = digital_style == 3 ? xmidSemiFont : midSemiFont;
 
-         // BUG: Digital font is bottom-aligned at 2x character height (font bounds are incorrect)
-         var height = dc.getFontHeight(boldF);
-         var y_offset = height * 0.75;
-         var hourW = dc.getTextWidthInPixels(hourText, boldF);
-         var minuW = dc.getTextWidthInPixels(minuText, normF);
-         var width = hourW + minuW + 6;
-         var left = center_x - width/2;
+            // BUG: fonts are bottom-aligned at 2x character height (font bounds are incorrect)
+            var height = dc.getFontHeight(boldF);
+            y_offset = height * 0.75;
+            hourW = dc.getTextWidthInPixels(hourText, boldF);
+            minsW = (dc.getTextWidthInPixels(minuText, boldF) * 0.95).toNumber() + 1; // estimate using boldF (normF not loaded)
+            timeW = (hourW + 6 + minsW);
+            left = center_x - timeW/2;
 
          // Draw time
          dc.setColor(ghour_color, Graphics.COLOR_TRANSPARENT);

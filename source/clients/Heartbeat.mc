@@ -50,15 +50,17 @@ class HeartbeatClient extends BaseClient {
 
         var token = Storage.getValue("token") as String?;
         var uid = Storage.getValue("uid") as String?;
-        var s = System.getDeviceSettings();
+        var features = Storage.getValue("features") as String?;
+        var device = System.getDeviceSettings();
 
         var params = {
             "uid"   => (uid != null) ? uid : "",
-            "part"  => s.partNumber,
-            "fw"    => Lang.format("$1$.$2$", s.firmwareVersion),
+            "part"  => device.partNumber,
+            "fw"    => Lang.format("$1$.$2$", device.firmwareVersion),
             "sw"    => APP_VERSION,
-            "ciq"   => Lang.format("$1$.$2$.$3$", s.monkeyVersion),
-            "lang"  => (s has :systemLanguage) ? s.systemLanguage.toString() : "",
+            "ciq"   => Lang.format("$1$.$2$.$3$", device.monkeyVersion),
+            "lang"  => (device has :systemLanguage) ? device.systemLanguage.toString() : "",
+            "feat"   => (features != null) ? features : "",
         };
         var searchParams = encodeParams(params);
 
@@ -119,21 +121,19 @@ public class HeartbeatHelper {
                 // Use application unique id, API 2.4.1+
                 uid = s.uniqueIdentifier;
             } else {
-                // Collect per-install unique fields, with entropy
+                // Create a unique per-install identifier
                 var partNum   = (s.partNumber != null) ? s.partNumber : "";
                 var fw        = (s.firmwareVersion != null) ? Lang.format("$1$.$2$", s.firmwareVersion) : "";
-                var lang      = (s has :systemLanguage) ? s.systemLanguage : "";
                 var now = Time.now().value();
                 var rnd = Math.rand();
 
                 // Hash values
-                var part1 = fnv1a32AsString(partNum);
-                var part2 = fnv1a32AsString(fw + lang);
-                var part3 = fnv1a32AsString(now.toString());
-                var part4 = fnv1a32AsString(rnd.toString());
+                var part1 = fnv1a32AsString(partNum + fw);
+                var part2 = fnv1a32AsString(now.toString());
+                var part3 = fnv1a32AsString(rnd.toString());
 
                 // Concatenate parts
-                uid = part1 + part2 + part3 + part4;
+                uid = part1 + part2 + part3;
             }
             Storage.setValue("uid", uid);
         }
