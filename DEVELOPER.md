@@ -1,4 +1,6 @@
-# Design Notes
+# Developer Notes
+
+Developer / Design notes and knowledge base to help maintain code base.
 
 ## Location
 

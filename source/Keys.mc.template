@@ -1,6 +1,12 @@
-// Copy this file and save as secrets.mc
-// Populate values in secrets.mc only
-// .gitignore prevents adding secrets.mc with your private api keys to GitHub
+/*
+ * Keys.mc.example
+ *
+ * Copy this file to `source/Keys.mc` and replace the placeholder values
+ * with your development or product secrets. Do not commit real keys to git.
+ *
+ * @note .gitignore prevents adding Keys.mc with your private api keys to GitHub
+ */
+
 
 // Developer-provided default keys for helping new users get started
 class Keys {
@@ -9,7 +15,7 @@ class Keys {
     // Create account and obtain free community Air Quality API key
     // https://dashboard.iqair.com/personal/api-keys
     static function getIQAirDefaultKey() as String {
-        return "";
+        return "<IQAIR_API_KEY>";
     }
 
     // OpenWeather API Key
@@ -17,11 +23,11 @@ class Keys {
     // (Set One Call API 3.0 plan limit to 1000/day to stay in free tier)
     // https://home.openweathermap.org/api_keys
     static function getOpenWeatherDefaultKey() as String {
-        return "";
+        return "<OPENWEATHER_API_KEY>";
     }
 
     // Worker API Client Token
     static function getWorkerToken() as String {
-        return "";
+        return "<CLIENT_TOKEN>";
     }
 }
