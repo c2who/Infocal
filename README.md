@@ -1,6 +1,7 @@
 A watchface for Garmin devices, available free on the [Garmin App Store](https://apps.garmin.com/apps/f86d1406-8272-4ede-abe5-cc566dd8e2d6)
 
-![Hero Image](assets/hero.png)
+<a href="https://apps.garmin.com/apps/f86d1406-8272-4ede-abe5-cc566dd8e2d6"> <img src="assets/hero.png" /> </a>
+
 
 # Description
 
@@ -33,11 +34,18 @@ It's both customizable and functional. With up to 8 data fields on the screen, y
 - Time (current, additional timezone, sunrise / sunset)
 - Weather conditions (OpenWeather, Wind)
 
-⭐️ Weather provided by OpenWeather https://openweathermap.org/
+---
 
-⭐️ Air Quality provided by IQAir https://www.iqair.com/
+⭐️ Weather data provided by [OpenWeather](https://openweathermap.org/)
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="https://openweathermap.org/"> <img src="https://openweather.co.uk/api/media/file/logo-1.svg" height="50" /> </a>
+
+⭐️ Air Quality data provided by [IQAir](https://www.iqair.com/)
 
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="https://www.iqair.com/"> <img src="https://www.iqair.com/dl/assets/logos/ic-logo-iq-air-blue.svg" height="50" /> </a>
+
+---
 
 # Supported Devices
 

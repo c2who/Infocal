@@ -133,7 +133,7 @@ class InfocalView extends WatchUi.WatchFace {
       var force_date_english = Properties.getValue("force_date_english") as Boolean;
       var iqair_api = Properties.getValue(("iqair_api")) as String?;
 
-      // Save used features as short string
+      // Save used features as short string (e.g. "Fa3shEq")
       var features = "F"
          + ( _use_analog ? "A" : "a" )
          + ( digital_style.toString() )
