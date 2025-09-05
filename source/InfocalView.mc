@@ -125,6 +125,21 @@ class InfocalView extends WatchUi.WatchFace {
       _always_on_second = Properties.getValue("always_on_second") as Boolean;
       _always_on_heart = Properties.getValue("always_on_heart") as Boolean;
       _always_on_style = Properties.getValue("always_on_style") as Number;
+
+      var digital_style = Properties.getValue("digital_style") as Number;
+      var force_date_english = Properties.getValue("force_date_english") as Boolean;
+      var iqair_api = Properties.getValue(("iqair_api")) as String?;
+
+      // Save used features as short string
+      var features = "F"
+         + ( _use_analog ? "A" : "a" )
+         + ( digital_style.toString() )
+         + ( _always_on_second ? "S" : "s" )
+         + ( _always_on_heart ? "H" : "h" )
+         + ( force_date_english ? "E" : "e" )
+         + ( (iqair_api != null) && (iqair_api.length() > 0) ? "Q" : "q" )
+      ;
+      Storage.setValue("features", features);
    }
 
    // Called when this View is brought to the foreground. Restore
@@ -541,7 +556,6 @@ class InfocalView extends WatchUi.WatchFace {
          if (isAnyDataFieldsInUse([FIELD_TYPE_AIR_QUALITY])) {
             if (IQAirClientHelper.needsDataUpdate()) {
                pendingWebRequests[IQAirClient.DATA_TYPE] = true;
-               debug_print(:background, "need:$1$", IQAirClient.DATA_TYPE);
             }
          }
 
@@ -549,14 +563,18 @@ class InfocalView extends WatchUi.WatchFace {
          if (isAnyDataFieldsInUse([FIELD_TYPE_TEMPERATURE_OUT, FIELD_TYPE_TEMPERATURE_HL, FIELD_TYPE_WEATHER, FIELD_TYPE_WIND])) {
             if (OpenWeatherClientHelper.needsDataUpdate()) {
                pendingWebRequests[OpenWeatherClient.DATA_TYPE] = true;
-               debug_print(:background, "need:$1$", OpenWeatherClient.DATA_TYPE);
             }
          }
 
+         // debug
+         var keys = pendingWebRequests.keys();
+         for (var i=0; i < keys.size(); i++) {
+            debug_print(:background, "need:$1$", keys[i]);
+         }
          Storage.setValue("PendingWebRequests", pendingWebRequests as Dictionary<PropertyKeyType, PropertyValueType>);
 
          // If there are any pending data requests (and phone is connected)
-         if (pendingWebRequests.keys().size() > 0) {
+         if (keys.size() > 0) {
             // Register for background temporal event as soon as possible.
             var lastTime = Background.getLastTemporalEventTime();
 

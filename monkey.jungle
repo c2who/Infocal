@@ -5,7 +5,7 @@ project.manifest = manifest.xml
 # Compiler Optimization
 # @see  https://developer.garmin.com/connect-iq/monkey-c/compiler-options/
 # 0 = None, 1 = Basic,2 = Fast Optimizations, 3 = Slow Optimizations, p = Performance Optimizations, z = Code Space Optimizations
-#project.optimization = 3z
+project.optimization = 3z
 
 # @also https://www.garmin.com/en-US/blog/developer/improve-your-app-performance/
 # @also https://www.garmin.com/en-US/blog/developer/your-app-but-better/

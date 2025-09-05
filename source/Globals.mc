@@ -108,3 +108,22 @@ public class Globals {
 function min(a as Numeric, b as Numeric) as Numeric {
    return a < b ? a : b;
 }
+
+//! Fowler–Noll–Vo (FNV) light-weight (non-cryptographic) hashing algorithm
+//! @see https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function
+function fnv1a32(s as String) as Number {
+   var hash = 0x811c9dc5; // FNV offset basis
+   var prime = 0x01000193; // FNV prime
+   var chars = s.toCharArray();
+
+   for (var i = 0; i < chars.size(); i++) {
+      hash = hash ^ chars[i].toNumber();
+      hash = (hash * prime) & 0xffffffff; // keep 32-bit
+   }
+   return hash;
+}
+
+function fnv1a32AsString(s as String) as String {
+    var hash = fnv1a32(s);
+    return hash.format("%08x");
+}

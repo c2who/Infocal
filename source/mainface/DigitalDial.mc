@@ -9,16 +9,6 @@ import Toybox.Lang;
 import Settings;
 
 class DigitalDial extends Ui.Drawable {
-   ////////////////////////
-   /// common variables ///
-   ////////////////////////
-   private var digitalFont as FontType?, xdigitalFont as FontType?;
-   private var midDigitalFont as FontType?;
-   private var midBoldFont as FontType?;
-   private var midSemiFont as FontType?;
-   private var xmidBoldFont as FontType?;
-   private var xmidSemiFont as FontType?;
-
    private var barRadius as Number;
    private var alignment as Number;
 
@@ -27,38 +17,6 @@ class DigitalDial extends Ui.Drawable {
 
       barRadius = center_x - 10;
       alignment = Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER;
-   }
-
-   private function unloadFonts() as Void {
-      midBoldFont = null;
-      midSemiFont = null;
-      xmidBoldFont = null;
-      xmidSemiFont = null;
-      xdigitalFont = null;
-      digitalFont = null;
-      midDigitalFont = null;
-   }
-
-   // TODO: Simplify font handling (remove duplicate vars)
-   private function loadFonts() as Void {
-      var digital_style = Properties.getValue("digital_style") as Number?;
-      if (digital_style == 0) {
-         // big
-         digitalFont = Ui.loadResource(Rez.Fonts.bigdigi) as FontType?;
-         midDigitalFont = Ui.loadResource(Rez.Fonts.middigi) as FontType?;
-      } else if (digital_style == 1) {
-         // small
-         midBoldFont = Ui.loadResource(Rez.Fonts.midbold) as FontType?;
-         midSemiFont = Ui.loadResource(Rez.Fonts.midsemi) as FontType?;
-      } else if (digital_style == 2) {
-         // extra big
-         xdigitalFont = Ui.loadResource(Rez.Fonts.xbigdigi) as FontType?;
-         midDigitalFont = Ui.loadResource(Rez.Fonts.middigi) as FontType?;
-      } else {
-         // medium
-         xmidBoldFont = Ui.loadResource(Rez.Fonts.xmidbold) as FontType?;
-         xmidSemiFont = Ui.loadResource(Rez.Fonts.xmidsemi) as FontType?;
-      }
    }
 
    //! Draw an object to the device context (Dc).
@@ -70,13 +28,8 @@ class DigitalDial extends Ui.Drawable {
          return;
       }
 
-      try {
-         loadFonts();
-         var clockTime = System.getClockTime();
-         drawdigitalDial(dc, clockTime);
-      } finally {
-         unloadFonts();
-      }
+      var clockTime = System.getClockTime();
+      drawdigitalDial(dc, clockTime);
    }
 
    function drawdigitalDial(dc as Dc, clockTime as System.ClockTime) as Void {
@@ -96,46 +49,56 @@ class DigitalDial extends Ui.Drawable {
       var alwayon_style = Properties.getValue("always_on_style") as Number?;
 
       if (digital_style == 0 || digital_style == 2) {
-         // Big number in center_x style
+         // Big number in center_x style (0=big, 2=xbig)
          var big_number_type = Properties.getValue("big_number_type") as Number?;
          var bignumber = big_number_type == 0 ? minute : hour;
          var smallnumber = big_number_type == 0 ? hour : minute;
          var big_color = big_number_type == 0 ? gmins_color : ghour_color;
          var sml_color = big_number_type == 0 ? ghour_color : gmins_color;
 
-         var target_center_font = digital_style == 0 ? digitalFont : xdigitalFont;
+         var target_center_font;
+         try {
+            var fontId = digital_style == 0 ? Rez.Fonts.bigdigi : Rez.Fonts.xbigdigi;
+            target_center_font = Ui.loadResource(fontId) as FontType?;
 
-         // Draw center_x number
-         var bigText = bignumber.format(number_formater);
-         dc.setPenWidth(1);
-         dc.setColor(big_color, Graphics.COLOR_TRANSPARENT);
-         var h = dc.getFontHeight(target_center_font);
-         var w = dc.getTextWidthInPixels(bigText, target_center_font);
-         dc.drawText(center_x, center_y - h / 4, target_center_font, bigText, alignment);
+            // Draw center_x number
+            var bigText = bignumber.format(number_formater);
+            dc.setPenWidth(1);
+            dc.setColor(big_color, Graphics.COLOR_TRANSPARENT);
+            var h = dc.getFontHeight(target_center_font);
+            var w = dc.getTextWidthInPixels(bigText, target_center_font);
+            dc.drawText(center_x, center_y - h / 4, target_center_font, bigText, alignment);
 
-         // Draw stripes
-         if (Properties.getValue("big_num_stripes")) {
-            dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
-            var w2 = dc.getTextWidthInPixels("\\", target_center_font);
-            dc.drawText(center_x + w2 - w / 2, center_y - h / 4, target_center_font, "\\", Graphics.TEXT_JUSTIFY_VCENTER);
+            // Draw stripes
+            if (Properties.getValue("big_num_stripes")) {
+               dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
+               var w2 = dc.getTextWidthInPixels("\\", target_center_font);
+               dc.drawText(center_x + w2 - w / 2, center_y - h / 4, target_center_font, "\\", Graphics.TEXT_JUSTIFY_VCENTER);
+            }
+
+            // FIXME - Move to InfocalView: Calculate seconds/hr global offsets
+            var f_align = digital_style == 0 ? 62 : 71;
+            if (center_x == 195 || center_x == 208) {
+               f_align = f_align + 40;
+            }
+            var second_x_l = center_x + w / 2 + 3;
+            var heart_x_l = center_x - w / 2 - 3;
+            var second_y_l = 0;
+            if (center_x == 109 && digital_style == 2) {
+               second_y_l = center_y - second_font_height_half / 2 - (alwayon_style == 0 ? 3 : 6);
+            } else {
+               second_y_l = center_y + (h - f_align) / 2 - second_font_height_half * 2 + (alwayon_style == 0 ? 0 : 5);
+            }
+            // Save globals
+            second_x = second_x_l;
+            second_y = second_y_l;
+            heart_x = heart_x_l;
+         } finally {
+            // unload
+            target_center_font = null;
          }
 
-         // FIXME - Move to InfocalView: Calculate seconds/hr global offsets
-         var f_align = digital_style == 0 ? 62 : 71;
-         if (center_x == 195 || center_x == 208) {
-            f_align = f_align + 40;
-         }
-         var second_x_l = center_x + w / 2 + 3;
-         var heart_x_l = center_x - w / 2 - 3;
-         var second_y_l = 0;
-         if (center_x == 109 && digital_style == 2) {
-            second_y_l = center_y - second_font_height_half / 2 - (alwayon_style == 0 ? 3 : 6);
-         } else {
-            second_y_l = center_y + (h - f_align) / 2 - second_font_height_half * 2 + (alwayon_style == 0 ? 0 : 5);
-         }
-
-         // Draw digital info (small number, date)
-         // Calculate alignment
+         // Calculate alignment of digital info (small number, date)
          var bonus_alignment = 0;
          var extra_info_alignment = 0;
          var vertical_alignment = 0;
@@ -158,7 +121,7 @@ class DigitalDial extends Ui.Drawable {
          }
 
          // Draw background of date
-         // This is needed to prevent power save mode from re-rendering
+         // This is needed to prevent power save mode from re-rendering // XXX ?
          dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
          dc.setPenWidth(20);
          if (left_digital_info) {
@@ -168,68 +131,91 @@ class DigitalDial extends Ui.Drawable {
          }
          dc.setPenWidth(1);
 
-         // Draw small number
-         dc.setColor(sml_color, Graphics.COLOR_TRANSPARENT);
-         var h2 = dc.getFontHeight(midDigitalFont);
-         dc.drawText(
-            target_info_x + bonus_alignment,
-            center_y * 0.7 - h2 / 4 + 5 + vertical_alignment,
-            midDigitalFont,
-            smallnumber.format(number_formater),
-            alignment
-         );
+         var midDigitalFont;
+         try {
+            midDigitalFont = Ui.loadResource(Rez.Fonts.middigi) as FontType?;
 
-         // If there is no room for the date, return and don't draw it
-         if (center_x == 109 && digital_style == 2) {
-            return;
+            // Draw small number
+            dc.setColor(sml_color, Graphics.COLOR_TRANSPARENT);
+            var h2 = dc.getFontHeight(midDigitalFont);
+            dc.drawText(
+               target_info_x + bonus_alignment,
+               center_y * 0.7 - h2 / 4 + 5 + vertical_alignment,
+               midDigitalFont,
+               smallnumber.format(number_formater),
+               alignment
+            );
+         } finally {
+            // unload
+            midDigitalFont = null;
          }
 
-         // Draw date
-         var dateText = Globals.getFormattedDate();
-         dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-         var h3 = dc.getFontHeight(small_digi_font);
-         dc.drawText(target_info_x - bonus_alignment + extra_info_alignment, center_y * 0.4 - h3 / 4 + 7, small_digi_font, dateText, alignment);
+         // TODO: Localize load-unload of global small_digi_font
+         // Draw the date only if there is enough room to display it
+         if (center_x > 109 || digital_style != 2) {
+            // Draw date
+            var dateText = Globals.getFormattedDate();
+            dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
+            var h3 = dc.getFontHeight(small_digi_font);
+            dc.drawText(target_info_x - bonus_alignment + extra_info_alignment, center_y * 0.4 - h3 / 4 + 7, small_digi_font, dateText, alignment);
 
-         // Draw horizontal line
-         var w3 = dc.getTextWidthInPixels(dateText, small_digi_font);
-         dc.setPenWidth(2);
-         dc.setColor(gaccent_color, Graphics.COLOR_TRANSPARENT);
-         dc.drawLine(
-            target_info_x - bonus_alignment - w3 / 2 + extra_info_alignment,
-            center_y * 0.5 + 7,
-            target_info_x - bonus_alignment + w3 / 2 + extra_info_alignment,
-            center_y * 0.5 + 7
-         );
-
-         // Save globals
-         second_x = second_x_l;
-         second_y = second_y_l;
-         heart_x = heart_x_l;
+            // Draw horizontal line
+            var w3 = dc.getTextWidthInPixels(dateText, small_digi_font);
+            dc.setPenWidth(2);
+            dc.setColor(gaccent_color, Graphics.COLOR_TRANSPARENT);
+            dc.drawLine(
+               target_info_x - bonus_alignment - w3 / 2 + extra_info_alignment,
+               center_y * 0.5 + 7,
+               target_info_x - bonus_alignment + w3 / 2 + extra_info_alignment,
+               center_y * 0.5 + 7
+            );
+         }
       } else if (digital_style == 1 || digital_style == 3) {
-         // All numbers in center_x style
+         // Classic time numbers in center_x style (1=small(mid), 3=medium(xmid))
          var hourText = hour.format(number_formater);
          var minuText = minute.format("%02d");
 
-         var boldF = digital_style == 3 ? xmidBoldFont : midBoldFont;
-         var normF = digital_style == 3 ? xmidSemiFont : midSemiFont;
+         var boldF;
+         var hourW;
+         var minsW;
+         var timeW;
+         var left;
+         var y_offset;
+         try {
+            var fontId = digital_style == 1 ? Rez.Fonts.midbold : Rez.Fonts.xmidbold;
+            boldF = Ui.loadResource(fontId) as FontType;
 
-         // BUG: Digital font is bottom-aligned at 2x character height (font bounds are incorrect)
-         var height = dc.getFontHeight(boldF);
-         var y_offset = height * 0.75;
-         var hourW = dc.getTextWidthInPixels(hourText, boldF);
-         var minuW = dc.getTextWidthInPixels(minuText, normF);
-         var width = hourW + minuW + 6;
-         var left = center_x - width / 2;
+            // BUG: fonts are bottom-aligned at 2x character height (font bounds are incorrect)
+            var height = dc.getFontHeight(boldF);
+            y_offset = height * 0.75;
+            hourW = dc.getTextWidthInPixels(hourText, boldF);
+            minsW = (dc.getTextWidthInPixels(minuText, boldF) * 0.92).toNumber() + 1; // estimate using boldF (normF not loaded)
+            timeW = hourW + 6 + minsW;
+            left = center_x - timeW / 2;
 
-         // Draw time
-         dc.setColor(ghour_color, Graphics.COLOR_TRANSPARENT);
-         dc.drawText(left, center_y - y_offset, boldF, hourText, Graphics.TEXT_JUSTIFY_LEFT);
-         dc.setColor(gmins_color, Graphics.COLOR_TRANSPARENT);
-         dc.drawText(left + hourW + 6, center_y - y_offset, normF, minuText, Graphics.TEXT_JUSTIFY_LEFT);
+            // Draw hour
+            dc.setColor(ghour_color, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(left, center_y - y_offset, boldF, hourText, Graphics.TEXT_JUSTIFY_LEFT);
+         } finally {
+            // unload
+            boldF = null;
+         }
+
+         var normF;
+         try {
+            var fontId = digital_style == 1 ? Rez.Fonts.midsemi : Rez.Fonts.xmidsemi;
+            normF = Ui.loadResource(fontId) as FontType;
+
+            dc.setColor(gmins_color, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(left + hourW + 6, center_y - y_offset, normF, minuText, Graphics.TEXT_JUSTIFY_LEFT);
+         } finally {
+            // unload
+            normF = null;
+         }
 
          // FIXME - Move to InfocalView: Save globals - Calculate Layout of seconds and heart rate (with widest digits)
-         second_x = center_x + width / 2 + 1;
-         heart_x = center_x - width / 2 - 1;
+         heart_x = center_x - timeW / 2 - 1;
+         second_x = center_x + timeW / 2 + 3;
          second_y = center_y - second_font_height_half; // centre-justified
       }
    }

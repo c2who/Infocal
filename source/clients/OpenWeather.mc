@@ -30,7 +30,6 @@ class OpenWeatherClient extends BaseClient {
    function requestData() as Void {
       var api_key = Storage.getValue("owm_api_key") as String?;
       var location = Storage.getValue("LastLocation") as Array<Float>?;
-
       var params = {
          "lat" => location != null ? location[0] : null,
          "lon" => location != null ? location[1] : null,
@@ -38,7 +37,12 @@ class OpenWeatherClient extends BaseClient {
          "units" => "metric", // Celsius.
       };
 
-      BaseClient.makeWebRequest(API_CURRENT_WEATHER, params as Dictionary<Object, Object>, method(:onReceiveOpenWeatherData));
+      BaseClient.makeGetRequest(
+         API_CURRENT_WEATHER,
+         params,
+         null, // headers
+         method(:onCurrentWeatherResponse)
+      );
    }
 
    //! Callback handler for makeWebRequest. Decodes response and flatten (extract) data we need.
@@ -51,7 +55,7 @@ class OpenWeatherClient extends BaseClient {
    //!       It is imperative that the code/data size of background task is kept
    //!       as small as possible!
    //! @see  https://developer.garmin.com/connect-iq/api-docs/Toybox/Communications.html
-   function onReceiveOpenWeatherData(responseCode as Number, data as Dictionary?) as Void {
+   function onCurrentWeatherResponse(responseCode as Number, data as Dictionary?) as Void {
       var result;
 
       // Useful data only available if result was successful.
@@ -109,7 +113,16 @@ public class OpenWeatherClientHelper {
          Storage.setValue("owm_api_key", default_key);
       }
 
+      // Set the api key used by the service client (user key, or default key for new users)
+      if (user_key != null && user_key.length() > 0) {
+         Storage.setValue("owm_api_key", user_key);
+      } else {
+         // Set the default api key for new users
+         var default_key = Keys.getOpenWeatherDefaultKey();
+         Storage.setValue("owm_api_key", default_key);
+      }
+
       // Check based on default behavior with retries
-      return BaseClientHelper.calcNeedsDataUpdate(OpenWeatherClient.DATA_TYPE, BaseClientHelper.DEFAULT_UPDATE_INTERVAL_SECS);
+      return BaseClientHelper.calcNeedsDataUpdate(OpenWeatherClient.DATA_TYPE, 30 * Gregorian.SECONDS_PER_MINUTE);
    }
 }
