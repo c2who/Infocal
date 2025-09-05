@@ -2,6 +2,7 @@ import Toybox.Application;
 import Toybox.Graphics;
 import Toybox.Time.Gregorian;
 import Toybox.Lang;
+import Toybox.Position;
 import Toybox.System;
 import Toybox.WatchUi;
 
@@ -688,22 +689,47 @@ class InfocalView extends WatchUi.WatchFace {
       // Attempt to update current location, to be used by Sunrise/Sunset, Weather, Air Quality.
       // If current location available from current activity, save it in case it goes "stale" and can not longer be retrieved.
       var activityInfo = Activity.getActivityInfo();
-      if ((activityInfo != null) && (activityInfo.currentLocation != null)) {
+      if (  (activityInfo != null) && (activityInfo.currentLocation != null)) {
          // Save current location to globals
-         var degrees = activityInfo.currentLocation.toDegrees(); // Array of Doubles.
+         var degrees = (activityInfo.currentLocation as Position.Location).toDegrees(); // Array of Doubles.
          gLocationLat = degrees[0].toFloat();
          gLocationLon = degrees[1].toFloat();
 
-         Storage.setValue("LastLocation", [gLocationLat, gLocationLon] );
+         if (isValidLocation(degrees)) {
+            Storage.setValue("LastLocation", [gLocationLat, gLocationLon] );
+         }
+
       } else {
          // current location is not available, read stored value from Object Store, being careful not to overwrite a valid
          // in-memory value with an invalid stored one.
          var storedLocation = Storage.getValue("LastLocation") as Array<Float>?;
-         if ((storedLocation != null)) {
+
+         if ((storedLocation != null) && (isValidLocation(storedLocation))) {
             gLocationLat = storedLocation[0];
             gLocationLon = storedLocation[1];
+
+         } else {
+            // 2025.09.05-24 Delete invalid previously stored location
+            if (storedLocation != null) { Storage.deleteValue("LastLocation"); }
          }
       }
+   }
+
+   // FIXES: BUG: VA3/VA3M (and other) watches return invalid [lat,lon] data [180,180] or [~0, ~0] - rather than null
+   //        https://forums.garmin.com/developer/connect-iq/f/discussion/250487/makewebrequest-error-400-for-position-data-on-va3m/1970627#1970627
+   private function isValidLocation(degrees as [Double, Double] or Array<Float>) as Boolean {
+      // [180,180] is invalid location
+      var isValid = ((degrees[0] >=-90) && (degrees[0] <= 90) && (degrees[1] >=-180) && (degrees[1] <= 180));
+
+      // special case: treat [~0,~0] as invalid  (sorry Null Island!)
+      var isNull = ((degrees[0].abs() < 0.01) && (degrees[1].abs() < 0.01));
+
+      debug_print(:location, "loc: [$1$, $2$] $3$", [
+         degrees[0].format("%0.3f"),
+         degrees[1].format("%0.3f"),
+         (isValid && !isNull) ? "ok" : "invalid" ]);
+
+      return (isValid && !isNull);
    }
 }
 
