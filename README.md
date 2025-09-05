@@ -4,7 +4,7 @@ A watchface for Garmin devices, available free on the [Garmin App Store](https:/
 
 # Description
 
-Infocal is a digital and analogue watchface, with unique curved text
+⭐️ Infocal is a digital and analogue watchface, with unique curved text
 around the edge of the display.
 
 It's both customizable and functional. With up to 8 data fields on the screen, your watchface can show a variety of data to suit your needs:
@@ -32,6 +32,12 @@ It's both customizable and functional. With up to 8 data fields on the screen, y
 - Temperature (high/low, OpenWeather)
 - Time (current, additional timezone, sunrise / sunset)
 - Weather conditions (OpenWeather, Wind)
+
+⭐️ Weather provided by OpenWeather https://openweathermap.org/
+
+⭐️ Air Quality provided by IQAir https://www.iqair.com/
+
+
 
 # Supported Devices
 
