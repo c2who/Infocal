@@ -50,6 +50,20 @@ The Garmin Simulator does not implent all of the device behaviors, here are some
   (all newer watches clear screen on update, so must perform a full screen refresh;
   older watches allowed incremental draw on update, allowing incredible power efficiency)
 
+# Colors
+
+## Theme Colors
+The theme colors are selected using the theme_code setting.
+The theme colors are defined in [theme.json](resources/json/theme.json).
+
+The columns in [theme.json](resources/json/theme.json) are defined as follows:
+| idx |      0     |     1     |     2     |     3   |     4     |        5        |        6        |        7      |
+|-----|------------|-----------|-----------|---------|-----------|-----------------|-----------------|---------------|
+|  => | background | main text | accents   |  ticks  | bar arrow | bar/graph bkgnd | bar/grah bottom | bar/graph top |
+|  => |            |   + mins  |  + hour   |         |           |                 |                 |               |
+
+
+
 # Fonts
 
 ## Sizes
@@ -86,13 +100,20 @@ may require the loadResource() and free(null) of typically 40 (forty) different 
 
 Note that all fonts must be written with anti-aliasing (a grayscale of intensities) to look smooth.
 
-# Arc Bar Data Fonts
+# Bar Data Tiled Fonts (Glyphs)
 The 5-segment bar chart along an arc, with the arrow pointer is made up of
 different characters of a custom font:
 - arrow top     (arr_up, arr_up_sm, arr_up_big, arr_up_xbig)
 - arrow bottom  (arr_bo, arr_bo_sm, arr_bo_big, arr_bo_xbigs)
 - curve top     (cur_up, cur_up_sm, cur_up_big, cur_up_xbig)
 - curve bottom  (cur_bo, cur_bo_sm, cur_bo_big, cur_bo_xbig)
+
+The instructions to write the tiled font glyphs into a full bar dial is stored in [jsons](resources/jsons/) resources.
+Each number in the packed tile is a 4-byte integer used to position each bar/graph tile (glyph):
+
+| byte |     1     |     2     |     3    |     4     |
+|------|-----------|-----------|----------|-----------|
+|  =>  |    Flag   | char code |   xpos   |   ypos    |
 
 ## Screen Buffer
 The idea behind the screen buffer is that you can write (and cache) all your graphics and text in
