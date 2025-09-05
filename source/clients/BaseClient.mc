@@ -169,6 +169,10 @@ class BaseClientHelper {
         // Fixed: Enduro throws unhandled exception (Enduro 28.02, Venu 2 19.05)
         try {
             switch (responseCode.toNumber()) {
+                case 400: // Bad request
+                    // Suggest invalid locn (as we have seen with VA3/VA3M)
+                    return "LOCN ERR";
+
                 case 401: // Unauthorized
                 case 403: // Forbidden
                 case 429: // Too Many Requests (often due to api key quota)
