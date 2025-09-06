@@ -724,7 +724,7 @@ class InfocalView extends WatchUi.WatchFace {
       var isValid = ((degrees[0] >=-90) && (degrees[0] <= 90) && (degrees[1] >=-180) && (degrees[1] <= 180));
 
       // special case: treat [~0,~0] as invalid  (sorry Null Island!)
-      var isNull = ((degrees[0].abs() < 0.01) && (degrees[1].abs() < 0.01));
+      var isNull = ((degrees[0].abs() < 0.02) && (degrees[1].abs() < 0.02));
 
       debug_print(:location, "loc: [$1$, $2$] $3$", [
          degrees[0].format("%0.3f"),
