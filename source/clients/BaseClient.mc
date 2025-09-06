@@ -169,6 +169,9 @@ class BaseClientHelper {
         // Fixed: Enduro throws unhandled exception (Enduro 28.02, Venu 2 19.05)
         try {
             switch (responseCode.toNumber()) {
+                case Communications.BLE_CONNECTION_UNAVAILABLE:
+                    return "CONN ERR";
+
                 case 400: // Bad request
                     // Suggest invalid locn (as we have seen with VA3/VA3M)
                     return "LOCN ERR";
@@ -179,11 +182,8 @@ class BaseClientHelper {
                     return "API KEY";
 
                 default:
-                    // Because updates are slower without an API KEY, tell user
-                    // to get an api key if they start encountering errors
-                    return Lang.format("API KEY/$1$", [responseCode]);
+                    return Lang.format("ERR $1$", [responseCode]);
             }
-
         } catch (ex) {
             debug_print(:client, "ex: $1$", ex.getErrorMessage());
             return "ERR EX";
