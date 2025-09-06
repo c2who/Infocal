@@ -685,34 +685,34 @@ class InfocalView extends WatchUi.WatchFace {
    //! Update last (known) location.
    //! Persists location for later use (e.g. after app restart)
    //! @note 2025.08.18 data moved from app Property to Storage class
+   //! @note 2025.09.05 Fixes bug where invalid location [180,180]  or [~0, ~0] is returned
+   //!       by activityInfo.currentLocation / saved in storedLocation.
    function updateLastLocation() as Void {
-      // Attempt to update current location, to be used by Sunrise/Sunset, Weather, Air Quality.
-      // If current location available from current activity, save it in case it goes "stale" and can not longer be retrieved.
+      // Try to get current location from activity
       var activityInfo = Activity.getActivityInfo();
-      if (  (activityInfo != null) && (activityInfo.currentLocation != null)) {
-         // Save current location to globals
-         var degrees = (activityInfo.currentLocation as Position.Location).toDegrees(); // Array of Doubles.
-         var lat = degrees[0].toFloat();
-         var lon = degrees[1].toFloat();
+      var currentLocation = null;
+      if ((activityInfo != null) && (activityInfo.currentLocation != null)) {
+         currentLocation = (activityInfo.currentLocation as Position.Location).toDegrees();
+      }
 
-         if (isValidLocation(degrees)) {
-            Storage.setValue("LastLocation", [gLocationLat, gLocationLon] );
-            gLocationLat = lat;
-            gLocationLon = lon;
-         }
-
+      if ((currentLocation != null) && isValidLocation(currentLocation)) {
+         // Use current location if valid
+         var lat = currentLocation[0].toFloat();
+         var lon = currentLocation[1].toFloat();
+         gLocationLat = lat;
+         gLocationLon = lon;
+         Storage.setValue("LastLocation", [lat, lon]);
       } else {
-         // current location is not available, read stored value from Object Store, being careful not to overwrite a valid
-         // in-memory value with an invalid stored one.
+         // Fallback to stored location if valid
          var storedLocation = Storage.getValue("LastLocation") as Array<Float>?;
-
-         if ((storedLocation != null) && (isValidLocation(storedLocation))) {
+         if ((storedLocation != null) && isValidLocation(storedLocation)) {
             gLocationLat = storedLocation[0];
             gLocationLon = storedLocation[1];
-
          } else {
-            // 2025.09.05-24 Delete invalid previously stored location
-            if (storedLocation != null) { Storage.deleteValue("LastLocation"); }
+            // No valid location, clear stored value if present
+            if (storedLocation != null) {
+               Storage.deleteValue("LastLocation");
+            }
          }
       }
    }
