@@ -1,0 +1,12 @@
+<properties>
+<!--
+    # Devices with basic features
+    # - no Heart Rate Variability (HRV)
+-->
+
+    <!-- Replace 4h with Calories Active (caloriesact) -->
+    <property id="comp4h" type="number">2</property>
+
+    <!-- Replace 6h with Heart rate (heartrate) -->
+    <property id="comp6h" type="number">0</property>
+</properties>
