@@ -692,11 +692,13 @@ class InfocalView extends WatchUi.WatchFace {
       if (  (activityInfo != null) && (activityInfo.currentLocation != null)) {
          // Save current location to globals
          var degrees = (activityInfo.currentLocation as Position.Location).toDegrees(); // Array of Doubles.
-         gLocationLat = degrees[0].toFloat();
-         gLocationLon = degrees[1].toFloat();
+         var lat = degrees[0].toFloat();
+         var lon = degrees[1].toFloat();
 
          if (isValidLocation(degrees)) {
             Storage.setValue("LastLocation", [gLocationLat, gLocationLon] );
+            gLocationLat = lat;
+            gLocationLon = lon;
          }
 
       } else {
