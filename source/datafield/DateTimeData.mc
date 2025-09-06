@@ -6,7 +6,7 @@ import Toybox.System;
 
 /* AM/PM INDICATOR */
 class AMPMField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -23,7 +23,7 @@ class AMPMField extends BaseDataField {
 
 /* TIME */
 class TimeField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -52,7 +52,7 @@ class TimeField extends BaseDataField {
 
 /* DATE */
 class DateField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -63,7 +63,7 @@ class DateField extends BaseDataField {
 
 /* WEEK COUNT */
 class WeekCountField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -126,7 +126,7 @@ class WeekCountField extends BaseDataField {
 
 /* COUNTDOWN */
 class CountdownField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -159,7 +159,7 @@ class CountdownField extends BaseDataField {
 
 /* SECONDARY TIME */
 class TimeSecondaryField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 

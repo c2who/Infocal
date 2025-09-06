@@ -6,7 +6,7 @@ import Toybox.Lang;
 
 /* ACTIVE MINUTES (WEEK) */
 class ActiveField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -34,7 +34,7 @@ class ActiveField extends BaseDataField {
 }
 /* ACTIVE MODERATE MINUTES (WEEK) */
 class ActiveModerateField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -63,7 +63,7 @@ class ActiveModerateField extends BaseDataField {
 
 /* ACTIVE VIGOROUS MINUTES (WEEK) */
 class ActiveVigorousField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -92,7 +92,7 @@ class ActiveVigorousField extends BaseDataField {
 
 /* DISTANCE */
 class DistanceField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -142,7 +142,7 @@ class DistanceField extends BaseDataField {
 
 /* CALORIES */
 class CaloField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -165,14 +165,14 @@ class CaloField extends BaseDataField {
       var need_minimal = Properties.getValue("minimal_data");
 
       if (field_id() == FIELD_TYPE_CALORIES) {
-      if (need_minimal) {
-         return Lang.format("$1$-$2$", [
-            value.format("%d"),
-            activeCalories.format("%d"),
-         ]);
-      } else {
-         var valKp = Globals.toKValue(value);
-         return Lang.format("$1$K-$2$", [valKp, activeCalories.format("%d")]);
+         if (need_minimal) {
+            return Lang.format("$1$-$2$", [
+               value.format("%d"),
+               activeCalories.format("%d"),
+            ]);
+         } else {
+            var valKp = Globals.toKValue(value);
+            return Lang.format("$1$K-$2$", [valKp, activeCalories.format("%d")]);
          }
       } else {
          // FIELD_TYPE_CALORIES_ACTIVE
@@ -180,7 +180,7 @@ class CaloField extends BaseDataField {
       }
    }
 
-   function active_calories(value) {
+   function active_calories(value as Float) as Number {
       var now = Time.now();
       var date = Date.info(now, Time.FORMAT_SHORT);
 
@@ -198,14 +198,14 @@ class CaloField extends BaseDataField {
       return activeCalories;
    }
 
-   function bar_data() {
+   function bar_data() as Boolean {
       return true;
    }
 }
 
 /* FLOORS CLIMBED */
 class FloorField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -245,16 +245,16 @@ class FloorField extends BaseDataField {
 
 /* MOVE BAR */
 class MoveField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
    function min_val() {
-      return ActivityMonitor.MOVE_BAR_LEVEL_MIN;
+      return ActivityMonitor.MOVE_BAR_LEVEL_MIN.toFloat();
    }
 
    function max_val() {
-      return ActivityMonitor.MOVE_BAR_LEVEL_MAX;
+      return ActivityMonitor.MOVE_BAR_LEVEL_MAX.toFloat();
    }
 
    function cur_val() {
@@ -282,7 +282,7 @@ class MoveField extends BaseDataField {
 
 /* STEPS */
 class StepField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -323,7 +323,7 @@ class StepField extends BaseDataField {
 /* DISTANCE FOR WEEK */
 class WeekDistanceField extends BaseDataField {
 
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -416,18 +416,18 @@ class WeekDistanceField extends BaseDataField {
 class TimeToRecoveryField extends BaseDataField {
    private const _hasTimeToRecovery = (ActivityMonitor.Info has :timeToRecovery) as Boolean;
 
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
    function max_val() {
-      return 96; // hours
+      return 96.0; // hours
    }
 
    function cur_val() {
       // timeToRecovery can return null
       var time = (_hasTimeToRecovery) ? ActivityMonitor.getInfo().timeToRecovery : null;
-      return time;
+      return (time != null) ? time.toFloat() : null;
    }
 
    function max_label(value) {

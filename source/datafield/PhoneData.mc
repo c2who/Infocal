@@ -1,13 +1,15 @@
-using Toybox.System as Sys;
+import Toybox.Lang;
+using Toybox.System;
+
 
 /* NOTIFICATIONS */
 class NotifyField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
    function cur_label(value) {
-      var settings = Sys.getDeviceSettings();
+      var settings = System.getDeviceSettings();
       value = settings.notificationCount;
       return Lang.format("NOTIF $1$", [value.format("%d")]);
    }
@@ -15,12 +17,12 @@ class NotifyField extends BaseDataField {
 
 /* PHONE STATUS */
 class PhoneField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
    function cur_label(value) {
-      var settings = Sys.getDeviceSettings();
+      var settings = System.getDeviceSettings();
       if (settings.phoneConnected) {
          return "CONN";
       } else {
@@ -31,12 +33,12 @@ class PhoneField extends BaseDataField {
 
 /* GROUP NOTIFICATION */
 class GroupNotiField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
    function cur_label(value) {
-      var settings = Sys.getDeviceSettings();
+      var settings = System.getDeviceSettings();
       value = settings.alarmCount;
       var alarm_str = Lang.format("A$1$", [value.format("%d")]);
       value = settings.notificationCount;

@@ -8,7 +8,7 @@ import Toybox.Lang;
 //! Air Quality Data Field
 class AirQualityField extends BaseDataField {
 
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 

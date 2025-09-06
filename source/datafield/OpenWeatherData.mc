@@ -6,7 +6,7 @@ import Toybox.Lang;
 
 /* TEMPERATURE HIGH/LOW */
 class TemparatureHLField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -47,7 +47,7 @@ class TemparatureHLField extends BaseDataField {
 
 /* TEMPERATURE OUTSIDE */
 class TemparatureOutField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -84,7 +84,7 @@ class TemparatureOutField extends BaseDataField {
 /* WEATHER */
 class WeatherField extends BaseDataField {
 
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -166,7 +166,7 @@ class WeatherField extends BaseDataField {
 /* WIND */
 class WindField extends BaseDataField {
 
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 

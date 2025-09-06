@@ -1,8 +1,9 @@
 import Toybox.Application;
+import Toybox.Lang;
 
 /* CUSTOM TEXT */
 class CTextField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
