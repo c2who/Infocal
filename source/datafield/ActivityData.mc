@@ -160,9 +160,11 @@ class CaloField extends BaseDataField {
       return Lang.format("$1$K", [valKp]);
    }
 
-   function cur_label(value) {
+   function cur_label(value as Float) as String {
       var activeCalories = active_calories(value);
       var need_minimal = Properties.getValue("minimal_data");
+
+      if (field_id() == FIELD_TYPE_CALORIES) {
       if (need_minimal) {
          return Lang.format("$1$-$2$", [
             value.format("%d"),
@@ -171,6 +173,10 @@ class CaloField extends BaseDataField {
       } else {
          var valKp = Globals.toKValue(value);
          return Lang.format("$1$K-$2$", [valKp, activeCalories.format("%d")]);
+         }
+      } else {
+         // FIELD_TYPE_CALORIES_ACTIVE
+         return Lang.format("CAL+ $1$", [ activeCalories.format("%d") ]);
       }
    }
 

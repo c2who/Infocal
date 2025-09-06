@@ -53,6 +53,7 @@
     <string scope="settings" id="empty">(Empty)</string>
     <string scope="settings" id="battery">Battery</string>
     <string scope="settings" id="calories">Calories (total, active)</string>
+    <string scope="settings" id="caloriesact">Calories (active)</string>
     <string scope="settings" id="distance">Distance (day)</string>
     <string scope="settings" id="distanceweek">Distance (week)</string>
     <string scope="settings" id="movebar">Move bar</string>

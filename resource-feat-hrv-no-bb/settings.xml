@@ -10,6 +10,7 @@
                 <listEntry value="38">@Strings.airquality</listEntry>       <!-- Air -->
                 <listEntry value="18">@Strings.barometer</listEntry>
                 <listEntry value="1">@Strings.battery</listEntry>
+                <listEntry value="40">@Strings.caloriesact</listEntry>
                 <listEntry value="2">@Strings.calories</listEntry>
                 <listEntry value="21">@Strings.countdown</listEntry>        <!-- Custom -->
                 <listEntry value="27">@Strings.ctext</listEntry>
@@ -54,6 +55,7 @@
                 <listEntry value="38">@Strings.airquality</listEntry>       <!-- Air -->
                 <listEntry value="18">@Strings.barometer</listEntry>
                 <listEntry value="1">@Strings.battery</listEntry>
+                <listEntry value="40">@Strings.caloriesact</listEntry>
                 <listEntry value="2">@Strings.calories</listEntry>
                 <listEntry value="21">@Strings.countdown</listEntry>        <!-- Custom -->
                 <listEntry value="27">@Strings.ctext</listEntry>
@@ -98,6 +100,7 @@
                 <listEntry value="38">@Strings.airquality</listEntry>       <!-- Air -->
                 <listEntry value="18">@Strings.barometer</listEntry>
                 <listEntry value="1">@Strings.battery</listEntry>
+                <listEntry value="40">@Strings.caloriesact</listEntry>
                 <listEntry value="2">@Strings.calories</listEntry>
                 <listEntry value="21">@Strings.countdown</listEntry>        <!-- Custom -->
                 <listEntry value="27">@Strings.ctext</listEntry>
@@ -142,6 +145,7 @@
                 <listEntry value="38">@Strings.airquality</listEntry>       <!-- Air -->
                 <listEntry value="18">@Strings.barometer</listEntry>
                 <listEntry value="1">@Strings.battery</listEntry>
+                <listEntry value="40">@Strings.caloriesact</listEntry>
                 <listEntry value="2">@Strings.calories</listEntry>
                 <listEntry value="21">@Strings.countdown</listEntry>        <!-- Custom -->
                 <listEntry value="27">@Strings.ctext</listEntry>
@@ -186,6 +190,7 @@
                 <listEntry value="38">@Strings.airquality</listEntry>       <!-- Air -->
                 <listEntry value="18">@Strings.barometer</listEntry>
                 <listEntry value="1">@Strings.battery</listEntry>
+                <listEntry value="40">@Strings.caloriesact</listEntry>
                 <listEntry value="2">@Strings.calories</listEntry>
                 <listEntry value="21">@Strings.countdown</listEntry>        <!-- Custom -->
                 <listEntry value="27">@Strings.ctext</listEntry>
@@ -230,6 +235,7 @@
                 <listEntry value="38">@Strings.airquality</listEntry>       <!-- Air -->
                 <listEntry value="18">@Strings.barometer</listEntry>
                 <listEntry value="1">@Strings.battery</listEntry>
+                <listEntry value="40">@Strings.caloriesact</listEntry>
                 <listEntry value="2">@Strings.calories</listEntry>
                 <listEntry value="21">@Strings.countdown</listEntry>        <!-- Custom -->
                 <listEntry value="27">@Strings.ctext</listEntry>
@@ -274,6 +280,7 @@
                 <listEntry value="38">@Strings.airquality</listEntry>       <!-- Air -->
                 <listEntry value="18">@Strings.barometer</listEntry>
                 <listEntry value="1">@Strings.battery</listEntry>
+                <listEntry value="40">@Strings.caloriesact</listEntry>
                 <listEntry value="2">@Strings.calories</listEntry>
                 <listEntry value="21">@Strings.countdown</listEntry>        <!-- Custom -->
                 <listEntry value="27">@Strings.ctext</listEntry>
@@ -318,6 +325,7 @@
                 <listEntry value="38">@Strings.airquality</listEntry>       <!-- Air -->
                 <listEntry value="18">@Strings.barometer</listEntry>
                 <listEntry value="1">@Strings.battery</listEntry>
+                <listEntry value="40">@Strings.caloriesact</listEntry>
                 <listEntry value="2">@Strings.calories</listEntry>
                 <listEntry value="21">@Strings.countdown</listEntry>        <!-- Custom -->
                 <listEntry value="27">@Strings.ctext</listEntry>
