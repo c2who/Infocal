@@ -22,15 +22,13 @@ module Location {
             // Use current location if valid
             var lat = currentLocation[0].toFloat();
             var lon = currentLocation[1].toFloat();
-            $.gLocationLat = lat;
-            $.gLocationLon = lon;
+            $.gLocation = [lat, lon];
             Storage.setValue("LastLocation", [lat, lon]);
         } else {
             // Fallback to stored location if valid
             var storedLocation = Storage.getValue("LastLocation") as [Float, Float]?;
             if ((storedLocation != null) && isValidLocation(storedLocation, null)) {
-                $.gLocationLat = storedLocation[0];
-                $.gLocationLon = storedLocation[1];
+                $.gLocation = storedLocation;
             } else {
                 // No valid location, clear stored value if present
                 if (storedLocation != null) {

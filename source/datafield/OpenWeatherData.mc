@@ -132,7 +132,7 @@ class WeatherField extends BaseDataField {
          // Display error(if any) or no-computed-data
          var error = Storage.getValue(OpenWeatherClient.DATA_TYPE + Globals.DATA_TYPE_ERROR_SUFFIX) as Dictionary<String, PropertyValueType>?;
 
-         if ((gLocationLat == null) || (gLocationLon == null)) {
+         if (gLocation == null) {
             return "NO LOCN";
          } else if (error != null) {
             var responseCode = error.get("code") as Number;

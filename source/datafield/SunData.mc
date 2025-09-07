@@ -11,7 +11,7 @@ class SunField extends BaseDataField {
    }
 
    function cur_label(value) {
-      if (gLocationLat != null) {
+      if (gLocation != null) {
          value = "";
          var nextSunEvent = 0;
          var isSunriseNext = false;
@@ -23,8 +23,8 @@ class SunField extends BaseDataField {
 
          // Get today's sunrise/sunset times in current time zone.
          var sunTimes = getSunTimes(
-            gLocationLat,
-            gLocationLon,
+            gLocation[0].toDouble(),
+            gLocation[1].toDouble(),
             null,
             /* tomorrow */ false
          );
@@ -44,8 +44,8 @@ class SunField extends BaseDataField {
                // After sunset today: tomorrow's sunrise (if any) is next.
             } else {
                sunTimes = getSunTimes(
-                  gLocationLat,
-                  gLocationLon,
+                  gLocation[0].toDouble(),
+                  gLocation[1].toDouble(),
                   null,
                   /* tomorrow */ true
                );
@@ -102,12 +102,10 @@ class SunField extends BaseDataField {
     * @param {Boolean} tomorrow Calculate tomorrow's sunrise and sunset, instead of today's.
     * @return {Array} Returns array of length 2 with sunrise and sunset as floats.
     *                 Returns array with [null, -1] if the sun never rises, and [-1, null] if the sun never sets.
+    *
+    * @note Use double precision where possible, as floating point errors can affect result by minutes.
     */
-   function getSunTimes(lat, lon, tz, tomorrow) as Array<Float?> {
-      // Use double precision where possible, as floating point errors can affect result by minutes.
-      lat = lat.toDouble();
-      lon = lon.toDouble();
-
+   function getSunTimes(lat as Double, lon as Double, tz, tomorrow as Boolean) as Array<Float?> {
       var now = Time.now();
       if (tomorrow) {
          now = now.add(new Time.Duration(24 * 60 * 60));
