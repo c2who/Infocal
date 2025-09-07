@@ -91,6 +91,7 @@ class HeartbeatClient extends BaseClient {
         var result = {
             "type" => DATA_TYPE,
             "code" => responseCode.toNumber(),
+            "sw" => (data != null) ? data["sw"] : null,
         };
         _callback.invoke(DATA_TYPE, responseCode, result as Dictionary<PropertyKeyType, PropertyValueType>);
     }
@@ -103,11 +104,21 @@ class HeartbeatClient extends BaseClient {
 public class HeartbeatHelper {
 
     public static function needsDataUpdate() as Boolean {
-        var update_interval_secs = 1 * Gregorian.SECONDS_PER_DAY;
+
+        // set client token and uid for background service
         var token = Keys.getWorkerToken();
         Storage.setValue("token", token);
         setUniqueId();
 
+        // Check if we need to udpate due to changed software version
+        var data = Storage.getValue(HeartbeatClient.DATA_TYPE) as Dictionary<String, PropertyValueType>?;
+        if ((data == null) || (data["sw"] == null) || (!APP_VERSION.equals(data["sw"]))) {
+            // software version changed, so we need to send a heartbeat
+            return true;
+        }
+
+        // Check if we need to update (once per day)
+        var update_interval_secs = 1 * Gregorian.SECONDS_PER_DAY;
         return BaseClientHelper.calcNeedsDataUpdate(HeartbeatClient.DATA_TYPE, update_interval_secs);
     }
 
