@@ -50,7 +50,7 @@ enum /* FIELD_TYPES */ {
    FIELD_TYPE_CALORIES_ACTIVE = 40,
 }
 
-function buildFieldObject(type) {
+function buildFieldObject(type as Number) {
    if (type == FIELD_TYPE_HEART_RATE) {
       return new HRField(type);
    } else if (type == FIELD_TYPE_BATTERY) {
@@ -161,7 +161,7 @@ class BaseDataField {
       return 100.0;
    }
 
-   function cur_val() as Float? {
+   function cur_val() as Float {
       return 0.01;
    }
 

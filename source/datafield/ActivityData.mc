@@ -411,38 +411,3 @@ class WeekDistanceField extends BaseDataField {
    }
 }
 
-//! TimeToRecovery (API Level 3.3.0)
-//! Time to recovery from the last activity, in hours. Value may be null.
-class TimeToRecoveryField extends BaseDataField {
-   private const _hasTimeToRecovery = (ActivityMonitor.Info has :timeToRecovery) as Boolean;
-
-   function initialize(id as Number) {
-      BaseDataField.initialize(id);
-   }
-
-   function max_val() {
-      return 96.0; // hours
-   }
-
-   function cur_val() {
-      // timeToRecovery can return null
-      var time = (_hasTimeToRecovery) ? ActivityMonitor.getInfo().timeToRecovery : null;
-      return (time != null) ? time.toFloat() : null;
-   }
-
-   function max_label(value) {
-      return value.format("%d");
-   }
-
-   function cur_label(value) {
-      if (value == null) {
-         return "--";
-      } else {
-         return Lang.format("RT $1$H", [value.format("%d")]);
-      }
-   }
-
-   function bar_data() {
-      return true;
-   }
-}
