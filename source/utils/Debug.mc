@@ -2,6 +2,12 @@ import Toybox.Lang;
 import Toybox.System;
 import Toybox.Time;
 
+(:debug)
+const IS_DEBUG = true;
+
+(:release)
+const IS_DEBUG = false;
+
 //! Filter to filter debug messages in debug build
 (:debug, :background) function is_debug_print_allowed(scope as Symbol) as Boolean {
    return true;
@@ -11,7 +17,7 @@ import Toybox.Time;
 //! @note debug messages filtered in release build to limit log file overhead
 (:release, :background) function is_debug_print_allowed(scope as Symbol) as Boolean {
    // TODO: Edit for the scope you want to debug in release builds
-   return (scope == :bms) || (scope == :client);
+   return (scope == :bms) || (scope == :client) || (scope == :location);
 }
 
 //! Print debug messages.
