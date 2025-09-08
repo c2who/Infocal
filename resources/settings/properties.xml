@@ -28,12 +28,12 @@
 
     <property id="ticks_style" type="number">1</property>
 
-    <property id="comp12h" type="number">1</property>
-    <property id="comp2h" type="number">38</property>
-    <property id="comp4h" type="number">4</property>
-    <property id="comp6h" type="number">31</property>
-    <property id="comp8h" type="number">3</property>
-    <property id="comp10h" type="number">7</property>
+    <property id="comp12h" type="number">1</property>   <!--  1 = battery -->
+    <property id="comp2h" type="number">38</property>   <!-- 38 = air quality -->
+    <property id="comp4h" type="number">40</property>   <!-- 40 = calories active -->
+    <property id="comp6h" type="number">0</property>    <!--  0 = heartrate -->
+    <property id="comp8h" type="number">3</property>    <!--  3 = distance -->
+    <property id="comp10h" type="number">7</property>   <!--  7 = date -->
 
     <property id="compbart" type="number">25</property>
     <property id="compbarb" type="number">5</property>

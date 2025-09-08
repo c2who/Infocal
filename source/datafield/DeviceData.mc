@@ -10,7 +10,7 @@ import Toybox.Time;
 class BatteryField extends BaseDataField {
    private var _hasBatteryInDays = (System.Stats has :batteryInDays) as Boolean; // API 3.3.0
 
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -97,7 +97,7 @@ class BatteryField extends BaseDataField {
 
 /* HEART RATE */
 class HRField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -155,7 +155,7 @@ function _retrieveHeartrate() as Number {
 
 /* BODY BATTERY */
 class BodyBatteryField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -213,7 +213,7 @@ function _retrieveBodyBattery() {
 
 /* STRESS */
 class StressField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -271,7 +271,7 @@ function _retrieveStress() {
 
 /* BODY BATTERY/STRESS COMBINED */
 class BodyBatteryStressField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -316,7 +316,7 @@ class BodyBatteryStressField extends BaseDataField {
 
 /* ALTITUDE */
 class AltitudeField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -372,7 +372,7 @@ class AltitudeField extends BaseDataField {
 
 /* ON DEVICE TEMPERATURE */
 class TemparatureField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -411,7 +411,7 @@ class TemparatureField extends BaseDataField {
 }
 /* ALARM */
 class AlarmField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -424,7 +424,7 @@ class AlarmField extends BaseDataField {
 
 /* BAROMETER */
 class BarometerField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 

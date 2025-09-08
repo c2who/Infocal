@@ -1,0 +1,86 @@
+<settings>
+
+    <group id="format_group" title="@Strings.format_group" description="@Strings.format_group_desc">
+        <setting propertyKey="@Properties.date_format" title="@Strings.date_format">
+            <settingConfig type="list">
+                <listEntry value="0">@Strings.datef1</listEntry>
+                <listEntry value="1">@Strings.datef11</listEntry>
+                <listEntry value="2">@Strings.datef2</listEntry>
+                <listEntry value="3">@Strings.datef21</listEntry>
+                <listEntry value="4">@Strings.datef3</listEntry>
+                <listEntry value="5">@Strings.datef31</listEntry>
+                <listEntry value="6">@Strings.datef4</listEntry>
+                <listEntry value="7">@Strings.datef41</listEntry>
+            </settingConfig>
+        </setting>
+        <setting propertyKey="@Properties.battery_format" title="@Strings.battery_format">
+            <settingConfig type="list">
+                <listEntry value="0">@Strings.battery_format_1</listEntry>
+                <listEntry value="1">@Strings.battery_format_2</listEntry>
+                <listEntry value="2">@Strings.battery_format_3</listEntry>
+            </settingConfig>
+        </setting>
+        <setting propertyKey="@Properties.barometer_unit" title="@Strings.barometer_unit">
+            <settingConfig type="list">
+                <listEntry value="0">@Strings.barometer_unit_0</listEntry>
+                <listEntry value="1">@Strings.barometer_unit_1</listEntry>
+            </settingConfig>
+        </setting>
+        <setting propertyKey="@Properties.minimal_data" title="@Strings.minimal_data">
+            <settingConfig type="boolean" />
+        </setting>
+
+        <setting propertyKey="@Properties.force_date_english" title="@Strings.force_date_english">
+            <settingConfig type="boolean" />
+        </setting>
+
+    </group>
+
+    <group id="custom_group" title="@Strings.custom_group" description="@Strings.custom_group_desc">
+        <setting propertyKey="@Properties.utc_timezone" title="@Strings.utc_timezone">
+            <settingConfig type="list">
+                <listEntry value="0">@Strings.utc0</listEntry>
+                <listEntry value="1">@Strings.utc1</listEntry>
+                <listEntry value="2">@Strings.utc2</listEntry>
+                <listEntry value="3">@Strings.utc3</listEntry>
+                <listEntry value="4">@Strings.utc4</listEntry>
+                <listEntry value="5">@Strings.utc5</listEntry>
+                <listEntry value="6">@Strings.utc6</listEntry>
+                <listEntry value="7">@Strings.utc7</listEntry>
+                <listEntry value="8">@Strings.utc8</listEntry>
+                <listEntry value="9">@Strings.utc9</listEntry>
+                <listEntry value="10">@Strings.utc10</listEntry>
+                <listEntry value="11">@Strings.utc11</listEntry>
+                <listEntry value="12">@Strings.utc12</listEntry>
+                <listEntry value="-1">@Strings.utc1m</listEntry>
+                <listEntry value="-2">@Strings.utc2m</listEntry>
+                <listEntry value="-3">@Strings.utc3m</listEntry>
+                <listEntry value="-4">@Strings.utc4m</listEntry>
+                <listEntry value="-5">@Strings.utc5m</listEntry>
+                <listEntry value="-6">@Strings.utc6m</listEntry>
+                <listEntry value="-7">@Strings.utc7m</listEntry>
+                <listEntry value="-8">@Strings.utc8m</listEntry>
+                <listEntry value="-9">@Strings.utc9m</listEntry>
+                <listEntry value="-10">@Strings.utc10m</listEntry>
+                <listEntry value="-11">@Strings.utc11m</listEntry>
+                <listEntry value="-12">@Strings.utc12m</listEntry>
+            </settingConfig>
+        </setting>
+        <setting propertyKey="@Properties.utc_shift" title="@Strings.utc_shift">
+            <settingConfig type="boolean" />
+        </setting>
+        <setting propertyKey="@Properties.countdown_date" title="@Strings.countdown_date">
+            <settingConfig type="date" min="1754028000"/>
+        </setting>
+        <setting propertyKey="@Properties.ctext_input" title="@Strings.ctext">
+            <settingConfig type="alphaNumeric" maxLength="10"/>
+        </setting>
+        <setting propertyKey="@Properties.openweather_api" title="@Strings.openweather_api">
+            <settingConfig type="alphaNumeric" maxLength="36"/>
+        </setting>
+        <setting propertyKey="@Properties.iqair_api" title="@Strings.iqair_api">
+            <settingConfig type="alphaNumeric" maxLength="36"/>
+        </setting>
+    </group>
+
+</settings>

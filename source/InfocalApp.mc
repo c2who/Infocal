@@ -12,8 +12,7 @@ import Toybox.WatchUi;
 // Previously persisted in App.Storage, but now persisted in Object Store due to #86 workaround for App.Storage firmware bug.
 // Persistence allows weather and sunrise/sunset features to be used after watch face restart, even if watch no longer has current
 // location available.
-var gLocationLat as Float?;
-var gLocationLon as Float?;
+var gLocation as [Float, Float]?;
 
 //! Watchface Application entry point
 //! @note App class is used in (:background) context; class should only contain

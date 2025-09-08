@@ -6,6 +6,8 @@ import Toybox.Position;
 import Toybox.System;
 import Toybox.WatchUi;
 
+// Local modules (import not strictly required for local modules)
+import Location;
 import Settings;
 
 typedef DrawableInitOptions as { :identifier as Object, :locX as Numeric, :locY as Numeric, :width as Numeric, :height as Numeric, :visible as Boolean };
@@ -51,8 +53,8 @@ class InfocalView extends WatchUi.WatchFace {
    private var _settings_changed as Boolean = false;
    private var _isAwake as Boolean = true;
    private var last_draw_minute as Number = -1;
-   private var restore_from_resume as Boolean = false;
-   private var restore_from_sleep as Boolean = false;
+   private var _on_show_update as Boolean = false;
+   private var _on_wake_update as Boolean = false;
    private var face_radius as Number = 0;
 
    // Cached settings
@@ -150,7 +152,7 @@ class InfocalView extends WatchUi.WatchFace {
       loadFonts();
 
       last_draw_minute = -1;
-      restore_from_resume = true;
+      _on_show_update = true;
    }
 
    // Called when this View is removed from the screen. Save the
@@ -180,7 +182,7 @@ class InfocalView extends WatchUi.WatchFace {
          onLayout(screenDc);
       }
 
-      if (restore_from_resume || minute_changed || _settings_changed) {
+      if (_on_show_update || _on_wake_update || minute_changed || _settings_changed) {
          // update all client data (e.g. Air Quality, Weather, Battery Info)
          updateClientData();
       }
@@ -191,7 +193,7 @@ class InfocalView extends WatchUi.WatchFace {
       //       - you just need to do full redraw on: onLayout, onShow and onExitSleep
       //         (and for this app minute_changed to print a new hh:mm time)
       var power_save_mode = Properties.getValue("power_save_mode") as Boolean;
-      if (power_save_mode == false || _settings_changed || restore_from_resume || restore_from_sleep || minute_changed) {
+      if (power_save_mode == false || _settings_changed || _on_show_update || _on_wake_update || minute_changed) {
          // Clear screen clip region (may be set after onPartialUpdate/onPowerBudgetExceeded on some devices)
          screenDc.clearClip();
 
@@ -209,8 +211,8 @@ class InfocalView extends WatchUi.WatchFace {
 
       // Reset draw state flags
       last_draw_minute = clockTime.min;
-      restore_from_resume = false;
-      restore_from_sleep = false;
+      _on_show_update = false;
+      _on_wake_update = false;
       minute_changed = false;
       _settings_changed = false;
 
@@ -279,7 +281,7 @@ class InfocalView extends WatchUi.WatchFace {
    //! Timers and animations may be started here in preparation for once-per-second updates.
    //! (the user has just looked at their watch)
    function onExitSleep() {
-      restore_from_sleep = true;
+      _on_wake_update = true;
       _isAwake = true;
 
       var dialDisplay = View.findDrawableById("analog") as AnalogDial;
@@ -531,7 +533,8 @@ class InfocalView extends WatchUi.WatchFace {
       var settings = System.getDeviceSettings();
 
       // Update last known location
-      updateLastLocation();
+      //Location.updateLastLocation();
+      Location.updateLastLocation();
 
       // Update Internal batteryInDays calculation
       if (!_hasBatteryInDays && isAnyDataFieldsInUse([FIELD_TYPE_BATTERY])) {
@@ -646,54 +649,7 @@ class InfocalView extends WatchUi.WatchFace {
       }
       return false;
    }
-
-   //! Update last (known) location.
-   //! Persists location for later use (e.g. after app restart)
-   //! @note 2025.08.18 data moved from app Property to Storage class
-   function updateLastLocation() as Void {
-      // Attempt to update current location, to be used by Sunrise/Sunset, Weather, Air Quality.
-      // If current location available from current activity, save it in case it goes "stale" and can not longer be retrieved.
-      var activityInfo = Activity.getActivityInfo();
-      if (activityInfo != null && activityInfo.currentLocation != null) {
-         // Save current location to globals
-         var degrees = (activityInfo.currentLocation as Position.Location).toDegrees(); // Array of Doubles.
-         gLocationLat = degrees[0].toFloat();
-         gLocationLon = degrees[1].toFloat();
-
-         if (isValidLocation(degrees)) {
-            Storage.setValue("LastLocation", [gLocationLat, gLocationLon]);
-         }
-      } else {
-         // current location is not available, read stored value from Object Store, being careful not to overwrite a valid
-         // in-memory value with an invalid stored one.
-         var storedLocation = Storage.getValue("LastLocation") as Array<Float>?;
-
-         if (storedLocation != null && isValidLocation(storedLocation)) {
-            gLocationLat = storedLocation[0];
-            gLocationLon = storedLocation[1];
-         } else {
-            // 2025.09.05-24 Delete invalid previously stored location
-            if (storedLocation != null) {
-               Storage.deleteValue("LastLocation");
-            }
-         }
-      }
-   }
-
-   // FIXES: BUG: VA3/VA3M (and other) watches return invalid [lat,lon] data [180,180] or [~0, ~0] - rather than null
-   //        https://forums.garmin.com/developer/connect-iq/f/discussion/250487/makewebrequest-error-400-for-position-data-on-va3m/1970627#1970627
-   private function isValidLocation(degrees as [Double, Double] or Array<Float>) as Boolean {
-      // [180,180] is invalid location
-      var isValid = degrees[0] >= -90 && degrees[0] <= 90 && degrees[1] >= -180 && degrees[1] <= 180;
-
-      // special case: treat [~0,~0] as invalid  (sorry Null Island!)
-      var isNull = degrees[0].abs() < 0.01 && degrees[1].abs() < 0.01;
-
-      debug_print(:location, "loc: [$1$, $2$] $3$", [degrees[0].format("%0.3f"), degrees[1].format("%0.3f"), isValid && !isNull ? "ok" : "invalid"]);
-
-      return isValid && !isNull;
-   }
-}
+} // End of InfocalView class
 
 //! Receive events on a Watch Face.
 class InfocalViewDelegate extends WatchUi.WatchFaceDelegate {

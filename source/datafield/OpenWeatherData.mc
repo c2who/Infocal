@@ -6,7 +6,7 @@ import Toybox.Lang;
 
 /* TEMPERATURE HIGH/LOW */
 class TemparatureHLField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -41,7 +41,7 @@ class TemparatureHLField extends BaseDataField {
 
 /* TEMPERATURE OUTSIDE */
 class TemparatureOutField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -76,34 +76,34 @@ class TemparatureOutField extends BaseDataField {
 
 /* WEATHER */
 class WeatherField extends BaseDataField {
-
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
    function cur_icon() {
       var weather_data = Storage.getValue("Weather") as Dictionary<String, PropertyValueType>?;
-      var weather_icon_mapper  = {
-         "01d" => "",
-         "02d" => "",
-         "03d" => "",
-         "04d" => "",
-         "09d" => "",
-         "10d" => "",
-         "11d" => "",
-         "13d" => "",
-         "50d" => "",
+      var weather_icon_mapper =
+         ({
+            "01d" => "",
+            "02d" => "",
+            "03d" => "",
+            "04d" => "",
+            "09d" => "",
+            "10d" => "",
+            "11d" => "",
+            "13d" => "",
+            "50d" => "",
 
-         "01n" => "",
-         "02n" => "",
-         "03n" => "",
-         "04n" => "",
-         "09n" => "",
-         "10n" => "",
-         "11n" => "",
-         "13n" => "",
-         "50n" => "",
-      } as Dictionary<String, String>;
+            "01n" => "",
+            "02n" => "",
+            "03n" => "",
+            "04n" => "",
+            "09n" => "",
+            "10n" => "",
+            "11n" => "",
+            "13n" => "",
+            "50n" => "",
+         }) as Dictionary<String, String>;
 
       if (weather_data != null) {
          return weather_icon_mapper[weather_data["icon"]];
@@ -122,7 +122,7 @@ class WeatherField extends BaseDataField {
          // Display error(if any) or no-computed-data
          var error = Storage.getValue(OpenWeatherClient.DATA_TYPE + Globals.DATA_TYPE_ERROR_SUFFIX) as Dictionary<String, PropertyValueType>?;
 
-         if (gLocationLat == null || gLocationLon == null) {
+         if (gLocation == null) {
             return "NO LOCN";
          } else if (error != null) {
             var responseCode = error.get("code") as Number;
@@ -155,32 +155,14 @@ class WeatherField extends BaseDataField {
 
 /* WIND */
 class WindField extends BaseDataField {
-
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
    function cur_label(value) {
       //var need_minimal = Properties.getValue("minimal_data");
       var weather_data = Storage.getValue("Weather") as Dictionary<String, PropertyValueType>?;
-      var wind_direction_mapper = [
-         "N",
-         "NNE",
-         "NE",
-         "ENE",
-         "E",
-         "ESE",
-         "SE",
-         "SSE",
-         "S",
-         "SSW",
-         "SW",
-         "WSW",
-         "W",
-         "WNW",
-         "NW",
-         "NNW",
-      ] as Array<String>;
+      var wind_direction_mapper = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"] as Array<String>;
 
       if (weather_data != null) {
          var settings = System.getDeviceSettings();

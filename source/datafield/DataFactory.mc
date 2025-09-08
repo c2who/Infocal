@@ -47,9 +47,11 @@ enum /* FIELD_TYPES */ {
    FIELD_TYPE_VIGOROUS,
    FIELD_TYPE_AIR_QUALITY,
    FIELD_TYPE_TIME_TO_RECOVERY,
+   FIELD_TYPE_CALORIES_ACTIVE = 40,
+   FIELD_TYPE_SOLAR_INTENSITY,
 }
 
-function buildFieldObject(type) {
+function buildFieldObject(type as Number) {
    if (type == FIELD_TYPE_HEART_RATE) {
       return new HRField(type);
    } else if (type == FIELD_TYPE_BATTERY) {
@@ -130,6 +132,10 @@ function buildFieldObject(type) {
       return new AirQualityField(type);
    } else if (type == FIELD_TYPE_TIME_TO_RECOVERY) {
       return new TimeToRecoveryField(type);
+   } else if (type == FIELD_TYPE_CALORIES_ACTIVE) {
+      return new CaloField(type);
+   } else if (type == FIELD_TYPE_SOLAR_INTENSITY) {
+      return new SolarIntensityField(type);
    }
 
    return new EmptyDataField(FIELD_TYPE_EMPTY);
@@ -138,63 +144,63 @@ function buildFieldObject(type) {
 class BaseDataField {
    private var _field_id as Number;
 
-   function initialize(id) {
+   function initialize(id as Number) {
       _field_id = id;
    }
 
-   function field_id() {
+   function field_id() as Number {
       return _field_id;
    }
 
-   function have_secondary() {
+   function have_secondary() as Boolean {
       return false;
    }
 
-   function min_val() {
+   function min_val() as Float {
       return 0.0;
    }
 
-   function max_val() {
+   function max_val() as Float {
       return 100.0;
    }
 
-   function cur_val() {
+   function cur_val() as Float {
       return 0.01;
    }
 
-   function min_label(value) {
+   function min_label(value as Float) as String {
       return "0";
    }
 
-   function max_label(value) {
+   function max_label(value as Float) as String {
       return "100";
    }
 
-   function cur_label(value) {
+   function cur_label(value as Float) as String {
       return "0";
    }
 
-   function need_draw() {
+   function need_draw() as Boolean {
       return true;
    }
 
-   function bar_data() {
+   function bar_data() as Boolean {
       return false;
    }
 }
 
 class EmptyDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       _field_id = id;
    }
 
    private var _field_id;
 
-   function field_id() {
+   function field_id() as Number{
       return _field_id;
    }
 
-   function need_draw() {
+   function need_draw() as Boolean {
       return false;
    }
 }

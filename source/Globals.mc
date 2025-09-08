@@ -96,7 +96,7 @@ public class Globals {
       }
    }
 
-   static function getKString(value) {
+   static function getKString(value as Float) as String {
       if (value <= 10000) {
          return "";
       } else {
@@ -124,6 +124,6 @@ function fnv1a32(s as String) as Number {
 }
 
 function fnv1a32AsString(s as String) as String {
-    var hash = fnv1a32(s);
-    return hash.format("%08x");
+   var hash = fnv1a32(s);
+   return hash.format("%08x");
 }

@@ -7,7 +7,7 @@ import Toybox.Lang;
 //! TEMPERATURE GARMIN
 //! @since API Level 3.2.0
 class TemparatureGarminField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -37,7 +37,7 @@ class TemparatureGarminField extends BaseDataField {
 /* TEMPERATURE HIGH/LOW GARMIN */
 //! @since API Level 3.2.0
 class TemperatureHLGarminField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -77,7 +77,7 @@ class TemperatureHLGarminField extends BaseDataField {
 //! @since API Level 3.2.0
 class WeatherGarminField extends BaseDataField {
 
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 
@@ -168,7 +168,7 @@ class WeatherGarminField extends BaseDataField {
 /* PRECIPITATION GARMIN */
 //! @since API Level 3.2.0
 class PrecipitationGarminField extends BaseDataField {
-   function initialize(id) {
+   function initialize(id as Number) {
       BaseDataField.initialize(id);
    }
 

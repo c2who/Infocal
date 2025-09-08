@@ -53,6 +53,7 @@
     <string scope="settings" id="empty">(Empty)</string>
     <string scope="settings" id="battery">Battery</string>
     <string scope="settings" id="calories">Calories (total, active)</string>
+    <string scope="settings" id="caloriesact">Calories (active)</string>
     <string scope="settings" id="distance">Distance (day)</string>
     <string scope="settings" id="distanceweek">Distance (week)</string>
     <string scope="settings" id="movebar">Move bar</string>
@@ -87,8 +88,9 @@
     <string scope="settings" id="bodybattery">Health, Body Battery</string>
     <string scope="settings" id="stress">Health, Stress Score</string>
     <string scope="settings" id="bodybattstress">Health, Battery + Stress</string>
-    <string scope="settings" id="timetorecovery">Health, Recovery Time</string>
     <string scope="settings" id="airquality">Air Quality Index</string>
+    <string scope="settings" id="timetorecovery">Health, Time to Recovery</string>
+    <string scope="settings" id="solarintensity">Solar Intensity</string>
 
     <!-- Formats group -->
     <string scope="settings" id="format_group">Formats</string>

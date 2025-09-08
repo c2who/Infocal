@@ -1,0 +1,14 @@
+<properties>
+<!--
+    # Devices supporting Heart Rate Variability (HRV) features
+    # - Recovery Time (timeToRecover)
+    # - Body Battery (bodyBattery)
+    # - Stress Score (stress)
+-->
+
+    <!-- Replace move bar with Recovery Time (timetorecovery) -->
+    <property id="comp4h" type="number">39</property>
+
+    <!-- Replace 6h with Stress Score (stress)) -->
+    <property id="comp6h" type="number">30</property>
+</properties>
