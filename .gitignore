@@ -1,7 +1,6 @@
-bin/
-build/
-export/
-logs/
+/bin/
+/export/
+/logs/
 *.DS_Store
 .vscode
 *.code-workspace

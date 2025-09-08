@@ -1,6 +1,6 @@
 import Toybox.Lang;
 
-enum /* FIELD_TYPES */ {
+enum FIELD_TYPES {
    FIELD_TYPE_HEART_RATE = 0,
    FIELD_TYPE_BATTERY,
    FIELD_TYPE_CALORIES,
