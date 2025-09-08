@@ -1,7 +1,7 @@
 import Toybox.System;
 import Toybox.Lang;
 
-//! SolarIntensity (API Level 4.0.0)
+//! SolarIntensity (API Level 3.2.0)
 //! Solar charging intensity from 0-100%. Value may be null.
 class SolarIntensityField extends BaseDataField {
    private const _hasSolarIntensity = (System.Stats has :solarIntensity) as Boolean;

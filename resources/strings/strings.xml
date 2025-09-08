@@ -88,7 +88,8 @@
     <string scope="settings" id="bodybattery">Health, Body Battery</string>
     <string scope="settings" id="stress">Health, Stress Score</string>
     <string scope="settings" id="bodybattstress">Health, Battery + Stress</string>
-    <string scope="settings" id="timetorecovery">Time to Recovery</string>
+    <string scope="settings" id="airquality">Air Quality Index</string>
+    <string scope="settings" id="timetorecovery">Health, Time to Recovery</string>
     <string scope="settings" id="solarintensity">Solar Intensity</string>
 
     <!-- Formats group -->

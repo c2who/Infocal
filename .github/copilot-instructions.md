@@ -10,6 +10,10 @@
 - Avoid unnecessary object allocations and repeated calculations.
 - Use clear, descriptive variable and function names.
 - Follow consistent indentation and brace style as in existing code.
+- In monkey.jungle, a device’s `resourcePath` may only appear once - make sure it is in the correct section.
+- In settings.xml, the `DataField` list must include **all** data fields supported by that device.
+- In settings.xml, place new data fields in the correct place, to maintain alphabetical order of the related Strings value;
+  note that the Strings entries are keys - you must lookup the display string in the strings.xml file
 
 ## Performance & Constraints
 - Optimize for **low memory usage** and **battery efficiency** — this is wearable device code.
