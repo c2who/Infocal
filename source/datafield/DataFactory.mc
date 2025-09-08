@@ -48,6 +48,7 @@ enum /* FIELD_TYPES */ {
    FIELD_TYPE_AIR_QUALITY,
    FIELD_TYPE_TIME_TO_RECOVERY,
    FIELD_TYPE_CALORIES_ACTIVE = 40,
+   FIELD_TYPE_SOLAR_INTENSITY,
 }
 
 function buildFieldObject(type as Number) {
@@ -133,6 +134,8 @@ function buildFieldObject(type as Number) {
       return new TimeToRecoveryField(type);
    } else if (type == FIELD_TYPE_CALORIES_ACTIVE) {
       return new CaloField(type);
+   } else if (type == FIELD_TYPE_SOLAR_INTENSITY) {
+      return new SolarIntensityField(type);
    }
 
    return new EmptyDataField(FIELD_TYPE_EMPTY);

@@ -109,8 +109,6 @@ fenix7xpro.resourcePath = $(fenix7xpro.resourcePath);resource-feat-hrv;resource-
 fenix7xpronowifi.resourcePath = $(fenix7xpronowifi.resourcePath);resource-feat-hrv;resource-settings
 fenix843mm.resourcePath = $(fenix843mm.resourcePath);resource-feat-hrv;resource-settings
 fenix847mm.resourcePath = $(fenix847mm.resourcePath);resource-feat-hrv;resource-settings
-fenix8solar47mm.resourcePath = $(fenix8solar47mm.resourcePath);resource-feat-hrv;resource-settings
-fenix8solar51mm.resourcePath = $(fenix8solar51mm.resourcePath);resource-feat-hrv;resource-settings
 fenixe.resourcePath = $(fenixe.resourcePath);resource-feat-hrv;resource-settings
 fr165.resourcePath = $(fr165.resourcePath);resource-feat-hrv;resource-settings
 fr165m.resourcePath = $(fr165m.resourcePath);resource-feat-hrv;resource-settings
@@ -135,7 +133,6 @@ instinct2s.resourcePath = $(instinct2s.resourcePath);resource-feat-hrv;resource-
 instinct2x.resourcePath = $(instinct2x.resourcePath);resource-feat-hrv;resource-settings
 instinct3amoled45mm.resourcePath = $(instinct3amoled45mm.resourcePath);resource-feat-hrv;resource-settings
 instinct3amoled50mm.resourcePath = $(instinct3amoled50mm.resourcePath);resource-feat-hrv;resource-settings
-instinct3solar45mm.resourcePath = $(instinct3solar45mm.resourcePath);resource-feat-hrv;resource-settings
 instinctcrossover.resourcePath = $(instinctcrossover.resourcePath);resource-feat-hrv;resource-settings
 instincte40mm.resourcePath = $(instincte40mm.resourcePath);resource-feat-hrv;resource-settings
 instincte45mm.resourcePath = $(instincte45mm.resourcePath);resource-feat-hrv;resource-settings
@@ -161,3 +158,27 @@ venux1.resourcePath = $(venux1.resourcePath);resource-feat-hrv;resource-settings
 vivoactive4.resourcePath = $(vivoactive4.resourcePath);resource-feat-hrv;resource-settings
 vivoactive4s.resourcePath = $(vivoactive4s.resourcePath);resource-feat-hrv;resource-settings
 vivoactive6.resourcePath = $(vivoactive6.resourcePath);resource-feat-hrv;resource-settings
+
+# ------------------------------------------------------------------------------
+# Devices supporting Solar features
+# - Body Battery (bodyBattery)
+# - Stress Score (stress)
+# - Recovery Time (timeToRecover)
+# - Solar Intensity (solarIntensity)
+enduro.resourcePath = $(enduro.resourcePath);resource-feat-solar;resource-settings
+enduro3.resourcePath = $(enduro3.resourcePath);resource-feat-solar;resource-settings
+fenix6xpro.resourcePath = $(fenix6xpro.resourcePath);resource-feat-solar;resource-settings
+fenix7.resourcePath = $(fenix7.resourcePath);resource-feat-solar;resource-settings
+fenix7pro.resourcePath = $(fenix7pro.resourcePath);resource-feat-solar;resource-settings
+fenix7pronowifi.resourcePath = $(fenix7pronowifi.resourcePath);resource-feat-solar;resource-settings
+fenix7s.resourcePath = $(fenix7s.resourcePath);resource-feat-solar;resource-settings
+fenix7spro.resourcePath = $(fenix7spro.resourcePath);resource-feat-solar;resource-settings
+fenix7x.resourcePath = $(fenix7x.resourcePath);resource-feat-solar;resource-settings
+fenix7xpro.resourcePath = $(fenix7xpro.resourcePath);resource-feat-solar;resource-settings
+fenix7xpronowifi.resourcePath = $(fenix7xpronowifi.resourcePath);resource-feat-solar;resource-settings
+fenix8solar47mm.resourcePath = $(fenix8solar47mm.resourcePath);resource-feat-solar;resource-settings
+fenix8solar51mm.resourcePath = $(fenix8solar51mm.resourcePath);resource-feat-solar;resource-settings
+instinct2s.resourcePath = $(instinct2s.resourcePath);resource-feat-solar;resource-settings
+instinct2x.resourcePath = $(instinct2x.resourcePath);resource-feat-solar;resource-settings
+instinct3solar45mm.resourcePath = $(instinct3solar45mm.resourcePath);resource-feat-solar;resource-settings
+instinctcrossover.resourcePath = $(instinctcrossover.resourcePath);resource-feat-solar;resource-settings
