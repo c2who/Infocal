@@ -1,4 +1,5 @@
 import Toybox.ActivityMonitor;
+import Toybox.Application;
 import Toybox.Lang;
 
 /* FLOORS CLIMBED */
@@ -30,10 +31,14 @@ class FloorField extends BaseDataField {
    }
 
    function cur_label(value) {
-      if (value == null) {
-         return "FLOOR --";
+      var need_minimal = Properties.getValue("minimal_data");
+      var title = (need_minimal) ? "" : "FLR ";
+
+      if ((value == null) || (value < 0)) {
+         return Lang.format("$1$--", [title]);
+      } else {
+         return Lang.format("$1$$2$", [title, value.format("%d")]);
       }
-      return Lang.format("FLOOR $1$", [value.format("%d")]);
    }
 
    function bar_data() {

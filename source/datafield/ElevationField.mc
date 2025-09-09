@@ -44,13 +44,12 @@ class ElevationField extends BaseDataField {
          }
 
          value = elevation.format("%d");
-         value += unit;
          if (need_minimal) {
             return value;
          } else {
-            var temp = Lang.format("ELE $1$", [value]);
+            var temp = Lang.format("ELE $1$$2$", [value, unit]);
             if (temp.length() > 10) {
-               return Lang.format("$1$", [value]);
+               return Lang.format("$1$$2$", [value, unit]);
             }
             return temp;
          }
