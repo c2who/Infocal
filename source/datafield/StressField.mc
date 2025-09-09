@@ -45,9 +45,11 @@ class StressField extends BaseDataField {
 function _retrieveStress() as Float {
    var currentStress = 0.0;
    var activityInfo = ActivityMonitor.getInfo();
-   if (activityInfo.stressScore != null) {
+   if ((activityInfo has :stressScore) && (activityInfo.stressScore != null)) {
+      // API 5.0.0
       currentStress = activityInfo.stressScore.toFloat();
    } else if (
+      // API 3.3.0 (some devices)
       Toybox has :SensorHistory &&
       Toybox.SensorHistory has :getStressHistory
    ) {
