@@ -2,8 +2,8 @@ import Toybox.Lang;
 import Toybox.Test;
 
 (:test)
-function testSunField(logger as Test.Logger) as Boolean {
-    var field = new SunField(32);
+function testSunTimesField(logger as Test.Logger) as Boolean {
+    var field = new SunTimesField(32);
 
     Test.assertEqualMessage(field.field_id(), 32, "Field ID '" + field.field_id() + "' should be 32");
 

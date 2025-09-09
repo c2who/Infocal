@@ -85,7 +85,7 @@ function buildFieldObject(type as Number) {
    } else if (type == FIELD_TYPE_TEMPERATURE) {
       return new TemparatureField(type);
    } else if (type == FIELD_TYPE_SUNRISE_SUNSET) {
-      return new SunField(type);
+      return new SunTimesField(type);
    } else if (type == FIELD_TYPE_FLOOR) {
       return new FloorField(type);
    } else if (type == FIELD_TYPE_GROUP_NOTI) {
