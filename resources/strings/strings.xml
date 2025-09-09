@@ -96,7 +96,7 @@
     <string scope="settings" id="format_group">Formats</string>
     <string scope="settings" id="format_group_desc">Select preferred data field formats / units</string>
 
-    <string scope="settings" id="minimal_data">Do not abbreviate large numbers</string>
+    <string scope="settings" id="minimal_data">Compact display ('DIS 5.5KM' to '5.5KM')</string>
     <string scope="settings" id="force_date_english">Force date to English (prevent rectangle on unsupported chars)</string>
 
     <!-- Date and time format -->
@@ -111,8 +111,9 @@
 
     <!-- Unit settings -->
     <string scope="settings" id="battery_format">Battery format</string>
-    <string scope="settings" id="battery_format_1">Percent</string>
-    <string scope="settings" id="battery_format_2">Days left</string>
+    <string scope="settings" id="battery_format_0">Percent</string>
+    <string scope="settings" id="battery_format_1">Days left</string>
+    <string scope="settings" id="battery_format_2">Days, hours left</string>
 
     <string scope="settings" id="barometer_unit">Barometer Unit</string>
     <string scope="settings" id="barometer_unit_0">Hector Pascal (Pa)</string>

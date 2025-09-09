@@ -33,38 +33,60 @@ class BatteryField extends BaseDataField {
    }
 
    //! Format hours as days/hours string
-   private function format_hours(total_hours as Float) {
-      if (total_hours < 24) {
-         return Lang.format("$1$ HRS", [Math.round(total_hours).format("%d")]);
-      } else if (total_hours >= 99 * 24) {
-         return "99+ DAYS";
+   private function format_days_hours(batInDays as Float) as String {
+      if (batInDays < 1.0) {
+         return Lang.format("$1$H", [Math.round(batInDays * 24).format("%d")]);
+      } else if (batInDays >= 99.0) {
+         return "99+D";
       } else {
-         total_hours = total_hours.toNumber();
+         var total_hours = (batInDays * 24).toNumber();
          var days = total_hours / 24;
          var hrs =  total_hours % 24;
-         var days_str = (days > 1) ? "DAYS" : "DAY";
          if (hrs == 0) {
-            return Lang.format("$1$ $2$", [days, days_str]);
+            return Lang.format("$1$D", [days]);
          } else {
-            return Lang.format("$1$ $2$ $3$H", [days, days_str, hrs]);
+            return Lang.format("$1$D $2$H", [days, hrs]);
          }
       }
    }
 
    function cur_label(value) {
-      var battery_format = Properties.getValue("battery_format");
+      var battery_format = Properties.getValue("battery_format") as Number;
+      var need_minimal = Properties.getValue("minimal_data");
+      var title = (need_minimal) ? "" : "BAT ";
 
       if (battery_format == 0) {
          // Battery Percent
-         return Lang.format("BAT $1$%", [Math.round(value).toNumber()]);
-      } else if (_hasBatteryInDays) {
+         return Lang.format("$1$$2$%", [ title, Math.round(value).toNumber() ]);
+      } else {
+         // Battery in Days formats
+         var batInDays = getBatteryInDays(value);
+
+         if (batInDays < 0.0) {
+            // No computed data
+            return Lang.format("$1$--", [title]);
+
+         } else if (battery_format == 1) {
+            // battery in days
+            return Lang.format("$1$$2$D", [ title, Math.round(batInDays).toNumber() ]);
+
+         } else {
+            // Battery in days, hours
+            return Lang.format("$1$$2$", [ title, format_days_hours(batInDays) ]);
+         }
+      }
+   }
+
+   //! @param value  battery in percent
+   function getBatteryInDays(value as Float) as Float {
+      if (_hasBatteryInDays) {
          // API Level 3.3.0 battery in days
-         return format_hours(System.getSystemStats().batteryInDays * 24);
+         return System.getSystemStats().batteryInDays;
       } else {
          // Internal value for battery in days
          var bat_dchg1_time = Storage.getValue("bat_dchg1_time") as Number?;
          if (bat_dchg1_time == null) {
-            return "WAIT";
+            return -1.0; // No computed data
          } else {
             // Calculate time left (in seconds), deducting time elapsed since last known battery% change
             // (this ensures display value decreases over the hour/day, even if battery% does not move)
@@ -72,10 +94,11 @@ class BatteryField extends BaseDataField {
             var bat_last_pcnt = Storage.getValue("bat_last_pcnt") as Float?;
             var bat_last_time = Storage.getValue("bat_last_time") as Number?;
             if ((bat_last_pcnt != null) && (bat_last_time != null) && (bat_last_pcnt >= value)) {
+               // If battery % has reduced, calculate time in days, using this know state of charge point
                value = bat_last_pcnt;
                time_since = Time.now().value() - bat_last_time;
             }
-            return format_hours( ((value * bat_dchg1_time) - time_since) / Gregorian.SECONDS_PER_HOUR );
+            return ((value * bat_dchg1_time) - time_since) / Gregorian.SECONDS_PER_HOUR;
          }
       }
    }
