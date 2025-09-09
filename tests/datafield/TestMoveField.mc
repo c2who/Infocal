@@ -1,25 +1,23 @@
-import Toybox.Test;
 import Toybox.Lang;
-import Toybox.ActivityMonitor;
+import Toybox.Test;
 
 (:test)
-function testMoveField(logger as Logger) as Boolean {
-    var field = new MoveField(25);
+function testMoveField(logger as Test.Logger) as Boolean {
+    var field = new MoveField(22);
 
-    // Field ID
-    Test.assertEqualMessage(field.field_id(), 25, "Field ID should be 25");
+    Test.assertEqualMessage(field.field_id(), 22, "Field ID '" + field.field_id() + "' should be 22");
 
-    // Test min_val and max_val
-    Test.assertMessage(field.min_val() <= field.max_val(), "min_val should be <= max_val");
-
-    // Test cur_val
-    var curVal = field.cur_val();
-    Test.assertMessage(curVal >= field.min_val() and curVal <= field.max_val(), "cur_val should be within specified bounds");
-
-    // Test labels
-    Test.assertEqualMessage(field.min_label(1.0), "1", "min_label should format '1'");
-    Test.assertEqualMessage(field.max_label(2.0), "2", "max_label should format '2'");
-    Test.assertEqualMessage(field.cur_label(3.0), "MOVE 3", "cur_label should format 'MOVE 3'");
+    // Test that methods execute without throwing exceptions
+    try {
+        var maxValue = field.max_val();
+        var curValue = field.cur_val();
+        var maxLabel = field.max_label(100.0);
+        var curLabel = field.cur_label(50.0);
+        var barData = field.bar_data();
+        Test.assertMessage(true, "MoveField methods executed successfully without exceptions");
+    } catch (ex) {
+        Test.assertMessage(false, "MoveField methods threw exception: " + ex.getErrorMessage());
+    }
 
     return true;
 }

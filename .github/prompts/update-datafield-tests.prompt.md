@@ -1,7 +1,7 @@
 ---
 description: Write unit tests for DataField classes in the `/tests` directory.
 mode: agent
-model: ${input:model:claude-sonnet-3.7}
+model: ${input:model:claude-sonnet-4}
 ---
 
 # Add DataField Tests Prompt
@@ -47,7 +47,7 @@ Generate all test classes/files for every source class/file in `/source/datafiel
 - Validate that methods return expected outputs or, in non-trivial cases, return a value without throwing exceptions.
 
 # **Directory Structure:**
-- Write tests in the `/tests` directory.
+- Write tests in the `/tests/datafield` directory.
 - Ensure that the tests align with the refactored structure of `/source/datafield`.
 
 # **Output:**
@@ -61,8 +61,7 @@ Generate all test classes/files for every source class/file in `/source/datafiel
 
 # Syntax and Conventions
 - Use the same coding style and conventions as the existing codebase.
-- Dictionary in Monkey C using symbols as keys has the following syntax
-   `{ :clientTs => timestamp, :aqius => 42, :a_string => "value", :anArray => [1, 2, 3], :aFloat => 0.5 }`
+- ensure test code complies with #file:monkeyc.instructions.md  and #file:monkeyc-tests.instructions.md
 - See the Garmin Monkey C documentation for more details: https://developer.garmin.com/connect-iq/monkey-c/monkey-types/ and all other relevant documentation under https://developer.garmin.com/connect-iq/monkey-c/.
 
 # Hallucination Guardrails

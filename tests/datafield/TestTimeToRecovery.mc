@@ -2,10 +2,10 @@ import Toybox.Lang;
 import Toybox.Test;
 
 (:test)
-function testWeekDistanceField(logger as Test.Logger) as Boolean {
-    var field = new WeekDistanceField(38);
+function testTimeToRecoveryField(logger as Test.Logger) as Boolean {
+    var field = new TimeToRecoveryField(36);
 
-    Test.assertEqualMessage(field.field_id(), 38, "Field ID '" + field.field_id() + "' should be 38");
+    Test.assertEqualMessage(field.field_id(), 36, "Field ID '" + field.field_id() + "' should be 36");
 
     var maxValue = field.max_val();
     var curValue = field.cur_val();
@@ -19,4 +19,4 @@ function testWeekDistanceField(logger as Test.Logger) as Boolean {
     Test.assertEqualMessage(field.bar_data(), true, "Bar data '" + field.bar_data() + "' should be true");
 
     return true;
-}
+} 

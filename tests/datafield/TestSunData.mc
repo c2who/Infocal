@@ -2,10 +2,10 @@ import Toybox.Lang;
 import Toybox.Test;
 
 (:test)
-function testTemparatureOutField(logger as Test.Logger) as Boolean {
-    var field = new TemparatureOutField(35);
+function testSunField(logger as Test.Logger) as Boolean {
+    var field = new SunField(32);
 
-    Test.assertEqualMessage(field.field_id(), 35, "Field ID '" + field.field_id() + "' should be 35");
+    Test.assertEqualMessage(field.field_id(), 32, "Field ID '" + field.field_id() + "' should be 32");
 
     // Test cur_label method - this field only implements cur_label
     var curLabel = field.cur_label(50.0);

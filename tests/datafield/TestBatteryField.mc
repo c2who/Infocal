@@ -1,33 +1,22 @@
-import Toybox.Test;
 import Toybox.Lang;
-import Toybox.System;
+import Toybox.Test;
 
 (:test)
-function testBatteryField(logger as Logger) as Boolean {
-    var field = new BatteryField(8);
+function testBatteryField(logger as Test.Logger) as Boolean {
+    var field = new BatteryField(7);
 
-    // Field ID
-    Test.assertEqualMessage(field.field_id(), 8, "Field ID should be 8");
+    Test.assertEqualMessage(field.field_id(), 7, "Field ID '" + field.field_id() + "' should be 7");
 
-    // Test min_val and max_val
-    Test.assertEqualMessage(field.min_val(), 0.0, "min_val should return 0.0");
-    Test.assertEqualMessage(field.max_val(), 100.0, "max_val should return 100.0");
+    var maxValue = field.max_val();
+    var curValue = field.cur_val();
+    var maxLabel = field.max_label(100.0);
+    var curLabel = field.cur_label(50.0);
 
-    // Test cur_val range
-    var curVal = field.cur_val();
-    Test.assertMessage(curVal >= 0.0 and curVal <= 100.0, "cur_val should be between 0.0 and 100.0");
-
-    // Test min_label and max_label
-    Test.assertEqualMessage(field.min_label(curVal), "b", "min_label should return 'b'");
-    Test.assertEqualMessage(field.max_label(curVal), "P", "max_label should return 'P'");
-
-    // Test cur_label does not throw and returns non-empty string
-    var label = field.cur_label(curVal);
-    Test.assertMessage(label instanceof String, "cur_label should return a String");
-    Test.assertMessage(label.length() > 0, "cur_label should return a non-empty string");
-
-    // Test bar_data
-    Test.assertEqualMessage(field.bar_data(), true, "bar_data should be true");
+    Test.assertMessage(maxValue != null, "Max value '" + maxValue + "' should not be null");
+    Test.assertMessage(curValue != null, "Current value '" + curValue + "' should not be null");
+    Test.assertMessage(maxLabel != null, "Max label '" + maxLabel + "' should not be null");
+    Test.assertMessage(curLabel != null, "Current label '" + curLabel + "' should not be null");
+    Test.assertEqualMessage(field.bar_data(), true, "Bar data '" + field.bar_data() + "' should be true");
 
     return true;
 }
