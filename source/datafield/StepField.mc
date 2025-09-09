@@ -9,12 +9,13 @@ class StepField extends BaseDataField {
    }
 
    function max_val() {
-      return ActivityMonitor.getInfo().stepGoal.toFloat();
+      var info = ActivityMonitor.getInfo();
+      return (info.stepGoal != null) ? info.stepGoal.toFloat() : 10000.0;
    }
 
    function cur_val() {
-      var currentStep = ActivityMonitor.getInfo().steps;
-      return currentStep.toFloat();
+      var info = ActivityMonitor.getInfo();
+      return (info.steps != null) ? info.steps.toFloat() : 0.0;
    }
 
    function max_label(value) {

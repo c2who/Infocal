@@ -9,12 +9,12 @@ class ActiveModerateField extends BaseDataField {
 
    function max_val() {
       var activityInfo = ActivityMonitor.getInfo();
-      return activityInfo.activeMinutesWeekGoal.toFloat();
+      return (activityInfo.activeMinutesWeekGoal != null) ? activityInfo.activeMinutesWeekGoal.toFloat() : 150.0;
    }
 
    function cur_val() {
       var activityInfo = ActivityMonitor.getInfo();
-      return activityInfo.activeMinutesWeek.moderate.toFloat();
+      return (activityInfo.activeMinutesWeek.moderate != null) ? activityInfo.activeMinutesWeek.moderate.toFloat() : 0.0;
    }
 
    function max_label(value) {

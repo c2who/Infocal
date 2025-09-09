@@ -15,8 +15,7 @@ class DistanceField extends BaseDataField {
 
    function cur_val() {
       var activityInfo = ActivityMonitor.getInfo();
-      var value = activityInfo.distance.toFloat();
-      return value;
+      return (activityInfo.distance != null) ? activityInfo.distance.toFloat() : 0.0;
    }
 
    function max_label(value) {

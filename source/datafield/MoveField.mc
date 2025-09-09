@@ -8,16 +8,16 @@ class MoveField extends BaseDataField {
    }
 
    function min_val() {
-      return ActivityMonitor.MOVE_BAR_LEVEL_MIN.toFloat();
+      return 0.0; //ActivityMonitor.MOVE_BAR_LEVEL_MIN.toFloat();
    }
 
    function max_val() {
-      return ActivityMonitor.MOVE_BAR_LEVEL_MAX.toFloat();
+      return 5.0; //ActivityMonitor.MOVE_BAR_LEVEL_MAX.toFloat();
    }
 
    function cur_val() {
-      var info = ActivityMonitor.getInfo();
-      var currentBar = info.moveBarLevel.toFloat();
+      var activityInfo = ActivityMonitor.getInfo();
+      var currentBar = (activityInfo.moveBarLevel != null) ? activityInfo.moveBarLevel.toFloat() : 0.0;
       return currentBar.toFloat();
    }
 

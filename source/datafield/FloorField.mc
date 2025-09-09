@@ -10,7 +10,7 @@ class FloorField extends BaseDataField {
 
    function max_val() {
       var activityInfo = ActivityMonitor.getInfo();
-      if (activityInfo has :floorsClimbedGoal) {
+      if ((activityInfo has :floorsClimbedGoal) && (activityInfo.floorsClimbedGoal != null)) {
          return activityInfo.floorsClimbedGoal.toFloat();
       } else {
          return 1.0;
@@ -19,7 +19,7 @@ class FloorField extends BaseDataField {
 
    function cur_val() {
       var activityInfo = ActivityMonitor.getInfo();
-      if (activityInfo has :floorsClimbed) {
+      if ((activityInfo has :floorsClimbed) && (activityInfo.floorsClimbed != null)) {
          return activityInfo.floorsClimbed.toFloat();
       } else {
          return 0.0;

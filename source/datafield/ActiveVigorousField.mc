@@ -9,12 +9,12 @@ class ActiveVigorousField extends BaseDataField {
 
    function max_val() {
       var activityInfo = ActivityMonitor.getInfo();
-      return activityInfo.activeMinutesWeekGoal.toFloat();
-  }
+      return (activityInfo.activeMinutesWeekGoal != null) ? activityInfo.activeMinutesWeekGoal.toFloat() : 75.0;
+   }
 
    function cur_val() {
       var activityInfo = ActivityMonitor.getInfo();
-      return activityInfo.activeMinutesWeek.vigorous.toFloat();
+      return (activityInfo.activeMinutesWeek.vigorous != null) ? activityInfo.activeMinutesWeek.vigorous.toFloat() : 0.0;
    }
 
    function max_label(value) {

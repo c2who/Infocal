@@ -45,9 +45,9 @@ class HRField extends BaseDataField {
 const HAS_HEART_RATE_HISTORY = (ActivityMonitor has :getHeartRateHistory) as Boolean;
 
 function _retrieveHeartrate() as Number {
-   var activityInfo = Activity.getActivityInfo();
-   if ((activityInfo != null) && (activityInfo.currentHeartRate != null)) {
-      return activityInfo.currentHeartRate;
+   var activity = Activity.getActivityInfo();
+   if ((activity != null) && (activity.currentHeartRate != null)) {
+      return activity.currentHeartRate;
 
    } else if (HAS_HEART_RATE_HISTORY) {
       var sample = ActivityMonitor.getHeartRateHistory(1, true).next();

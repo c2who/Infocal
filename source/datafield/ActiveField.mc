@@ -9,12 +9,12 @@ class ActiveField extends BaseDataField {
 
    function max_val() {
       var activityInfo = ActivityMonitor.getInfo();
-      return activityInfo.activeMinutesWeekGoal.toFloat();
+      return (activityInfo.activeMinutesWeekGoal != null) ? activityInfo.activeMinutesWeekGoal.toFloat() : 150.0;
    }
 
    function cur_val() {
       var activityInfo = ActivityMonitor.getInfo();
-      return activityInfo.activeMinutesWeek.total.toFloat();
+      return (activityInfo.activeMinutesWeek != null) ? activityInfo.activeMinutesWeek.total.toFloat() : 0.0;
    }
 
    function max_label(value) {
