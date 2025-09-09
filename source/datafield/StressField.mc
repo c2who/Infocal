@@ -1,3 +1,4 @@
+import Toybox.ActivityMonitor;
 import Toybox.Lang;
 import Toybox.SensorHistory;
 
@@ -31,9 +32,9 @@ class StressField extends BaseDataField {
    function cur_label(value) {
       var stress = value;
       if (stress <= 1) {
-         return "STRESS --";
+         return "S --";
       }
-      return Lang.format("STRESS $1$", [stress.format("%d")]);
+      return Lang.format("S $1$", [stress.format("%d")]);
    }
 
    function bar_data() {
@@ -41,9 +42,12 @@ class StressField extends BaseDataField {
    }
 }
 
-function _retrieveStress() {
+function _retrieveStress() as Float {
    var currentStress = 0.0;
-   if (
+   var activityInfo = ActivityMonitor.getInfo();
+   if (activityInfo.stressScore != null) {
+      currentStress = activityInfo.stressScore.toFloat();
+   } else if (
       Toybox has :SensorHistory &&
       Toybox.SensorHistory has :getStressHistory
    ) {
@@ -51,8 +55,8 @@ function _retrieveStress() {
          :period => 1,
       }).next();
       if (sample != null && sample.data != null) {
-         currentStress = sample.data;
+         currentStress = sample.data.toFloat();
       }
    }
-   return currentStress.toFloat();
+   return currentStress;
 }
