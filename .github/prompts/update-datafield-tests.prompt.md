@@ -1,7 +1,7 @@
 ---
 description: Write unit tests for DataField classes in the `/tests` directory.
 mode: agent
-model: ${input:model:claude-sonnet-4}
+model: Claude Sonnet 4
 ---
 
 # Add DataField Tests Prompt
