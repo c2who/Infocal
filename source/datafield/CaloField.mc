@@ -17,31 +17,34 @@ class CaloField extends BaseDataField {
 
    function cur_val() {
       var activityInfo = ActivityMonitor.getInfo();
-      return activityInfo.calories.toFloat();
+      return (activityInfo.calories != null) ? activityInfo.calories.toFloat() : 0.0;
    }
 
    function max_label(value) {
-      var valKp = Globals.toKValue(value);
-      return Lang.format("$1$K", [valKp]);
+      return Globals.toKValue(value);
    }
 
    function cur_label(value as Float) as String {
-      var activeCalories = active_calories(value);
+      var activeCalories = active_calories(value).toFloat();
       var need_minimal = Properties.getValue("minimal_data");
+      var dispTotal = (value < 1000) ? value.format("%d") : Globals.toKValue(value);
+      var dispActive = (activeCalories < 1000) ? activeCalories.format("%d") : Globals.toKValue(activeCalories);
 
-      if (field_id() == FIELD_TYPE_CALORIES) {
+      if (value <= 0) {
+         return need_minimal ? "C --" : "--";
+      } else  if (field_id() == FIELD_TYPE_CALORIES) {
          if (need_minimal) {
-            return Lang.format("$1$-$2$", [
-               value.format("%d"),
-               activeCalories.format("%d"),
-            ]);
+            return Lang.format("C $1$-$2$", [ dispTotal, dispActive ]);
          } else {
-            var valKp = Globals.toKValue(value);
-            return Lang.format("$1$K-$2$", [valKp, activeCalories.format("%d")]);
+            return Lang.format("$1$-$2$", [ dispTotal, dispActive ]);
          }
       } else {
          // FIELD_TYPE_CALORIES_ACTIVE
-         return Lang.format("CAL+ $1$", [ activeCalories.format("%d") ]);
+         if (need_minimal) {
+            return Lang.format("CAL +$1$", [ dispActive ]);
+         } else {
+            return Lang.format("+$1$", [ dispActive ]);
+         }
       }
    }
 

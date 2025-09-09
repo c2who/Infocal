@@ -109,7 +109,7 @@ public class Globals {
 
     static function toKValue(value as Float) as String {
         var valK = value / 1000.0;
-        return valK.format("%0.1f");
+        return valK.format("%0.1fK");
     }
 }
 

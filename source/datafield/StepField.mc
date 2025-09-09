@@ -18,22 +18,16 @@ class StepField extends BaseDataField {
    }
 
    function max_label(value) {
-      var valKp = Globals.toKValue(value);
-      return Lang.format("$1$K", [valKp]);
+      return Globals.toKValue(value);
    }
 
    function cur_label(value) {
       var need_minimal = Properties.getValue("minimal_data");
-      var currentStep = value;
+      var dispStep = (value < 1000) ? value.format("%d") : Globals.toKValue(value);
       if (need_minimal) {
-         if (currentStep > 999) {
-            return currentStep.format("%d");
-         } else {
-            return Lang.format("STEP $1$", [currentStep.format("%d")]);
-         }
+            return Lang.format("$1$", [ dispStep ]);
       } else {
-         var valKp = Globals.toKValue(currentStep);
-         return Lang.format("STEP $1$K", [valKp]);
+         return Lang.format("STEP $1$", [dispStep]);
       }
    }
 

@@ -20,10 +20,7 @@ class DistanceField extends BaseDataField {
    }
 
    function max_label(value) {
-      value = value / 1000.0;
-      value = value / 100.0; // convert cm to km
-      var valKp = Globals.toKValue(value);
-      return Lang.format("$1$K", [valKp]);
+      return Globals.toKValue(value / 100); // convert cm to km
    }
 
    function cur_label(value) {
@@ -40,11 +37,11 @@ class DistanceField extends BaseDataField {
          unit = "Mi";
       }
 
+      var dispDist = kilo.format("%0.1f");
       if (need_minimal) {
-         return Lang.format("$1$ $2$", [kilo.format("%0.1f"), unit]);
+         return Lang.format("$1$$2$", [dispDist, unit]);
       } else {
-         var valKp = Globals.toKValue(kilo * 1000);
-         return Lang.format("DIS $1$$2$", [valKp, unit]);
+         return Lang.format("DIS $1$$2$", [dispDist, unit]);
       }
    }
 

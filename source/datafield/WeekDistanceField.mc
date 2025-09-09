@@ -42,13 +42,8 @@ class WeekDistanceField extends BaseDataField {
          kilo *= 0.621371;
          unit = "Mi";
       }
-
-      if (need_minimal) {
-         return Lang.format("$1$ $2$", [kilo.format("%0.1f"), unit]);
-      } else {
-         var valKp = Globals.toKValue(kilo * 1000);
-         return Lang.format("DIS $1$$2$", [valKp, unit]);
-      }
+      var title = (need_minimal)? "" : "DIS ";
+      return Lang.format("$1$$2$ $3$", [ title, kilo.format("%0.1f"), unit ]);
    }
 
    function day_of_week(activity) {
