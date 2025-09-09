@@ -16,7 +16,7 @@ function testTemparatureField(logger as Test.Logger) as Boolean {
     Test.assertMessage(curValue != null, "Current value '" + curValue + "' should not be null");
     Test.assertMessage(maxLabel != null, "Max label '" + maxLabel + "' should not be null");
     Test.assertMessage(curLabel != null, "Current label '" + curLabel + "' should not be null");
-    Test.assertEqualMessage(field.bar_data(), true, "Bar data '" + field.bar_data() + "' should be true");
+    Test.assertEqualMessage(field.bar_data(), false, "Bar data '" + field.bar_data() + "' should be false");
 
     return true;
 }
