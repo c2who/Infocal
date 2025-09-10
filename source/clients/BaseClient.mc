@@ -189,4 +189,11 @@ class BaseClientHelper {
             return "ERR EX";
         }
     }
+
+    public static function isValidData(data as Dictionary<String, PropertyValueType>?, max_age_secs as Number) as Boolean {
+        // Check if data is Valid, and within max_age_secs
+        return (   (data != null)
+                && (data["clientTs"] != null)
+                && (data.get("clientTs") >= (Time.now().value() - max_age_secs)));
+    }
 }

@@ -11,32 +11,32 @@ class WeatherField extends BaseDataField {
       BaseDataField.initialize(id);
    }
 
-   function cur_icon() {
-      var weather_data = Storage.getValue("Weather") as Dictionary<String, PropertyValueType>?;
+   function cur_icon() as Char? {
+      var data = Storage.getValue(OpenWeatherClient.DATA_TYPE) as Dictionary<String, PropertyValueType>?;
       var weather_icon_mapper  = {
-         "01d" => "",
-         "02d" => "",
-         "03d" => "",
-         "04d" => "",
-         "09d" => "",
-         "10d" => "",
-         "11d" => "",
-         "13d" => "",
-         "50d" => "",
+         "01d" => 61453.toChar(), // "",
+         "02d" => 61442.toChar(), // "",
+         "03d" => 61505.toChar(), // "",
+         "04d" => 61459.toChar(), // "",
+         "09d" => 61466.toChar(), // "",
+         "10d" => 61448.toChar(), // "",
+         "11d" => 61470.toChar(), // "",
+         "13d" => 61467.toChar(), // "",
+         "50d" => 61539.toChar(), // "",
 
-         "01n" => "",
-         "02n" => "",
-         "03n" => "",
-         "04n" => "",
-         "09n" => "",
-         "10n" => "",
-         "11n" => "",
-         "13n" => "",
-         "50n" => "",
-      } as Dictionary<String, String>;
+         "01n" => 61486.toChar(), // "",
+         "02n" => 61574.toChar(), // "",
+         "03n" => 61505.toChar(), // "",
+         "04n" => 61459.toChar(), // "",
+         "09n" => 61466.toChar(), // "",
+         "10n" => 61480.toChar(), // "",
+         "11n" => 61470.toChar(), // "",
+         "13n" => 61467.toChar(), // "",
+         "50n" => 61539.toChar(), // "",
+      } as Dictionary<String, Char>;
 
-      if (weather_data != null) {
-         return weather_icon_mapper[weather_data["icon"]];
+      if (BaseClientHelper.isValidData(data, 6 * Gregorian.SECONDS_PER_HOUR)) {
+         return weather_icon_mapper[ data["icon"] ];
       } else {
          return null;
       }
@@ -44,27 +44,11 @@ class WeatherField extends BaseDataField {
 
    function cur_label(value) as String {
       // WEATHER
-      //var need_minimal = Properties.getValue("minimal_data");
       var data = Storage.getValue(OpenWeatherClient.DATA_TYPE) as Dictionary<String, PropertyValueType>?;
 
-      // Check if data is Invalid, or too old (> 6 hours)
-      if (  (data == null)
-         || (data.get("clientTs") == null)
-         || (data["clientTs"] < (Time.now().value() - (6 * Gregorian.SECONDS_PER_HOUR)))) {
+      // Check if data valid and not too old (<= 6 hours)
+      if (BaseClientHelper.isValidData(data, 6 * Gregorian.SECONDS_PER_HOUR)) {
 
-         // Display error(if any) or no-computed-data
-         var error = Storage.getValue(OpenWeatherClient.DATA_TYPE + Globals.DATA_TYPE_ERROR_SUFFIX) as Dictionary<String, PropertyValueType>?;
-
-         if (gLocation == null) {
-            return "NO LOCN";
-         } else if (error != null) {
-            var responseCode = error.get("code") as Number;
-            return BaseClientHelper.getCommunicationsErrorCodeText(responseCode);
-         } else {
-            // No Data
-            return "--";
-         }
-      } else {
          var settings = System.getDeviceSettings();
          var temp = data["temp"];
          var unit = "°C";
@@ -81,6 +65,19 @@ class WeatherField extends BaseDataField {
             return description + " " + value;
          } else {
             return value;
+         }
+      } else {
+         // Display error(if any) or no-computed-data
+         var error = Storage.getValue(OpenWeatherClient.DATA_TYPE + Globals.DATA_TYPE_ERROR_SUFFIX) as Dictionary<String, PropertyValueType>?;
+
+         if (gLocation == null) {
+            return "NO LOCN";
+         } else if (error != null) {
+            var responseCode = error.get("code") as Number;
+            return BaseClientHelper.getCommunicationsErrorCodeText(responseCode);
+         } else {
+            // No Data
+            return "--";
          }
       }
    }
