@@ -59,8 +59,9 @@ class WeekDistanceField extends BaseDataField {
    }
 
    function _retriveWeekValues() as Array<Float> {
+      // API 3.0.0
       var settings = System.getDeviceSettings();
-      var firstDayOfWeek = settings.firstDayOfWeek;
+      var firstDayOfWeek = (DeviceSettings has :firstDayOfWeek) ? settings.firstDayOfWeek : 2; // Monday
 
       var activities = [];
       var activityInfo = ActivityMonitor.getInfo();
