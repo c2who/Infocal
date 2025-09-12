@@ -6,7 +6,7 @@ import Toybox.Time;
 /* BATTERY */
 class BatteryField extends BaseDataField {
 
-   private var _hasBatteryInDays = (System.Stats has :batteryInDays) as Boolean; // API 3.3.0
+   private var _hasBatteryInDays as Boolean = (System.Stats has :batteryInDays); // API 3.3.0
 
    function initialize(id as Number) {
       BaseDataField.initialize(id);
@@ -64,7 +64,13 @@ class BatteryField extends BaseDataField {
 
          if (batInDays < 0.0) {
             // No computed data
-            return Lang.format("$1$--", [title]);
+            if (_hasBatteryInDays) {
+               // API Level 3.3.0 battery in days not available
+               return Lang.format("$1$--", [title]);
+            } else {
+               // Internal battery in days not yet available, waiting for data
+               return Lang.format("$1$WAIT", [title]);
+            }
 
          } else if (battery_format == 1) {
             // battery in days
@@ -98,7 +104,7 @@ class BatteryField extends BaseDataField {
                value = bat_last_pcnt;
                time_since = Time.now().value() - bat_last_time;
             }
-            return ((value * bat_dchg1_time) - time_since) / Gregorian.SECONDS_PER_HOUR;
+            return ((value * bat_dchg1_time) - time_since) / Gregorian.SECONDS_PER_DAY;
          }
       }
    }
