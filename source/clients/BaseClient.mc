@@ -168,12 +168,19 @@ class BaseClientHelper {
             case 429: // Too Many Requests (often due to api key quota)
                return "API KEY";
 
-            default:
-               return Lang.format("ERR $1$", [responseCode]);
-         }
-      } catch (ex) {
-         debug_print(:client, "ex: $1$", ex.getErrorMessage());
-         return "ERR EX";
-      }
-   }
+                default:
+                    return Lang.format("ERR $1$", [responseCode]);
+            }
+        } catch (ex) {
+            debug_print(:client, "ex: $1$", ex.getErrorMessage());
+            return "ERR EX";
+        }
+    }
+
+    public static function isValidData(data as Dictionary<String, PropertyValueType>?, max_age_secs as Number) as Boolean {
+        // Check if data is Valid, and within max_age_secs
+        return (   (data != null)
+                && (data["clientTs"] != null)
+                && (data.get("clientTs") >= (Time.now().value() - max_age_secs)));
+    }
 }

@@ -56,7 +56,6 @@ fr735xt.resourcePath = $(fr735xt.resourcePath);resource-feat-basic;resource-sett
 fr920xt.resourcePath = $(fr920xt.resourcePath);resource-feat-basic;resource-settings
 fr935.resourcePath = $(fr935.resourcePath);resource-feat-basic;resource-settings
 garminswim2.resourcePath = $(garminswim2.resourcePath);resource-feat-basic;resource-settings
-instinct2.resourcePath = $(instinct2.resourcePath);resource-feat-basic;resource-settings
 vivoactive.resourcePath = $(vivoactive.resourcePath);resource-feat-basic;resource-settings
 vivoactive_hr.resourcePath = $(vivoactive_hr.resourcePath);resource-feat-basic;resource-settings
 vivoactive3.resourcePath = $(vivoactive3.resourcePath);resource-feat-basic;resource-settings
@@ -75,11 +74,25 @@ fenix5splus.resourcePath = $(fenix5splus.resourcePath);resource-feat-hrv-no-bb;r
 fenix5xplus.resourcePath = $(fenix5xplus.resourcePath);resource-feat-hrv-no-bb;resource-settings
 
 # ------------------------------------------------------------------------------
-# Devices supporting Heart Rate Variability (HRV) features
+# Devices supporting Heart Rate Variability (HRV) - but not Recovery Time
+# - Body Battery (bodyBattery)
+# -  Stress Score (stress)
+approachs50.resourcePath = $(approachs50.resourcePath);resource-feat-hrv-no-rt;resource-settings
+d2airx10.resourcePath = $(d2airx10.resourcePath);resource-feat-hrv-no-rt;resource-settings
+venu2.resourcePath = $(venu2.resourcePath);resource-feat-hrv-no-rt;resource-settings
+venu2plus.resourcePath = $(venu2plus.resourcePath);resource-feat-hrv-no-rt;resource-settings
+venu2s.resourcePath = $(venu2s.resourcePath);resource-feat-hrv-no-rt;resource-settings
+venu3.resourcePath = $(venu3.resourcePath);resource-feat-hrv-no-rt;resource-settings
+venu3s.resourcePath = $(venu3s.resourcePath);resource-feat-hrv-no-rt;resource-settings
+venusq2.resourcePath = $(venusq2.resourcePath);resource-feat-hrv-no-rt;resource-settings
+venusq2m.resourcePath = $(venusq2m.resourcePath);resource-feat-hrv-no-rt;resource-settings
+vivoactive5.resourcePath = $(vivoactive5.resourcePath);resource-feat-hrv-no-rt;resource-settings
+
+# ------------------------------------------------------------------------------
+# Devices supporting Heart Rate Variability (HRV) features - but not Solar
 # - Body Battery (bodyBattery)
 # - Stress Score (stress)
 # - Recovery Time (timeToRecover)
-approachs50.resourcePath = $(approachs50.resourcePath);resource-feat-hrv;resource-settings
 approachs7042mm.resourcePath = $(approachs7042mm.resourcePath);resource-feat-hrv;resource-settings
 approachs7047mm.resourcePath = $(approachs7047mm.resourcePath);resource-feat-hrv;resource-settings
 d2mach1.resourcePath = $(d2mach1.resourcePath);resource-feat-hrv;resource-settings
@@ -92,19 +105,11 @@ descentmk351mm.resourcePath = $(descentmk351mm.resourcePath);resource-feat-hrv;r
 epix2.resourcePath = $(epix2.resourcePath);resource-feat-hrv;resource-settings
 epix2pro42mm.resourcePath = $(epix2pro42mm.resourcePath);resource-feat-hrv;resource-settings
 epix2pro47mm.resourcePath = $(epix2pro47mm.resourcePath);resource-feat-hrv;resource-settings
-fenix6.resourcePath = $(fenix6.resourcePath);resource-feat-hrv;resource-settings
-fenix6pro.resourcePath = $(fenix6pro.resourcePath);resource-feat-hrv;resource-settings
-fenix6s.resourcePath = $(fenix6s.resourcePath);resource-feat-hrv;resource-settings
-fenix6spro.resourcePath = $(fenix6spro.resourcePath);resource-feat-hrv;resource-settings
-fenix6xpro.resourcePath = $(fenix6xpro.resourcePath);resource-feat-hrv;resource-settings
 fenix7.resourcePath = $(fenix7.resourcePath);resource-feat-hrv;resource-settings
 fenix7pro.resourcePath = $(fenix7pro.resourcePath);resource-feat-hrv;resource-settings
-fenix7pronowifi.resourcePath = $(fenix7pronowifi.resourcePath);resource-feat-hrv;resource-settings
 fenix7s.resourcePath = $(fenix7s.resourcePath);resource-feat-hrv;resource-settings
 fenix7spro.resourcePath = $(fenix7spro.resourcePath);resource-feat-hrv;resource-settings
-fenix7x.resourcePath = $(fenix7x.resourcePath);resource-feat-hrv;resource-settings
 fenix7xpro.resourcePath = $(fenix7xpro.resourcePath);resource-feat-hrv;resource-settings
-fenix7xpronowifi.resourcePath = $(fenix7xpronowifi.resourcePath);resource-feat-hrv;resource-settings
 fenix843mm.resourcePath = $(fenix843mm.resourcePath);resource-feat-hrv;resource-settings
 fenix847mm.resourcePath = $(fenix847mm.resourcePath);resource-feat-hrv;resource-settings
 fenixe.resourcePath = $(fenixe.resourcePath);resource-feat-hrv;resource-settings
@@ -124,11 +129,8 @@ fr57047mm.resourcePath = $(fr57047mm.resourcePath);resource-feat-hrv;resource-se
 fr745.resourcePath = $(fr745.resourcePath);resource-feat-hrv;resource-settings
 fr945.resourcePath = $(fr945.resourcePath);resource-feat-hrv;resource-settings
 fr945lte.resourcePath = $(fr945lte.resourcePath);resource-feat-hrv;resource-settings
-fr955.resourcePath = $(fr955.resourcePath);resource-feat-hrv;resource-settings
 fr965.resourcePath = $(fr965.resourcePath);resource-feat-hrv;resource-settings
 fr970.resourcePath = $(fr970.resourcePath);resource-feat-hrv;resource-settings
-instinct2s.resourcePath = $(instinct2s.resourcePath);resource-feat-hrv;resource-settings
-instinct2x.resourcePath = $(instinct2x.resourcePath);resource-feat-hrv;resource-settings
 instinct3amoled45mm.resourcePath = $(instinct3amoled45mm.resourcePath);resource-feat-hrv;resource-settings
 instinct3amoled50mm.resourcePath = $(instinct3amoled50mm.resourcePath);resource-feat-hrv;resource-settings
 instinctcrossover.resourcePath = $(instinctcrossover.resourcePath);resource-feat-hrv;resource-settings
@@ -158,24 +160,29 @@ vivoactive4s.resourcePath = $(vivoactive4s.resourcePath);resource-feat-hrv;resou
 vivoactive6.resourcePath = $(vivoactive6.resourcePath);resource-feat-hrv;resource-settings
 
 # ------------------------------------------------------------------------------
-# Devices supporting Solar features
+# Devices supporting HRV + (some models have) Solar features
+# Note: Garmin does not always have a different model name for Solar vs non-Solar versions
+#       (e.g. fenix6, fenix6s)
 # - Body Battery (bodyBattery)
 # - Stress Score (stress)
 # - Recovery Time (timeToRecover)
 # - Solar Intensity (solarIntensity)
 enduro.resourcePath = $(enduro.resourcePath);resource-feat-solar;resource-settings
 enduro3.resourcePath = $(enduro3.resourcePath);resource-feat-solar;resource-settings
+descentg1.resourcePath = $(descentg1.resourcePath);resource-feat-solar;resource-settings
+# Note: Fenix6 series was the first to introduce Solar features, but not all models have it
+fenix6.resourcePath = $(fenix6.resourcePath);resource-feat-solar;resource-settings
+fenix6pro.resourcePath = $(fenix6pro.resourcePath);resource-feat-solar;resource-settings
+fenix6s.resourcePath = $(fenix6s.resourcePath);resource-feat-solar;resource-settings
+fenix6spro.resourcePath = $(fenix6spro.resourcePath);resource-feat-solar;resource-settings
 fenix6xpro.resourcePath = $(fenix6xpro.resourcePath);resource-feat-solar;resource-settings
-fenix7.resourcePath = $(fenix7.resourcePath);resource-feat-solar;resource-settings
-fenix7pro.resourcePath = $(fenix7pro.resourcePath);resource-feat-solar;resource-settings
 fenix7pronowifi.resourcePath = $(fenix7pronowifi.resourcePath);resource-feat-solar;resource-settings
-fenix7s.resourcePath = $(fenix7s.resourcePath);resource-feat-solar;resource-settings
-fenix7spro.resourcePath = $(fenix7spro.resourcePath);resource-feat-solar;resource-settings
 fenix7x.resourcePath = $(fenix7x.resourcePath);resource-feat-solar;resource-settings
-fenix7xpro.resourcePath = $(fenix7xpro.resourcePath);resource-feat-solar;resource-settings
 fenix7xpronowifi.resourcePath = $(fenix7xpronowifi.resourcePath);resource-feat-solar;resource-settings
 fenix8solar47mm.resourcePath = $(fenix8solar47mm.resourcePath);resource-feat-solar;resource-settings
 fenix8solar51mm.resourcePath = $(fenix8solar51mm.resourcePath);resource-feat-solar;resource-settings
+fr955.resourcePath = $(fr955.resourcePath);resource-feat-solar;resource-settings
+instinct2.resourcePath = $(instinct2.resourcePath);resource-feat-solar;resource-settings
 instinct2s.resourcePath = $(instinct2s.resourcePath);resource-feat-solar;resource-settings
 instinct2x.resourcePath = $(instinct2x.resourcePath);resource-feat-solar;resource-settings
 instinct3solar45mm.resourcePath = $(instinct3solar45mm.resourcePath);resource-feat-solar;resource-settings

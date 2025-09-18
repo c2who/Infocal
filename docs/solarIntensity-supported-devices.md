@@ -4,7 +4,7 @@ This document lists all Garmin Connect IQ devices that support the `solarIntensi
 
 ## Supported Devices
 
-Solar intensity is available on devices with solar charging capabilities, typically requiring API Level 4.0.0 or higher.
+Solar intensity is available on devices with solar charging capabilities, typically requiring API Level 3.2.0 or higher.
 
 ### Fenix Series
 - fenix6xpro (solar variants)
@@ -29,6 +29,8 @@ Solar intensity is available on devices with solar charging capabilities, typica
 ### Other Series
 - approachs7042mm (solar variants)
 - approachs7047mm (solar variants)
+- descentg1
+- fr955
 
 ## Notes
 
@@ -39,6 +41,6 @@ Solar intensity is available on devices with solar charging capabilities, typica
 
 ## API Requirements
 
-- Requires Connect IQ API Level 4.0.0 or higher
+- Requires Connect IQ API Level 3.2.0 or higher
 - Uses `System.getSystemStats().solarIntensity`
 - Requires `System.Stats has :solarIntensity` capability check

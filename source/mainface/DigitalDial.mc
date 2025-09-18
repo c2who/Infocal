@@ -189,9 +189,9 @@ class DigitalDial extends Ui.Drawable {
             var height = dc.getFontHeight(boldF);
             y_offset = height * 0.75;
             hourW = dc.getTextWidthInPixels(hourText, boldF);
-            minsW = (dc.getTextWidthInPixels(minuText, boldF) * 0.92).toNumber() + 1; // estimate using boldF (normF not loaded)
-            timeW = hourW + 6 + minsW;
-            left = center_x - timeW / 2;
+            minsW = (dc.getTextWidthInPixels(minuText, boldF) * 0.95).toNumber() + 1; // estimate using boldF (normF not loaded)
+            timeW = (hourW + 6 + minsW);
+            left = center_x - timeW/2;
 
             // Draw hour
             dc.setColor(ghour_color, Graphics.COLOR_TRANSPARENT);

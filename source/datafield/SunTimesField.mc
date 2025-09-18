@@ -5,7 +5,7 @@ using Toybox.System;
 using Toybox.Time.Gregorian;
 
 /* SUNRISE/SUNSET */
-class SunField extends BaseDataField {
+class SunTimesField extends BaseDataField {
    function initialize(id as Number) {
       BaseDataField.initialize(id);
    }

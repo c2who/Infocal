@@ -1,6 +1,6 @@
 import Toybox.Lang;
 
-enum /* FIELD_TYPES */ {
+enum FIELD_TYPES {
    FIELD_TYPE_HEART_RATE = 0,
    FIELD_TYPE_BATTERY,
    FIELD_TYPE_CALORIES,
@@ -81,11 +81,11 @@ function buildFieldObject(type as Number) {
    } else if (type == FIELD_TYPE_ALARMS) {
       return new AlarmField(type);
    } else if (type == FIELD_TYPE_ALTITUDE) {
-      return new AltitudeField(type);
+      return new ElevationField(type);
    } else if (type == FIELD_TYPE_TEMPERATURE) {
       return new TemparatureField(type);
    } else if (type == FIELD_TYPE_SUNRISE_SUNSET) {
-      return new SunField(type);
+      return new SunTimesField(type);
    } else if (type == FIELD_TYPE_FLOOR) {
       return new FloorField(type);
    } else if (type == FIELD_TYPE_GROUP_NOTI) {
@@ -196,7 +196,7 @@ class EmptyDataField {
 
    private var _field_id;
 
-   function field_id() as Number{
+   function field_id() as Number {
       return _field_id;
    }
 

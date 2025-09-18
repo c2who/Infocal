@@ -1,7 +1,8 @@
-bin/
-build/
-export/
-logs/
+/bin/
+/export/
+/logs/
+/scripts/devices*
+uncontrolled/
 *.DS_Store
 .vscode
 *.code-workspace
@@ -10,5 +11,4 @@ secret*
 Secret*
 keys*
 Keys*
-scripts/devices*
 ~*

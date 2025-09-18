@@ -119,8 +119,8 @@ class BarComplication extends Ui.Drawable {
       return dt_field.bar_data();
    }
 
-   function get_weather_icon() {
-      return dt_field.cur_icon();
+   function get_weather_icon() as Char? {
+      return (dt_field as WeatherField).cur_icon();
    }
 
    function getSettingDataKey() {

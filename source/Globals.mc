@@ -87,22 +87,14 @@ public class Globals {
       return (center_y + radius * Math.sin(radians)) as Float;
    }
 
-   static function toKValue(value as Float, alwaysConvert as Boolean) as String {
-      if (!alwaysConvert and value <= 10000) {
-         return value.format("%d");
+    static function toKValue(value as Float) as String {
+      if (value != null) {
+        return (value / 1000.0).format("%0.1f") + "K";
       } else {
-         var valK = value / 1000.0;
-         return valK.format("%0.1f");
+         return "--;";
       }
-   }
 
-   static function getKString(value as Float) as String {
-      if (value <= 10000) {
-         return "";
-      } else {
-         return "K";
-      }
-   }
+    }
 }
 
 function min(a as Numeric, b as Numeric) as Numeric {

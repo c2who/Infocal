@@ -15,9 +15,9 @@
         </setting>
         <setting propertyKey="@Properties.battery_format" title="@Strings.battery_format">
             <settingConfig type="list">
-                <listEntry value="0">@Strings.battery_format_1</listEntry>
-                <listEntry value="1">@Strings.battery_format_2</listEntry>
-                <listEntry value="2">@Strings.battery_format_3</listEntry>
+                <listEntry value="0">@Strings.battery_format_0</listEntry>
+                <listEntry value="1">@Strings.battery_format_1</listEntry>
+                <listEntry value="2">@Strings.battery_format_2</listEntry>
             </settingConfig>
         </setting>
         <setting propertyKey="@Properties.barometer_unit" title="@Strings.barometer_unit">
